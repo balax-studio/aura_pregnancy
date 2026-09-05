@@ -116,11 +116,11 @@ class FFmpegVideoService {
         // 2. Fallback: getDownloadsDirectory veya getApplicationDocumentsDirectory
         if (dirPath == null) {
           final dir = await getDownloadsDirectory() ?? await getApplicationDocumentsDirectory();
-          dirPath = dir?.path;
+          dirPath = dir.path;
         }
 
         final actualFileName = fileName.endsWith('.mp4') ? fileName : '$fileName.mp4';
-        final savePath = dirPath != null ? '$dirPath/$actualFileName' : actualFileName;
+        final savePath = '$dirPath/$actualFileName';
         
         final file = File(savePath);
         final dummyBytes = Uint8List.fromList([

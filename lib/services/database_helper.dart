@@ -38,6 +38,7 @@ class DatabaseHelper {
   bool _webMedicationsSeeded = false;
   int _webResetCount = 0;
   final List<BabyNameModel> _webFavoriteNames = [];
+  final Map<String, String> _webSettings = {};
 
   /// Veritabanı örneğini döndürür (Lazy initialization)
   Future<Database?> get database async {
@@ -264,33 +265,44 @@ class DatabaseHelper {
   // ==========================================
 
   Future<int> saveProfile(ProfileModel profile) async {
-    _webProfile = profile.copyWith(id: profile.id ?? 1);
     final db = await database;
-    notifyDataChanged();
     if (db == null) {
-      return 1;
+      final savedId = profile.id ?? 1;
+      _webProfile = profile.copyWith(id: savedId);
+      _webSettings['is_onboarding_completed'] = 'true';
+      notifyDataChanged();
+      return savedId;
     }
     try {
-      final existing = await getProfile();
-      if (existing != null && existing.id != null) {
-        final res = await db.update(
+      final maps = await db.query('profile', limit: 1);
+      int savedId;
+      if (maps.isNotEmpty) {
+        final existingId = maps.first['id'] as int;
+        final map = profile.toMap();
+        map.remove('id');
+        await db.update(
           'profile',
-          profile.toMap(),
+          map,
           where: 'id = ?',
-          whereArgs: [existing.id],
+          whereArgs: [existingId],
         );
-        notifyDataChanged();
-        return res;
+        savedId = existingId;
       } else {
-        final id = await db.insert('profile', profile.toMap());
-        _webProfile = profile.copyWith(id: id);
-        notifyDataChanged();
-        return id;
+        final map = profile.toMap();
+        map.remove('id');
+        savedId = await db.insert('profile', map);
       }
+      _webProfile = profile.copyWith(id: savedId);
+      await setSetting('is_onboarding_completed', 'true');
+      notifyDataChanged();
+      return savedId;
     } catch (e) {
       debugPrint('saveProfile db error, using fallback: $e');
+      final fallbackId = profile.id ?? 1;
+      _webProfile = profile.copyWith(id: fallbackId);
+      _webSettings['is_onboarding_completed'] = 'true';
       notifyDataChanged();
-      return 1;
+      return fallbackId;
     }
   }
 
@@ -306,7 +318,7 @@ class DatabaseHelper {
         _webProfile = prof;
         return prof;
       }
-      return _webProfile;
+      return null;
     } catch (e) {
       debugPrint('getProfile db error, using fallback: $e');
       return _webProfile;
@@ -831,45 +843,89 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> getResetCount() async {
+  Future<void> _ensureAppSettingsTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS app_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT
+      )
+    ''');
+  }
+
+  Future<String?> getSetting(String key) async {
     final db = await database;
     if (db == null) {
-      return _webResetCount;
+      return _webSettings[key];
     }
     try {
+      await _ensureAppSettingsTable(db);
       final res = await db.query(
         'app_settings',
         where: 'key = ?',
-        whereArgs: ['data_reset_count'],
+        whereArgs: [key],
         limit: 1,
       );
       if (res.isNotEmpty) {
-        return int.tryParse(res.first['value']?.toString() ?? '0') ?? 0;
+        final val = res.first['value']?.toString();
+        if (val != null) _webSettings[key] = val;
+        return val;
       }
-      return 0;
+      return _webSettings[key];
     } catch (e) {
-      debugPrint('getResetCount error: $e');
-      return _webResetCount;
+      debugPrint('getSetting error: $e');
+      return _webSettings[key];
     }
+  }
+
+  Future<void> setSetting(String key, String value) async {
+    _webSettings[key] = value;
+    final db = await database;
+    if (db != null) {
+      try {
+        await _ensureAppSettingsTable(db);
+        await db.insert(
+          'app_settings',
+          {'key': key, 'value': value},
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      } catch (e) {
+        debugPrint('setSetting error: $e');
+      }
+    }
+  }
+
+  Future<bool> isOnboardingCompleted() async {
+    final val = await getSetting('is_onboarding_completed');
+    return val == 'true';
+  }
+
+  Future<void> setOnboardingCompleted(bool completed) async {
+    await setSetting('is_onboarding_completed', completed ? 'true' : 'false');
+  }
+
+  Future<bool> hasSelectedLanguage() async {
+    final val = await getSetting('has_selected_language');
+    return val == 'true';
+  }
+
+  Future<bool> hasSeenGuide() async {
+    final val = await getSetting('has_seen_guide');
+    return val == 'true';
+  }
+
+  Future<int> getResetCount() async {
+    final val = await getSetting('data_reset_count');
+    if (val != null) {
+      return int.tryParse(val) ?? 0;
+    }
+    return _webResetCount;
   }
 
   Future<void> incrementResetCount() async {
     final count = await getResetCount();
     final newCount = count + 1;
     _webResetCount = newCount;
-
-    final db = await database;
-    if (db != null) {
-      try {
-        await db.insert(
-          'app_settings',
-          {'key': 'data_reset_count', 'value': newCount.toString()},
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-      } catch (e) {
-        debugPrint('incrementResetCount error: $e');
-      }
-    }
+    await setSetting('data_reset_count', newCount.toString());
   }
 
   // ==========================================
@@ -985,6 +1041,7 @@ class DatabaseHelper {
       currentResetCount = await getResetCount();
     }
     _webProfile = null;
+    _webSettings.clear();
     _webDiaries.clear();
     _webDailyLogs.clear();
     _webNotifications.clear();

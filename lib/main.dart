@@ -12,6 +12,7 @@ import 'services/database_helper.dart';
 import 'services/att_tracking_service.dart';
 import 'models/profile_model.dart';
 import 'views/welcome/language_selection_screen.dart';
+import 'views/onboarding/onboarding_screen.dart';
 import 'views/main_navigation_scaffold.dart';
 
 
@@ -68,6 +69,8 @@ class RootGateScreen extends StatefulWidget {
 class _RootGateScreenState extends State<RootGateScreen> {
   bool _isLoading = true;
   ProfileModel? _profile;
+  bool _isOnboardingCompleted = false;
+  bool _hasSeenGuide = false;
 
   @override
   void initState() {
@@ -78,8 +81,12 @@ class _RootGateScreenState extends State<RootGateScreen> {
   Future<void> _checkInitialState() async {
     try {
       final profile = await DatabaseHelper.instance.getProfile();
+      final isOnboardingCompleted = await DatabaseHelper.instance.isOnboardingCompleted();
+      final hasSeenGuide = await DatabaseHelper.instance.hasSeenGuide();
       setState(() {
         _profile = profile;
+        _isOnboardingCompleted = isOnboardingCompleted;
+        _hasSeenGuide = hasSeenGuide;
         _isLoading = false;
       });
       // iOS ATT (App Tracking Transparency) izin kontrolü
@@ -129,12 +136,17 @@ class _RootGateScreenState extends State<RootGateScreen> {
       );
     }
 
-    // Profil varsa doğrudan ana navigasyona yönlendir
-    if (_profile != null) {
+    // Profil varsa veya onboarding tamamlanmışsa doğrudan ana navigasyona yönlendir
+    if (_profile != null || _isOnboardingCompleted) {
       return const MainNavigationScaffold();
     }
 
-    // Yeni kullanıcı için: Dil Seçimi -> Hoş Geldiniz -> Uygulama Rehberi -> Ana Uygulama
+    // Kullanıcı daha önce dili seçip rehberi tamamlamışsa tekrar gösterme, doğrudan Onboarding'e al
+    if (_hasSeenGuide) {
+      return const OnboardingScreen();
+    }
+
+    // Yeni kullanıcı için: Dil Seçimi -> Hoş Geldiniz -> Uygulama Rehberi -> Onboarding -> Ana Uygulama
     return const LanguageSelectionScreen();
   }
 }

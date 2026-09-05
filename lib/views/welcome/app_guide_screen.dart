@@ -98,6 +98,12 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
   }
 
   Future<void> _finishGuide({bool goToOnboarding = true}) async {
+    try {
+      await DatabaseHelper.instance.setSetting('has_seen_guide', 'true');
+    } catch (e) {
+      debugPrint('Guide setting save error: $e');
+    }
+
     if (widget.onCompleteGuide != null) {
       widget.onCompleteGuide!();
       return;

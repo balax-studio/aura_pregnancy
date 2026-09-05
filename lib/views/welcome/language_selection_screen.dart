@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/widgets/ambient_background.dart';
+import '../../services/database_helper.dart';
 import 'welcome_congratulation_screen.dart';
 
 class LanguageSelectionScreen extends StatelessWidget {
@@ -12,6 +13,12 @@ class LanguageSelectionScreen extends StatelessWidget {
 
   Future<void> _selectLanguage(BuildContext context, Locale locale) async {
     await context.setLocale(locale);
+    try {
+      await DatabaseHelper.instance.setSetting('has_selected_language', 'true');
+      await DatabaseHelper.instance.setSetting('app_language', locale.languageCode);
+    } catch (e) {
+      debugPrint('LanguageSelection save error: $e');
+    }
     if (!context.mounted) return;
     
     Navigator.pushReplacement(

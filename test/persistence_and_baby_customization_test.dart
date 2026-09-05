@@ -172,5 +172,34 @@ void main() {
 
       expect(find.byType(MainNavigationScaffold), findsOneWidget);
     });
+
+    test('7. Onboarding ve rehber ayarları kalıcı olarak kaydedilir ve okunur', () async {
+      expect(await DatabaseHelper.instance.isOnboardingCompleted(), isTrue);
+      
+      await DatabaseHelper.instance.setSetting('has_selected_language', 'true');
+      await DatabaseHelper.instance.setSetting('has_seen_guide', 'true');
+      
+      expect(await DatabaseHelper.instance.hasSelectedLanguage(), isTrue);
+      expect(await DatabaseHelper.instance.hasSeenGuide(), isTrue);
+    });
+
+    testWidgets('8. Bilgileri kayıtlı kullanıcı tekrar dil ve rehber ekranlarını görmez', (WidgetTester tester) async {
+      final prof = await DatabaseHelper.instance.getProfile();
+      expect(prof, isNotNull);
+      expect(await DatabaseHelper.instance.isOnboardingCompleted(), isTrue);
+
+      await tester.pumpWidget(
+        createLocalizedTestWidget(
+          child: const RootGateScreen(),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Ana sayfa görünmeli, dil seçimi veya rehber görünmemeli
+      expect(find.byType(MainNavigationScaffold), findsOneWidget);
+      expect(find.text('Choose Your Language'), findsNothing);
+      expect(find.text('Dil Seçiminizi Yapın'), findsNothing);
+    });
   });
 }

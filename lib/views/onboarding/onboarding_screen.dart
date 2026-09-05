@@ -7,6 +7,7 @@ import '../../controllers/onboarding_controller.dart';
 import '../../utils/date_utils.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 import '../main_navigation_scaffold.dart';
+import '../../services/database_helper.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback? onCompleted;
@@ -990,6 +991,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (!mounted) return;
 
     if (success) {
+      await DatabaseHelper.instance.setOnboardingCompleted(true);
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('onboarding_success_toast'.tr()),
@@ -1021,12 +1025,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           action: SnackBarAction(
             label: 'onboarding_force_start'.tr(),
             textColor: Colors.white,
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (_) => const MainNavigationScaffold()),
-                (route) => false,
-              );
+            onPressed: () async {
+              await DatabaseHelper.instance.ensureDefaultProfile();
+              await DatabaseHelper.instance.setOnboardingCompleted(true);
+              if (mounted) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (_) => const MainNavigationScaffold()),
+                  (route) => false,
+                );
+              }
             },
           ),
         ),
