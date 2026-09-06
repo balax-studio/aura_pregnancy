@@ -194,5 +194,25 @@ class _ClayBoxPainter extends material.BoxPainter {
 
     // 3. İç Gölgeler (Inset Specular & Shadows)
     _paintInnerShadows(canvas, rect, textDirection);
+
+    // 4. Sır Çerçevesi (Border & Specular Rim)
+    if (_decoration.border != null) {
+      if (_decoration.shape == material.BoxShape.circle) {
+        _decoration.border!.paint(
+          canvas,
+          rect,
+          textDirection: textDirection,
+          shape: material.BoxShape.circle,
+        );
+      } else {
+        _decoration.border!.paint(
+          canvas,
+          rect,
+          textDirection: textDirection,
+          shape: material.BoxShape.rectangle,
+          borderRadius: _decoration.borderRadius?.resolve(textDirection),
+        );
+      }
+    }
   }
 }

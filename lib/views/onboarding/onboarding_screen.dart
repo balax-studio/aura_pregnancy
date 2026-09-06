@@ -102,25 +102,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   children: List.generate(_totalPages, (index) {
                     final isActive = index <= _currentPage;
                     return Expanded(
-                      child: Container(
-                        height: 8,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOutCubic,
+                        height: 7,
                         margin: const EdgeInsets.symmetric(horizontal: 3),
-                        decoration: BoxDecoration(
-                          color: isActive
-                              ? AppColors.primaryPink
-                              : AppColors.backgroundSubtle,
-                          borderRadius: BorderRadius.circular(4),
-                          boxShadow: isActive
-                              ? [
-                                  BoxShadow(
-                                    color: AppColors.primaryPink
-                                        .withValues(alpha: 0.35),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ]
-                              : null,
-                        ),
+                        decoration: isActive
+                            ? ClayTheme.clayButtonDecoration(
+                                color: AppColors.primaryPink,
+                                borderRadius: 6,
+                              )
+                            : ClayTheme.concaveDecoration(
+                                color: AppColors.backgroundSubtle,
+                                borderRadius: 6,
+                              ),
                       ),
                     );
                   }),

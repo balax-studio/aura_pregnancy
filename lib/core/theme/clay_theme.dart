@@ -12,7 +12,7 @@ class ClayTheme {
   static const double cardRadius = 30.0;
   static const double buttonRadius = 24.0;
 
-  /// Standart Claymorphism Kart Kutu Dekorasyonu (Hacim Degradesi + Çift İç Işık + Yumuşak Sıcak Dış Gölge)
+  /// Standart Claymorphism Kart Kutu Dekorasyonu (Hacim Degradesi + Çift İç Işık + Çift Katmanlı Dış Gölge)
   static BoxDecoration clayDecoration({
     required Color color,
     double borderRadius = defaultRadius,
@@ -20,16 +20,16 @@ class ClayTheme {
   }) {
     final HSLColor hsl = HSLColor.fromColor(color);
     final Color topLight =
-        hsl.withLightness((hsl.lightness + 0.035).clamp(0.0, 1.0)).toColor();
+        hsl.withLightness((hsl.lightness + 0.045).clamp(0.0, 1.0)).toColor();
     final Color bottomShade =
-        hsl.withLightness((hsl.lightness - 0.03).clamp(0.0, 1.0)).toColor();
+        hsl.withLightness((hsl.lightness - 0.035).clamp(0.0, 1.0)).toColor();
 
     if (isPressed) {
       return BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [bottomShade, topLight],
+          begin: const Alignment(-0.2, -1.0),
+          end: const Alignment(0.2, 1.0),
+          colors: [bottomShade, color],
         ),
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
@@ -37,25 +37,25 @@ class ClayTheme {
           width: 1.0,
         ),
         boxShadow: [
-          // 1. Dış Gölge
-          const BoxShadow(
-            color: Color(0x1EC49A9E),
-            offset: Offset(0, 3),
-            blurRadius: 8,
+          // 1. Zemin temas gölgesi
+          BoxShadow(
+            color: color.withValues(alpha: 0.16),
+            offset: const Offset(0, 2),
+            blurRadius: 6,
             inset: false,
           ),
-          // 2. Üst İç Işık
-          BoxShadow(
-            color: Colors.white.withValues(alpha: 0.90),
-            offset: const Offset(0, 6),
-            blurRadius: 10,
-            inset: true,
-          ),
-          // 3. Alt İç Gölge
+          // 2. İç çöküntü gölgesi
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.14),
-            offset: const Offset(0, -6),
-            blurRadius: 10,
+            offset: const Offset(0, 5),
+            blurRadius: 8,
+            inset: true,
+          ),
+          // 3. Alt hafif karşı ışık
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.85),
+            offset: const Offset(0, -4),
+            blurRadius: 7,
             inset: true,
           ),
         ],
@@ -65,35 +65,44 @@ class ClayTheme {
     // Normal Havada Duran (Floating) Durum
     return BoxDecoration(
       gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [topLight, bottomShade],
+        begin: const Alignment(-0.3, -1.0),
+        end: const Alignment(0.3, 1.0),
+        colors: [topLight, color, bottomShade],
+        stops: const [0.0, 0.6, 1.0],
       ),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: Colors.white.withValues(alpha: 0.65),
-        width: 1.0,
+        color: Colors.white.withValues(alpha: 0.70),
+        width: 1.2,
       ),
       boxShadow: [
-        // 1. Yumuşak Sıcak Dış Gölge
-        const BoxShadow(
-          color: Color(0x22C49A9E),
-          offset: Offset(0, 12),
-          blurRadius: 24,
+        // 1. Zemin Temas Gölgesi (Net zemin ayrımı)
+        BoxShadow(
+          color: color.withValues(alpha: 0.14),
+          offset: const Offset(0, 3),
+          blurRadius: 8,
           inset: false,
         ),
-        // 2. Üst İç Işık (Kil parlaklığı - açık beyaz ışık)
+        // 2. Yumuşak Sıcak Atmosferik Dış Işıma (Ambient Glow - Kartı yüzdüren derinlik)
         BoxShadow(
-          color: Colors.white.withValues(alpha: 0.80),
-          offset: const Offset(0, 5),
-          blurRadius: 10,
+          color: const Color(0x18C49A9E).withValues(alpha: 0.16),
+          offset: const Offset(0, 14),
+          blurRadius: 28,
+          spreadRadius: -2,
+          inset: false,
+        ),
+        // 3. Üst-Sol Hacimsel İç Işık (Kil parlaklığı)
+        BoxShadow(
+          color: Colors.white.withValues(alpha: 0.88),
+          offset: const Offset(1.5, 4.5),
+          blurRadius: 8,
           inset: true,
         ),
-        // 3. Alt İç Gölge (Kil alt kıvrımı)
+        // 4. Alt-Sağ İç Gölge (Kil alt kıvrımı)
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
-          offset: const Offset(0, -5),
-          blurRadius: 10,
+          color: Colors.black.withValues(alpha: 0.07),
+          offset: const Offset(-1.0, -4.5),
+          blurRadius: 8,
           inset: true,
         ),
       ],
@@ -147,6 +156,7 @@ class ClayTheme {
   }
 
   /// Butonlar ve Küçük Etkileşim Öğeleri İçin Optimize Edilmiş Keskin Claymorphism 3.0 Dekorasyonu
+  /// Butonlar ve Küçük Etkileşim Öğeleri İçin Optimize Edilmiş Hacimli Claymorphism 3.0 Dekorasyonu
   static BoxDecoration clayButtonDecoration({
     required Color color,
     double borderRadius = buttonRadius,
@@ -154,39 +164,42 @@ class ClayTheme {
   }) {
     final HSLColor hsl = HSLColor.fromColor(color);
     final Color topLight =
-        hsl.withLightness((hsl.lightness + 0.06).clamp(0.0, 1.0)).toColor();
+        hsl.withLightness((hsl.lightness + 0.08).clamp(0.0, 1.0)).toColor();
     final Color bottomShade =
-        hsl.withLightness((hsl.lightness - 0.045).clamp(0.0, 1.0)).toColor();
+        hsl.withLightness((hsl.lightness - 0.06).clamp(0.0, 1.0)).toColor();
 
     if (isPressed) {
       return BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [bottomShade, topLight],
+          begin: const Alignment(-0.2, -1.0),
+          end: const Alignment(0.2, 1.0),
+          colors: [bottomShade, color],
         ),
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.30),
+          color: Colors.white.withValues(alpha: 0.35),
           width: 1.2,
         ),
         boxShadow: [
+          // Zemin temas gölgesi (baskı anında yere yaklaşır)
           BoxShadow(
-            color: color.withValues(alpha: 0.20),
+            color: color.withValues(alpha: 0.18),
             offset: const Offset(0, 2),
             blurRadius: 4,
             inset: false,
           ),
+          // İç çöküntü gölgesi (basılma hissi)
           BoxShadow(
-            color: Colors.white.withValues(alpha: 0.92),
+            color: Colors.black.withValues(alpha: 0.18),
             offset: const Offset(0, 4),
-            blurRadius: 6,
+            blurRadius: 7,
             inset: true,
           ),
+          // Alt hafif karşı ışık
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.16),
-            offset: const Offset(0, -4),
-            blurRadius: 6,
+            color: Colors.white.withValues(alpha: 0.70),
+            offset: const Offset(0, -3),
+            blurRadius: 5,
             inset: true,
           ),
         ],
@@ -195,31 +208,44 @@ class ClayTheme {
 
     return BoxDecoration(
       gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [topLight, bottomShade],
+        begin: const Alignment(-0.35, -1.0),
+        end: const Alignment(0.35, 1.0),
+        colors: [topLight, color, bottomShade],
+        stops: const [0.0, 0.55, 1.0],
       ),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: Colors.white.withValues(alpha: 0.75),
+        color: Colors.white.withValues(alpha: 0.85),
         width: 1.2,
       ),
       boxShadow: [
+        // 1. Zemin Temas Gölgesi (Net zemin ayrımı)
         BoxShadow(
-          color: color.withValues(alpha: 0.28),
-          offset: const Offset(0, 8),
-          blurRadius: 16,
+          color: color.withValues(alpha: 0.22),
+          offset: const Offset(0, 3),
+          blurRadius: 6,
+          spreadRadius: -1,
           inset: false,
         ),
+        // 2. Kromatik Ortam Halesi (Diffuse Ambient Bloom - Butonu havaya kaldıran yumuşak yayılım)
         BoxShadow(
-          color: Colors.white.withValues(alpha: 0.88),
-          offset: const Offset(0, 3),
-          blurRadius: 5,
+          color: color.withValues(alpha: 0.26),
+          offset: const Offset(0, 12),
+          blurRadius: 24,
+          spreadRadius: -2,
+          inset: false,
+        ),
+        // 3. Üst-Sol Hacimsel İç Işık (Porselen Sır Parlaklığı)
+        BoxShadow(
+          color: Colors.white.withValues(alpha: 0.94),
+          offset: const Offset(1.2, 3.5),
+          blurRadius: 4,
           inset: true,
         ),
+        // 4. Alt-Sağ Hacimsel Derinlik Gölgesi
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
-          offset: const Offset(0, -3),
+          color: Colors.black.withValues(alpha: 0.12),
+          offset: const Offset(-1.0, -3.5),
           blurRadius: 5,
           inset: true,
         ),
@@ -496,13 +522,47 @@ class _ClayButtonState extends State<ClayButton> {
           curve: _isPressed ? Curves.easeOutQuad : Curves.easeOutBack,
           width: widget.width,
           height: widget.height,
-          padding: effectivePadding,
           decoration: ClayTheme.clayButtonDecoration(
             color: widget.color,
             borderRadius: widget.borderRadius,
             isPressed: _isPressed,
           ),
-          child: Center(child: widget.child),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Üst Glaze Işık Yayı (Specular Pearl Sheen Arch)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: (widget.height != null ? widget.height! * 0.46 : 22),
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(widget.borderRadius),
+                        ),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.38),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: effectivePadding,
+                  child: widget.child,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
