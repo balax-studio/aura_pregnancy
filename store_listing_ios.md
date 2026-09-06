@@ -37,36 +37,36 @@ pregnancy tracker,baby growth,weekly fetal,kick counter,due date,bump journal,ma
 
 ### Türkçe (tr-TR):
 ```text
-Aura Pregnancy — Anne ve Bebeğin Eşsiz Yolculuğuna Zarafet Katan Dijital Rehber
+Aura Pregnancy - Anne ve Bebeğin Eşsiz Yolculuğuna Zarafet Katan Dijital Rehber
 
 Aura Pregnancy, hamileliğinizin ilk gününden doğum anına kadar yanınızda olan; tıbbi doğruluk, sakinleştirici Claymorphism tasarımı ve kişiselleştirilmiş bebek takibiyle donatılmış yeni nesil bir gebelik arkadaşıdır.
 
 ÖNE ÇIKAN ÖZELLİKLER:
 
-👶 HAFTA HAFTA BEBEK GELİŞİMİ VE 3D GÖRSELLEŞTİRME
-• 1. haftadan 40+ haftaya kadar bebeğinizin milimetrik büyümesini, organ gelişimini ve değişimlerini takip edin.
-• Bebeğinizin boyutunu gerçek meyve ve sebze benzetimleriyle (avokado, incir, nar) 3D olarak görselleştirin.
-• Canlı fetal simülasyon ve tıbbi ultrason görünümleriyle bebeğinizi her an yanınızda hissedin.
+HAFTA HAFTA BEBEK GELİŞİMİ VE 3D GÖRSELLEŞTİRME
+- 1. haftadan 40+ haftaya kadar bebeğinizin milimetrik büyümesini, organ gelişimini ve değişimlerini takip edin.
+- Bebeğinizin boyutunu gerçek meyve ve sebze benzetimleriyle (avokado, incir, nar) 3D olarak görselleştirin.
+- Canlı fetal simülasyon ve tıbbi ultrason görünümleriyle bebeğinizi her an yanınızda hissedin.
 
-❤️ ANNE SAĞLIĞI & GÜNLÜK MEDİKAL TAKİP
-• Su & Kafein Sayacı: Günlük 200 mg güvenli kafein limitini aşmadan sıvı alımınızı dengede tutun.
-• Tekme & Hareket Sayacı: Fetal hareketleri tek dokunuşla kaydedin, hareket sıklığını analiz edin.
-• Tansiyon, Ateş ve Kilo Takibi: IOM (Institute of Medicine) standartlarına göre haftalık ideal kilo artışınızı izleyin.
-• İlaç & Vitamin Hatırlatıcı: Folik asit, demir ve multivitaminlerinizi asla unutmayın.
+ANNE SAĞLIĞI VE GÜNLÜK MEDİKAL TAKİP
+- Su ve Kafein Sayacı: Günlük 200 mg güvenli kafein limitini aşmadan sıvı alımınızı dengede tutun.
+- Tekme ve Hareket Sayacı: Fetal hareketleri tek dokunuşla kaydedin, hareket sıklığını analiz edin.
+- Tansiyon, Ateş ve Kilo Takibi: IOM (Institute of Medicine) standartlarına göre haftalık ideal kilo artışınızı izleyin.
+- İlaç ve Vitamin Hatırlatıcı: Folik asit, demir ve multivitaminlerinizi asla unutmayın.
 
-📖 DUYGUSAL GÜNLÜK & SESLİ MEKTUPLAR
-• Bebeğinize sesli mektuplar kaydedin, ultrason fotoğraflarınızı ve göbek fotoğraflarınızı güvenle saklayın.
-• Otomatik Time-lapse Yolculuk Hikayesi: Seçtiğiniz anıları romantik fon müziği eşliğinde video hikayesine dönüştürün.
+DUYGUSAL GÜNLÜK VE SESLİ MEKTUPLAR
+- Bebeğinize sesli mektuplar kaydedin, ultrason fotoğraflarınızı ve göbek fotoğraflarınızı güvenle saklayın.
+- Otomatik Time-lapse Yolculuk Hikayesi: Seçtiğiniz anıları fon müziği eşliğinde video hikayesine dönüştürün.
 
-🚨 AKILLI ACİL DURUM VE DOKTOR KARTI
-• Acil durum belirtilerini önceden öğrenin (şiddetli baş ağrısı, ani kanama, görme bulanıklığı).
-• Doktorunuzun ve acil yakınınızın iletişim bilgilerini tek tıkla arama imkanıyla elinizin altında tutun.
+AKILLI ACİL DURUM VE DOKTOR KARTI
+- Acil durum belirtilerini önceden öğrenin (şiddetli baş ağrısı, ani kanama, görme bulanıklığı).
+- Doktorunuzun ve acil yakınınızın iletişim bilgilerini tek tıkla arama imkanıyla elinizin altında tutun.
 
-✨ GÖZ YORMAYAN CLAYMORPHISM TASARIMI
-• Yumuşak pastel tonlar, dinlendirici krem arka plan (#FDF7F4) ve 3 boyutlu dokunsal butonlarla hamilelik sürecinde ihtiyacınız olan huzurlu deneyim.
+GÖZ YORMAYAN CLAYMORPHISM TASARIMI
+- Yumuşak pastel tonlar, dinlendirici krem arka plan ve 3 boyutlu dokunsal butonlarla hamilelik sürecinde ihtiyacınız olan huzurlu deneyim.
 
-🔒 GİZLİLİK VE ÇEVRİMDIŞI ÇALIŞMA
-• Verileriniz tamamen cihazınızda saklanır. Sağlık ve anı kayıtlarınız sunuculara iletilmez, tamamen size aittir.
+GİZLİLİK VE ÇEVRİMDIŞI ÇALIŞMA
+- Verileriniz tamamen cihazınızda saklanır. Sağlık ve anı kayıtlarınız sunuculara iletilmez, tamamen size aittir.
 
 Yasal Uyarı: Aura Pregnancy bilgilendirme ve takip amaçlıdır; tıbbi teşhis veya tedavi yerine geçmez. Sağlık kararlarınız için daima doktorunuza danışınız.
 ```
