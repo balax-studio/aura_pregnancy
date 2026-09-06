@@ -396,7 +396,7 @@ class _JournalScreenState extends State<JournalScreen> {
         icon: const Icon(Icons.favorite_rounded, color: Colors.white),
         label: Text(
           'journal_write_memory'.tr(),
-          style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: 0.2),
+          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: 0.2),
         ),
       ),
     );

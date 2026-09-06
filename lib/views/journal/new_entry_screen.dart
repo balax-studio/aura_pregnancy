@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../models/diary_model.dart';
@@ -121,7 +122,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         centerTitle: true,
         title: Text(
           'journal_new_entry_title'.tr(),
-          style: const TextStyle(
+          style: GoogleFonts.outfit(
             color: AppColors.primaryDark,
             fontWeight: FontWeight.w800,
             fontSize: 18,
@@ -159,7 +160,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                                   value: w,
                                   child: Text(
                                     'weekly_week_range'.tr(args: [w.toString()]),
-                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                    style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                                   ),
                                 );
                               }).toList(),
@@ -188,7 +189,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                             const SizedBox(width: 6),
                             Text(
                               dateDisplayStr,
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.primaryDark),
+                              style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.primaryDark),
                             ),
                           ],
                         ),
@@ -205,7 +206,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('journal_mood_label'.tr(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                    Text('journal_mood_label'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primaryDark)),
                     const SizedBox(height: 12),
                     MoodSelectorWidget(
                       selectedMood: _selectedMood,
@@ -222,7 +223,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('journal_note_label'.tr(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                    Text('journal_note_label'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primaryDark)),
                     const SizedBox(height: 10),
                     Container(
                       decoration: BoxDecoration(
@@ -240,9 +241,10 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                       child: TextField(
                         controller: _noteController,
                         maxLines: 5,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                        style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.primaryDark),
                         decoration: InputDecoration(
                           hintText: 'journal_note_hint'.tr(),
+                          hintStyle: GoogleFonts.plusJakartaSans(fontSize: 14, color: AppColors.textSecondary.withValues(alpha: 0.6)),
                           border: InputBorder.none,
                         ),
                       ),
@@ -268,7 +270,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                               const SizedBox(width: 6),
                               Text(
                                 'journal_photo_attached'.tr(),
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                               ),
                             ],
                           ),
@@ -325,7 +327,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                                   children: [
                                     const Icon(Icons.zoom_in_rounded, color: Colors.white, size: 14),
                                     const SizedBox(width: 4),
-                                    Text('journal_zoom'.tr(), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
+                                    Text('journal_zoom'.tr(), style: GoogleFonts.plusJakartaSans(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
                                   ],
                                 ),
                               ),
@@ -355,7 +357,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                               const SizedBox(width: 6),
                               Text(
                                 'journal_audio_attached'.tr(),
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                               ),
                             ],
                           ),
@@ -405,7 +407,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                           const SizedBox(width: 6),
                           Text(
                             _photoPath != null ? 'journal_photo_selected'.tr() : 'journal_add_photo'.tr(),
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontWeight: FontWeight.w800,
                               fontSize: 12,
                               color: _photoPath != null ? AppColors.successGreen : AppColors.primaryDark,
@@ -431,7 +433,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                           const SizedBox(width: 6),
                           Text(
                             _audioPath != null ? 'journal_audio_recorded'.tr() : 'journal_record_audio'.tr(),
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontWeight: FontWeight.w800,
                               fontSize: 12,
                               color: _audioPath != null ? AppColors.successGreen : AppColors.primaryDark,
@@ -460,10 +462,10 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                             children: [
                               const Icon(Icons.star_rounded, size: 16, color: AppColors.primaryPink),
                               const SizedBox(width: 4),
-                              Text('journal_mark_highlight'.tr(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark)),
+                              Text('journal_mark_highlight'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark)),
                             ],
                           ),
-                          Text('journal_highlight_desc'.tr(), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                          Text('journal_highlight_desc'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
                         ],
                       ),
                     ),
@@ -504,7 +506,7 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
                     const SizedBox(width: 6),
                     Text(
                       'journal_save_entry'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                         color: AppColors.successGreen,

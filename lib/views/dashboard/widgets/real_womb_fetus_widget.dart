@@ -253,7 +253,7 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
                                   const SizedBox(height: 8),
                                   Text(
                                     stageTitle,
-                                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                                    style: GoogleFonts.plusJakartaSans(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),
@@ -317,11 +317,10 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
                         const SizedBox(width: 5),
                         Text(
                           heartRateRange,
-                          style: const TextStyle(
+                          style: GoogleFonts.jetBrainsMono(
                             color: Colors.white,
                             fontSize: 10.5,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'monospace',
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                         const SizedBox(width: 6),

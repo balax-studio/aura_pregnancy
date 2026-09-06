@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/inset_box_shadow.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
@@ -47,7 +48,7 @@ class EmergencySignCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         title,
-                        style: TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
                           color: isCritical ? AppColors.medicalAlertRed : AppColors.textPrimary,
@@ -65,7 +66,7 @@ class EmergencySignCard extends StatelessWidget {
                 ),
                 child: Text(
                   urgency,
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
@@ -77,7 +78,7 @@ class EmergencySignCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             detail,
-            style: const TextStyle(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,

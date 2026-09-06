@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/widgets/ambient_background.dart';
@@ -30,11 +31,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() => setState(() {}));
+    _controller.addListener(_onControllerUpdated);
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_onControllerUpdated);
     _momNameController.dispose();
     _babyNameController.dispose();
     _pageController.dispose();
@@ -42,11 +44,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
+  void _onControllerUpdated() {
+    if (mounted) setState(() {});
+  }
+
   void _nextPage() {
     if (_currentPage < _totalPages - 1) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOutCubic,
       );
     }
   }
@@ -54,8 +60,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _prevPage() {
     if (_currentPage > 0) {
       _pageController.previousPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOutCubic,
       );
     }
   }
@@ -70,7 +76,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         centerTitle: true,
         title: Text(
           'onboarding_title'.tr(),
-          style: const TextStyle(
+          style: GoogleFonts.outfit(
             color: AppColors.primaryDark,
             fontWeight: FontWeight.w800,
             fontSize: 20,
@@ -161,7 +167,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     const SizedBox(width: 10),
                     Text(
                       'onboarding_step1_title'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
                         color: AppColors.primaryDark,
@@ -172,7 +178,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 10),
                 Text(
                   'onboarding_step1_desc'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,
@@ -208,7 +214,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Center(
                         child: Text(
                           'onboarding_step1_lmp'.tr(),
-                          style: TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontWeight:
                                 _controller.inputMode == DateInputMode.lmp
                                     ? FontWeight.w800
@@ -238,7 +244,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Center(
                         child: Text(
                           'onboarding_step1_due_date'.tr(),
-                          style: TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontWeight:
                                 _controller.inputMode == DateInputMode.dueDate
                                     ? FontWeight.w800
@@ -268,8 +274,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   _controller.inputMode == DateInputMode.lmp
                       ? 'onboarding_step1_selected_lmp'.tr()
                       : 'onboarding_step1_selected_due_date'.tr(),
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,
                   ),
@@ -278,7 +284,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   AppDateUtils.formatDisplay(
                       AppDateUtils.toIso(_controller.selectedDate)),
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
                     color: AppColors.primaryDark,
@@ -310,7 +316,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'onboarding_step1_change_date'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           color: AppColors.primaryDark,
                           fontWeight: FontWeight.w800,
                           fontSize: 13.5,
@@ -335,7 +341,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   children: [
                     Text(
                       'onboarding_step1_calc_preg'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.plusJakartaSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textSecondary),
@@ -346,7 +352,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         _controller.currentWeek.toString(),
                         _controller.trimester.toString()
                       ]),
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
                         color: AppColors.successGreen,
@@ -367,7 +373,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               AppDateUtils.toIso(_controller.calculatedDueDate))
                           .toString()
                     ]),
-                    style: const TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
                       color: AppColors.primaryDark,
@@ -388,7 +394,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 Text(
                   'onboarding_continue'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                     color: AppColors.primaryDark,
@@ -426,7 +432,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     const SizedBox(width: 10),
                     Text(
                       'onboarding_step2_title'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
                         color: AppColors.secondaryPeach,
@@ -437,7 +443,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'onboarding_step2_desc'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textSecondary),
@@ -456,11 +462,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('onboarding_step2_height'.tr(),
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700)),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
                     Text(
                       '${_controller.heightCm.toInt()} cm',
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark),
@@ -490,11 +496,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('onboarding_step2_weight'.tr(),
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700)),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
                     Text(
                       '${_controller.prePregnancyWeightKg.toStringAsFixed(1)} kg',
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           color: AppColors.secondaryPeach),
@@ -529,7 +535,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         _controller.vki.toStringAsFixed(1),
                         guideline['category_tr']
                       ]),
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                         color: AppColors.waterBlue,
@@ -541,7 +547,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   'onboarding_step2_ideal_weight'
                       .tr(args: [guideline['range']]),
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary),
@@ -550,7 +556,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   'onboarding_step2_weekly_desc'
                       .tr(args: [guideline['weekly_desc']]),
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textSecondary),
@@ -568,7 +574,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 Text(
                   'onboarding_step2_next'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: AppColors.primaryDark),
@@ -603,7 +609,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     const SizedBox(width: 10),
                     Text(
                       'onboarding_step3_title'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
                         color: AppColors.primaryDark,
@@ -614,7 +620,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'onboarding_step3_desc'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                       fontSize: 13.5,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textSecondary),
@@ -636,25 +642,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         size: 16, color: AppColors.primaryPink),
                     const SizedBox(width: 6),
                     Text('onboarding_step3_mom_label'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w800,
                             color: AppColors.primaryDark)),
                   ],
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _momNameController,
+                  style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                   onChanged: (val) => _controller.setMomName(val),
                   decoration: InputDecoration(
                     hintText: 'onboarding_step3_mom_hint'.tr(),
                     hintStyle:
-                        TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                        GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none),
+                        borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: AppColors.primaryPink, width: 1.5)),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                   ),
@@ -676,29 +689,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         size: 16, color: AppColors.primaryPink),
                     const SizedBox(width: 6),
                     Text('onboarding_step3_baby_label'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w800,
                             color: AppColors.primaryDark)),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text('onboarding_step3_baby_desc'.tr(),
-                    style: const TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                         fontSize: 11.5, color: AppColors.textSecondary)),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _babyNameController,
+                  style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                   onChanged: (val) => _controller.setBabyName(val),
                   decoration: InputDecoration(
                     hintText: 'onboarding_step3_baby_hint'.tr(),
                     hintStyle:
-                        TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                        GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none),
+                        borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: AppColors.primaryPink, width: 1.5)),
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
                   ),
@@ -720,9 +740,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         size: 16, color: AppColors.secondaryPeach),
                     const SizedBox(width: 6),
                     Text('onboarding_step3_gender_label'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w800,
                             color: AppColors.primaryDark)),
                   ],
                 ),
@@ -764,7 +784,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 Text(
                   'onboarding_step3_next'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: AppColors.primaryDark),
@@ -808,7 +828,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const SizedBox(width: 5),
               Text(
                 label,
-                style: TextStyle(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
                   color: isSelected ? Colors.white : AppColors.textPrimary,
@@ -843,7 +863,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'onboarding_step4_title'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
                     color: AppColors.primaryDark,
@@ -853,7 +873,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Text(
                   'onboarding_step4_desc'.tr(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textSecondary),
@@ -925,7 +945,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Expanded(
                     child: Text(
                       'onboarding_disclaimer_notice'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
@@ -946,7 +966,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           if (_controller.errorMessage != null) ...[
             Text(
               _controller.errorMessage!,
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                   color: AppColors.medicalAlertRed,
                   fontWeight: FontWeight.w700),
             ),
@@ -972,7 +992,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'onboarding_step4_save'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                           color: AppColors.successGreen,
@@ -1047,12 +1067,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title,
-            style: const TextStyle(
+            style: GoogleFonts.plusJakartaSans(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textSecondary)),
         Text(value,
-            style: const TextStyle(
+            style: GoogleFonts.plusJakartaSans(
                 fontSize: 14.5,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary)),

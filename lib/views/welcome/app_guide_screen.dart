@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/widgets/ambient_background.dart';
@@ -140,7 +141,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
         centerTitle: true,
         title: Text(
           'guide_app_title'.tr(),
-          style: const TextStyle(
+          style: GoogleFonts.outfit(
             color: AppColors.primaryDark,
             fontWeight: FontWeight.w800,
             fontSize: 18,
@@ -160,7 +161,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
                 children: [
                   Text(
                     'guide_skip'.tr(),
-                    style: const TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       color: AppColors.primaryPink,
                       fontWeight: FontWeight.w800,
                       fontSize: 13,
@@ -241,7 +242,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
                                       children: [
                                         Text(
                                           step['title'] as String,
-                                          style: const TextStyle(
+                                          style: GoogleFonts.outfit(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w800,
                                             color: AppColors.primaryDark,
@@ -249,7 +250,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
                                         ),
                                         Text(
                                           step['subtitle'] as String,
-                                          style: const TextStyle(
+                                          style: GoogleFonts.plusJakartaSans(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w700,
                                             color: AppColors.secondaryPeach,
@@ -263,7 +264,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
                               const SizedBox(height: 14),
                               Text(
                                 step['description'] as String,
-                                style: const TextStyle(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 13.5,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
@@ -288,7 +289,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
                                   const SizedBox(width: 8),
                                   Text(
                                     'guide_highlights_title'.tr(),
-                                    style: const TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w800,
                                       color: AppColors.primaryDark,
@@ -307,7 +308,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
                                         Expanded(
                                           child: Text(
                                             h,
-                                            style: const TextStyle(
+                                            style: GoogleFonts.plusJakartaSans(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
                                               color: AppColors.textPrimary,
@@ -340,7 +341,7 @@ class _AppGuideScreenState extends State<AppGuideScreen> {
                   children: [
                     Text(
                       _currentStep == _guideSteps.length - 1 ? 'guide_button_start'.tr() : 'guide_button_next'.tr(),
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                         color: _currentStep == _guideSteps.length - 1 ? AppColors.successGreen : AppColors.primaryDark,

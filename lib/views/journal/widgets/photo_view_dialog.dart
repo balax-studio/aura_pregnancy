@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../services/media_service.dart';
 
@@ -48,7 +49,7 @@ class PhotoViewDialog extends StatelessWidget {
                 if (title != null) ...[
                   Text(
                     title!,
-                    style: const TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: AppColors.primaryDark,
@@ -73,7 +74,7 @@ class PhotoViewDialog extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       'photo_memory_caption'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textSecondary,

@@ -211,14 +211,19 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
               ),
               const SizedBox(height: 10),
 
-              TextButton(
+              ClayButton(
+                color: AppColors.clayCardSurface,
+                height: 44,
+                borderRadius: 14,
                 onPressed: () => Navigator.pop(context, false),
-                child: Text(
-                  'common_cancel_opt'.tr(),
-                  style: GoogleFonts.nunito(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF7A6E78),
+                child: Center(
+                  child: Text(
+                    'common_cancel_opt'.tr(),
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
               ),
@@ -242,7 +247,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                           style: GoogleFonts.nunito(
                             fontSize: 11,
                             fontWeight: FontWeight.w800,
-                            color: const Color(0xFF2D232E),
+                            color: AppColors.textPrimary,
                           ),
                         ),
                       ],
@@ -250,12 +255,12 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2D232E),
+                        color: AppColors.textPrimary,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         '$_countdown ${'ad_seconds_short'.tr()}',
-                        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900),
+                        style: GoogleFonts.nunito(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900),
                       ),
                     ),
                   ],
@@ -306,7 +311,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                           style: GoogleFonts.nunito(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
-                            color: const Color(0xFF2D232E),
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -315,7 +320,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                           style: GoogleFonts.quicksand(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFF5C4F53),
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -345,7 +350,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                 style: GoogleFonts.quicksand(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF7A6E78),
+                  color: AppColors.textSecondary,
                 ),
               ),
             ] else ...[
@@ -355,11 +360,11 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                   width: 64,
                   height: 64,
                   decoration: ClayTheme.clayDecoration(
-                    color: const Color(0xFFD4EBD6),
+                    color: AppColors.clayMint,
                     borderRadius: 22,
                   ),
                   child: const Center(
-                    child: Icon(Icons.lock_open_rounded, color: Color(0xFF2E6135), size: 34),
+                    child: Icon(Icons.lock_open_rounded, color: AppColors.successGreen, size: 34),
                   ),
                 ),
               ),
@@ -371,7 +376,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                 style: GoogleFonts.nunito(
                   fontSize: 20,
                   fontWeight: FontWeight.w900,
-                  color: const Color(0xFF2D232E),
+                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 6),
@@ -382,7 +387,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                 style: GoogleFonts.quicksand(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF5C4F53),
+                  color: AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 20),

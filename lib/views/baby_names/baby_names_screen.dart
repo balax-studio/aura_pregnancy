@@ -204,7 +204,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> with SingleTickerProv
                           ),
                           child: Text(
                             _favoriteNames.length.toString(),
-                            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900),
+                            style: GoogleFonts.outfit(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900),
                           ),
                         ),
                       ],

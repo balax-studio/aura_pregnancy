@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
@@ -143,7 +144,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
             const SizedBox(width: 8),
             Text(
               'emergency_appbar_title'.tr(),
-              style: const TextStyle(
+              style: GoogleFonts.outfit(
                 color: AppColors.medicalAlertRed,
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
@@ -200,7 +201,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                                     'emergency_edit_btn'.tr(),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.plusJakartaSans(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w800,
                                       color: AppColors.primaryDark,
@@ -230,7 +231,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                                     'emergency_call_doctor_btn'.tr(),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.plusJakartaSans(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.white,

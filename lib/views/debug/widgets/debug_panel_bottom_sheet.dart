@@ -129,14 +129,21 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
                     color: const Color(0xFFE07A5F).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text('DEBUG MODE', style: TextStyle(color: Color(0xFFE07A5F), fontWeight: FontWeight.w800, fontSize: 10)),
+                  child: Text(
+                    'DEBUG MODE',
+                    style: GoogleFonts.jetBrainsMono(
+                      color: const Color(0xFFE07A5F),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 10,
+                    ),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 4),
             Text(
               'debug_subtitle'.tr(),
-              style: const TextStyle(fontSize: 11.5, color: Color(0xFF7A6E78), fontWeight: FontWeight.w600),
+              style: GoogleFonts.plusJakartaSans(fontSize: 11.5, color: const Color(0xFF7A6E78), fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
 
@@ -236,7 +243,7 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
                             : _sliderWeek <= 27
                                 ? 'dashboard_trimester'.tr(args: ['2'])
                                 : 'dashboard_trimester'.tr(args: ['3']),
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.primaryPink),
+                        style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.primaryPink),
                       ),
                     ],
                   ),
@@ -296,11 +303,11 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
           children: [
             Icon(icon, size: 11, color: const Color(0xFF7A6E78)),
             const SizedBox(width: 3),
-            Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Color(0xFF7A6E78))),
+            Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w700, color: const Color(0xFF7A6E78))),
           ],
         ),
         const SizedBox(height: 2),
-        Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color(0xFF2D232E))),
+        Text(value, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w900, color: const Color(0xFF2D232E))),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:io' if (dart.library.html) 'io_stubs.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
@@ -346,25 +347,53 @@ class MediaService {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.background,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: AppColors.primaryDark)),
-        content: Text(message, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        title: Text(
+          title,
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 17, color: AppColors.primaryDark),
+        ),
+        content: Text(
+          message,
+          style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w600, height: 1.4),
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('common_cancel_opt'.tr(), style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryPink,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            ),
-            onPressed: () {
-              Navigator.pop(ctx);
-              openAppSettings();
-            },
-            child: Text('media_perm_open_settings'.tr(), style: const TextStyle(fontWeight: FontWeight.w800)),
+          Row(
+            children: [
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.clayCardSurface,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Center(
+                    child: Text(
+                      'common_cancel_opt'.tr(),
+                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.textSecondary),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.primaryPink,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    openAppSettings();
+                  },
+                  child: Center(
+                    child: Text(
+                      'media_perm_open_settings'.tr(),
+                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 13, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

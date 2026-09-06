@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
@@ -23,35 +24,38 @@ class TrimesterNutritionCard extends StatelessWidget {
     Color accentColor = AppColors.successGreen;
 
     if (trimester == 1) {
+      cardColor = AppColors.clayMint;
+      accentColor = AppColors.successGreen;
       title = 'nutrition_t1_title'.tr();
       extraCal = 'nutrition_t1_cal'.tr();
       foodItems = [
         'nutrition_t1_item1'.tr(),
         'nutrition_t1_item2'.tr(),
         'nutrition_t1_item3'.tr(),
+        'nutrition_t1_item4'.tr(),
       ];
-      cardColor = AppColors.clayMint;
-      accentColor = AppColors.successGreen;
     } else if (trimester == 2) {
+      cardColor = AppColors.clayPeach;
+      accentColor = AppColors.secondaryPeach;
       title = 'nutrition_t2_title'.tr();
       extraCal = 'nutrition_t2_cal'.tr();
       foodItems = [
         'nutrition_t2_item1'.tr(),
         'nutrition_t2_item2'.tr(),
         'nutrition_t2_item3'.tr(),
+        'nutrition_t2_item4'.tr(),
       ];
-      cardColor = AppColors.clayLavender;
-      accentColor = AppColors.primaryDark;
     } else {
+      cardColor = AppColors.clayRose;
+      accentColor = AppColors.primaryPink;
       title = 'nutrition_t3_title'.tr();
       extraCal = 'nutrition_t3_cal'.tr();
       foodItems = [
         'nutrition_t3_item1'.tr(),
         'nutrition_t3_item2'.tr(),
         'nutrition_t3_item3'.tr(),
+        'nutrition_t3_item4'.tr(),
       ];
-      cardColor = AppColors.clayRose;
-      accentColor = AppColors.primaryDark;
     }
 
     return ClayCard(
@@ -59,6 +63,7 @@ class TrimesterNutritionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Başlık
           Row(
             children: [
               Container(
@@ -76,7 +81,7 @@ class TrimesterNutritionCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                     color: accentColor,
@@ -101,7 +106,7 @@ class TrimesterNutritionCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   extraCal,
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                     color: AppColors.textPrimary,
@@ -123,7 +128,7 @@ class TrimesterNutritionCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         item,
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
@@ -152,7 +157,7 @@ class TrimesterNutritionCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'disclaimer_nutrition'.tr(),
-                    style: const TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 10.5,
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryDark,

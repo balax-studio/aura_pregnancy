@@ -460,16 +460,26 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
 
               // Fotoğraf Seç / Değiştir Butonu
               Center(
-                child: TextButton.icon(
+                child: ClayButton(
+                  color: AppColors.clayCardSurface,
+                  height: 38,
+                  borderRadius: 14,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   onPressed: _pickNewPhoto,
-                  icon: const Icon(Icons.add_photo_alternate_rounded, size: 16, color: AppColors.textSecondary),
-                  label: Text(
-                    'studio_change_photo'.tr(),
-                    style: GoogleFonts.quicksand(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textSecondary,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.add_photo_alternate_rounded, size: 16, color: AppColors.primaryPink),
+                      const SizedBox(width: 6),
+                      Text(
+                        'studio_change_photo'.tr(),
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.primaryDark,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

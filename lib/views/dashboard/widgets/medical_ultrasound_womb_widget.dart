@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Aura Pregnancy - Gerçekçi Canlı Tıbbi Ultrason & Fetal Sonografi Simülatörü
 class MedicalUltrasoundWombWidget extends StatefulWidget {
@@ -158,10 +159,10 @@ class _MedicalUltrasoundWombWidgetState
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Text(
+                    Text(
                       'HD LIVE 4D SONOGRAPHY',
-                      style: TextStyle(
-                        color: Color(0xFF90CAF9),
+                      style: GoogleFonts.jetBrainsMono(
+                        color: const Color(0xFF90CAF9),
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0.8,
@@ -171,11 +172,10 @@ class _MedicalUltrasoundWombWidgetState
                 ),
                 Text(
                   'GA: ${week}w+${day}d  •  FHR: $heartRateRange',
-                  style: const TextStyle(
-                    color: Color(0xFFFFD54F), // Amber Telemetri
+                  style: GoogleFonts.jetBrainsMono(
+                    color: const Color(0xFFFFD54F), // Amber Telemetri
                     fontSize: 10,
                     fontWeight: FontWeight.w800,
-                    fontFamily: 'monospace',
                   ),
                 ),
               ],
@@ -223,10 +223,9 @@ class _MedicalUltrasoundWombWidgetState
                       children: List.generate(6, (index) {
                         return Text(
                           '${index * 3}',
-                          style: TextStyle(
+                          style: GoogleFonts.jetBrainsMono(
                             color: Colors.white.withValues(alpha: 0.35),
                             fontSize: 8,
-                            fontFamily: 'monospace',
                           ),
                         );
                       }),
@@ -263,11 +262,10 @@ class _MedicalUltrasoundWombWidgetState
                                 const SizedBox(width: 5),
                                 Text(
                                   heartRateRange,
-                                  style: const TextStyle(
+                                  style: GoogleFonts.jetBrainsMono(
                                     color: Colors.white,
                                     fontSize: 10,
                                     fontWeight: FontWeight.w900,
-                                    fontFamily: 'monospace',
                                   ),
                                 ),
                               ],
@@ -292,11 +290,10 @@ class _MedicalUltrasoundWombWidgetState
                         ),
                         child: Text(
                           _getCaliperLabel(week),
-                          style: const TextStyle(
+                          style: GoogleFonts.jetBrainsMono(
                             color: Colors.black,
                             fontSize: 9,
                             fontWeight: FontWeight.w900,
-                            fontFamily: 'monospace',
                           ),
                         ),
                       ),
@@ -313,10 +310,10 @@ class _MedicalUltrasoundWombWidgetState
             color: const Color(0xFF0A0E14),
             child: Row(
               children: [
-                const Text(
+                Text(
                   'DOPPLER',
-                  style: TextStyle(
-                    color: Color(0xFF00E5FF),
+                  style: GoogleFonts.jetBrainsMono(
+                    color: const Color(0xFF00E5FF),
                     fontSize: 9,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1,
@@ -339,8 +336,8 @@ class _MedicalUltrasoundWombWidgetState
                 ),
                 Text(
                   _getStageName(week),
-                  style: const TextStyle(
-                    color: Color(0xFFB0BEC5),
+                  style: GoogleFonts.plusJakartaSans(
+                    color: const Color(0xFFB0BEC5),
                     fontSize: 9,
                     fontWeight: FontWeight.w700,
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/clay_theme.dart';
@@ -95,7 +96,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
               const SizedBox(width: 8),
               Text(
                 'audio_sheet_title'.tr(),
-                style: const TextStyle(
+                style: GoogleFonts.outfit(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
                   color: AppColors.primaryDark,
@@ -107,7 +108,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
           Text(
             'audio_sheet_subtitle'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+            style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 20),
 
@@ -115,7 +116,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: const Color(0xFFFDE8E8),
+                color: AppColors.medicalAlertBg,
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: AppColors.medicalAlertRed.withValues(alpha: 0.3)),
               ),
@@ -128,7 +129,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
                       Expanded(
                         child: Text(
                           _service.lastErrorMessage!,
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.medicalAlertRed),
+                          style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.medicalAlertRed),
                         ),
                       ),
                     ],
@@ -142,7 +143,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
                     },
                     child: Text(
                       'audio_sheet_open_settings'.tr(),
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                      style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                     ),
                   ),
                 ],
@@ -167,7 +168,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
                 ),
                 child: Text(
                   _service.formattedDuration,
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 28,
                     fontWeight: FontWeight.w900,
                     color: AppColors.primaryDark,
@@ -197,7 +198,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: waveforms.isEmpty
-                    ? [Text('audio_sheet_listening'.tr(), style: const TextStyle(fontSize: 12, color: Colors.grey))]
+                    ? [Text('audio_sheet_listening'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textMuted))]
                     : waveforms.map((amp) {
                         final h = (amp * 40).clamp(6.0, 44.0);
                         return Container(
@@ -249,7 +250,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
             Center(
               child: Text(
                 _service.isPaused ? 'audio_sheet_paused'.tr() : 'audio_sheet_recording'.tr(),
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
               ),
             ),
             const SizedBox(height: 24),
@@ -269,7 +270,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
                   },
                   child: Text(
                     'common_cancel'.tr(),
-                    style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                    style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, color: AppColors.textSecondary),
                   ),
                 ),
               ),
@@ -292,7 +293,7 @@ class _AudioRecordingSheetState extends State<AudioRecordingSheet> with SingleTi
                         const SizedBox(width: 6),
                         Text(
                           'audio_sheet_finish'.tr(),
-                          style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.successGreen, fontSize: 14),
+                          style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.successGreen, fontSize: 14),
                         ),
                       ],
                     ),

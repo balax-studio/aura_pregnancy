@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/inset_box_shadow.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
@@ -54,7 +55,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
             SnackBar(
               content: Text(
                 'walking_added_toast'.tr(),
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
               ),
               backgroundColor: AppColors.primaryPink,
               behavior: SnackBarBehavior.floating,
@@ -112,7 +113,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     children: [
                       Text(
                         'walking_title'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark,
@@ -121,7 +122,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                       Text(
                         'walking_target_desc'
                             .tr(args: [targetSteps.toString()]),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textSecondary,
@@ -150,7 +151,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                         const SizedBox(width: 2),
                         Text(
                           'walking_add_manual'.tr(),
-                          style: const TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w800,
                             color: AppColors.primaryDark,
@@ -191,7 +192,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                       children: [
                         Text(
                           '${widget.stepCount}',
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 28,
                             fontWeight: FontWeight.w900,
                             color: isTargetReached
@@ -207,7 +208,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                                   targetSteps.toString(),
                                   (progress * 100).toInt().toString()
                                 ]),
-                          style: TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: isTargetReached
@@ -243,7 +244,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                             isTargetReached
                                 ? 'walking_status_done'.tr()
                                 : 'walking_status_ongoing'.tr(),
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w800,
                               color: isTargetReached
@@ -339,7 +340,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                           const SizedBox(width: 5),
                           Text(
                             'walking_tab_steps'.tr(),
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 11,
                               fontWeight: !_isDurationMode
                                   ? FontWeight.w800
@@ -380,7 +381,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                           const SizedBox(width: 5),
                           Text(
                             'walking_tab_duration'.tr(),
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 11,
                               fontWeight: _isDurationMode
                                   ? FontWeight.w800
@@ -412,13 +413,13 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     onPressed: () => widget.onAddSteps(500, minutes: 4),
                     child: Column(
                       children: [
-                        const Text('+500',
-                            style: TextStyle(
+                        Text('+500',
+                            style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primaryDark)),
                         Text('walking_minutes_short'.tr(args: ['4']),
-                            style: const TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary)),
@@ -434,13 +435,13 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     onPressed: () => widget.onAddSteps(1000, minutes: 8),
                     child: Column(
                       children: [
-                        const Text('+1.000',
-                            style: TextStyle(
+                        Text('+1.000',
+                            style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primaryDark)),
                         Text('walking_minutes_short'.tr(args: ['8']),
-                            style: const TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary)),
@@ -456,13 +457,13 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     onPressed: () => widget.onAddSteps(2000, minutes: 16),
                     child: Column(
                       children: [
-                        const Text('+2.000',
-                            style: TextStyle(
+                        Text('+2.000',
+                            style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primaryDark)),
                         Text('walking_minutes_short'.tr(args: ['16']),
-                            style: const TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary)),
@@ -492,15 +493,15 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     color: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     onPressed: () => widget.onAddSteps(1800, minutes: 15),
-                    child: const Column(
+                    child: Column(
                       children: [
                         Text('+15 Dk',
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primaryDark)),
                         Text('~1.800 Adım',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary)),
@@ -514,15 +515,15 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     color: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     onPressed: () => widget.onAddSteps(3600, minutes: 30),
-                    child: const Column(
+                    child: Column(
                       children: [
                         Text('+30 Dk',
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primaryDark)),
                         Text('~3.600 Adım',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary)),
@@ -536,15 +537,15 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     color: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     onPressed: () => widget.onAddSteps(5400, minutes: 45),
-                    child: const Column(
+                    child: Column(
                       children: [
                         Text('+45 Dk',
-                            style: TextStyle(
+                            style: GoogleFonts.outfit(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primaryDark)),
                         Text('~5.400 Adım',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary)),
@@ -586,7 +587,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     Expanded(
                       child: Text(
                         _getTrimesterTip(),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: AppColors.waterBlue,
@@ -607,7 +608,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     Expanded(
                       child: Text(
                         'disclaimer_walking'.tr(),
-                        style: TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 10,
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w600,
@@ -636,7 +637,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
             const SizedBox(width: 3),
             Text(
               label,
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textSecondary),
@@ -646,7 +647,7 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(
+          style: GoogleFonts.outfit(
               fontSize: 13,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryDark),
@@ -783,7 +784,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                   children: [
                     Text(
                       'walking_sheet_title'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
                         color: AppColors.primaryDark,
@@ -792,7 +793,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                     const SizedBox(height: 2),
                     Text(
                       'walking_sheet_subtitle'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textSecondary,
@@ -859,7 +860,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                             const SizedBox(width: 6),
                             Text(
                               'walking_tab_duration'.tr(),
-                              style: TextStyle(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 13,
                                 fontWeight: _isDurationMode
                                     ? FontWeight.w800
@@ -909,7 +910,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                             const SizedBox(width: 6),
                             Text(
                               'walking_tab_steps'.tr(),
-                              style: TextStyle(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 13,
                                 fontWeight: !_isDurationMode
                                     ? FontWeight.w800
@@ -960,7 +961,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                           ),
                           child: Text(
                             '$mins dk',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
                               color: isSelected
@@ -996,7 +997,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                           ),
                           child: Text(
                             '$steps adım',
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
                               color: isSelected
@@ -1030,7 +1031,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
               child: TextField(
                 controller: _textController,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(
+                style: GoogleFonts.outfit(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: AppColors.primaryDark,
@@ -1040,7 +1041,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                   labelText: _isDurationMode
                       ? 'walking_field_duration'.tr()
                       : 'walking_field_steps'.tr(),
-                  labelStyle: const TextStyle(
+                  labelStyle: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,
@@ -1112,7 +1113,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
                   const SizedBox(width: 8),
                   Text(
                     'walking_confirm_add'.tr(),
-                    style: const TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
@@ -1138,7 +1139,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
             const SizedBox(width: 3),
             Text(
               title,
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textSecondary),
@@ -1148,7 +1149,7 @@ class _WalkingManualAddSheetState extends State<_WalkingManualAddSheet> {
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(
+          style: GoogleFonts.outfit(
               fontSize: 14,
               fontWeight: FontWeight.w900,
               color: AppColors.primaryDark),

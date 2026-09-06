@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/inset_box_shadow.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
@@ -46,15 +47,8 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
   late TextEditingController _contactPhoneController;
   late TextEditingController _symptomsController;
 
-  final List<String> _bloodTypes = [
-    'A Rh (+)',
-    'A Rh (-)',
-    'B Rh (+)',
-    'B Rh (-)',
-    'AB Rh (+)',
-    'AB Rh (-)',
-    '0 Rh (+)',
-    '0 Rh (-)',
+  static const List<String> _bloodTypes = [
+    'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', '0+', '0-'
   ];
 
   @override
@@ -91,7 +85,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
 
   void _save() {
     final updated = widget.card.copyWith(
-      patientName: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : widget.card.patientName,
+      patientName: _nameController.text.trim(),
       bloodType: _bloodTypeController.text.trim(),
       allergies: _allergiesController.text.trim(),
       chronicDiseases: _chronicController.text.trim(),
@@ -111,37 +105,33 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * 0.88,
       decoration: const BoxDecoration(
         color: AppColors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       padding: EdgeInsets.only(
-        top: 20,
+        top: 16,
         left: 20,
         right: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-      ),
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.88,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Tutma Barı
+          // Çekme Tutamacı (Drag Handle)
           Center(
             child: Container(
-              width: 44,
-              height: 5,
+              width: 38,
+              height: 4,
               decoration: BoxDecoration(
                 color: AppColors.textMuted.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // Başlık
+          // Başlık Satırı
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -161,7 +151,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
                   const SizedBox(width: 10),
                   Text(
                     'emergency_edit_sheet_title'.tr(),
-                    style: const TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 17,
                       fontWeight: FontWeight.w800,
                       color: AppColors.primaryDark,
@@ -195,7 +185,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
                   // Kan Grubu Seçici
                   Text(
                     'medical_card_blood'.tr(),
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                    style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
                   ),
                   const SizedBox(height: 6),
                   Wrap(
@@ -215,7 +205,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
                           ),
                           child: Text(
                             type,
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w800,
                               color: isSelected ? AppColors.primaryPink : AppColors.textPrimary,
@@ -318,7 +308,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
                 const SizedBox(width: 8),
                 Text(
                   'common_save'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
@@ -341,7 +331,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
           const SizedBox(width: 6),
           Text(
             title,
-            style: const TextStyle(
+            style: GoogleFonts.outfit(
               fontSize: 13,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryDark,
@@ -365,7 +355,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 11,
             fontWeight: FontWeight.w700,
             color: AppColors.textSecondary,
@@ -382,7 +372,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
             controller: controller,
             keyboardType: keyboardType,
             maxLines: maxLines,
-            style: const TextStyle(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w700,
               color: AppColors.textPrimary,
@@ -390,7 +380,7 @@ class _EditEmergencyCardSheetState extends State<EditEmergencyCardSheet> {
             decoration: InputDecoration(
               prefixIcon: Icon(icon, color: AppColors.textMuted, size: 18),
               hintText: hint,
-              hintStyle: const TextStyle(
+              hintStyle: GoogleFonts.plusJakartaSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textMuted,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/diary_model.dart';
@@ -77,7 +78,7 @@ class JournalEntryCard extends StatelessWidget {
                       children: [
                         Text(
                           'journal_week_entry_title'.tr(args: [entry.pregnancyWeek.toString()]),
-                          style: const TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
                             color: AppColors.primaryDark,
@@ -85,7 +86,7 @@ class JournalEntryCard extends StatelessWidget {
                         ),
                         Text(
                           AppDateUtils.formatDisplay(entry.date),
-                          style: const TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textSecondary,
@@ -112,7 +113,7 @@ class JournalEntryCard extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               'journal_highlight_badge'.tr(),
-                              style: const TextStyle(
+                              style: GoogleFonts.plusJakartaSans(
                                 color: Colors.white,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w800,
@@ -137,7 +138,7 @@ class JournalEntryCard extends StatelessWidget {
             if (entry.noteText != null && entry.noteText!.isNotEmpty)
               Text(
                 entry.noteText!,
-                style: const TextStyle(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
@@ -152,28 +153,17 @@ class JournalEntryCard extends StatelessWidget {
                 onTap: () => PhotoViewDialog.show(
                   context,
                   entry.photoPath!,
-                  title: 'journal_photo_week_title'.tr(args: [entry.pregnancyWeek.toString()]),
+                  title: 'journal_week_entry_title'.tr(args: [entry.pregnancyWeek.toString()]),
                 ),
-                child: Container(
-                  height: 170,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
                       MediaService.buildPhotoWidget(
                         entry.photoPath!,
+                        height: 180,
                         width: double.infinity,
-                        height: 170,
                         fit: BoxFit.cover,
                       ),
                       Container(
@@ -188,7 +178,10 @@ class JournalEntryCard extends StatelessWidget {
                           children: [
                             const Icon(Icons.zoom_in_rounded, color: Colors.white, size: 14),
                             const SizedBox(width: 4),
-                            Text('journal_zoom'.tr(), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700)),
+                            Text(
+                              'journal_zoom'.tr(),
+                              style: GoogleFonts.plusJakartaSans(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w700),
+                            ),
                           ],
                         ),
                       ),

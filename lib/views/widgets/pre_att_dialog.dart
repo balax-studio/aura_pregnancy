@@ -88,7 +88,7 @@ class PreAttConsentDialog extends StatelessWidget {
             const SizedBox(height: 8),
             _buildFeatureItem(
               icon: Icons.verified_user_rounded,
-              iconColor: const Color(0xFF2E6135),
+              iconColor: AppColors.successGreen,
               text: 'pre_att_feature_2'.tr(),
             ),
             const SizedBox(height: 22),
@@ -110,7 +110,7 @@ class PreAttConsentDialog extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     'pre_att_btn_continue'.tr(),
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.outfit(
                       fontSize: 15,
                       fontWeight: FontWeight.w900,
                       color: AppColors.primaryDark,
@@ -119,17 +119,22 @@ class PreAttConsentDialog extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
 
             // Şimdilik Geç Butonu
-            TextButton(
+            ClayButton(
+              color: AppColors.clayCardSurface,
+              height: 44,
+              borderRadius: 14,
               onPressed: () => Navigator.pop(context, false),
-              child: Text(
-                'pre_att_btn_skip'.tr(),
-                style: GoogleFonts.nunito(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF7A6E78),
+              child: Center(
+                child: Text(
+                  'pre_att_btn_skip'.tr(),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ),
             ),

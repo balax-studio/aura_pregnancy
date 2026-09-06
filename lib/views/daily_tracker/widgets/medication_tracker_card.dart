@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
@@ -65,6 +66,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
           nextState
               ? 'med_marked_taken'.tr(args: [med.name])
               : 'med_marked_untaken'.tr(args: [med.name]),
+          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
         ),
         backgroundColor: nextState ? AppColors.successGreen : AppColors.secondaryPeach,
         duration: const Duration(seconds: 2),
@@ -117,7 +119,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                       const SizedBox(width: 8),
                       Text(
                         'med_add_title'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark,
@@ -130,9 +132,12 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                   // İlaç Adı
                   TextField(
                     controller: nameController,
+                    style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.primaryDark),
                     decoration: InputDecoration(
                       labelText: 'med_name_label'.tr(),
+                      labelStyle: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textSecondary),
                       hintText: 'med_name_hint'.tr(),
+                      hintStyle: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textMuted),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
@@ -143,9 +148,12 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                   // Dozaj
                   TextField(
                     controller: dosageController,
+                    style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.primaryDark),
                     decoration: InputDecoration(
                       labelText: 'med_dosage_label'.tr(),
+                      labelStyle: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textSecondary),
                       hintText: 'med_dosage_hint'.tr(),
+                      hintStyle: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textMuted),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
@@ -161,16 +169,17 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                           initialValue: selectedTime,
                           decoration: InputDecoration(
                             labelText: 'med_time_label'.tr(),
+                            labelStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textSecondary),
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                           ),
                           items: [
-                            DropdownMenuItem(value: 'Sabah Aç', child: Text('med_time_morning_empty'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'Sabah Tok', child: Text('med_time_morning_full'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'Öğle', child: Text('med_time_noon'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'Akşam Tok', child: Text('med_time_evening_full'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'Gece Yatarken', child: Text('med_time_night'.tr(), style: const TextStyle(fontSize: 13))),
+                            DropdownMenuItem(value: 'Sabah Aç', child: Text('med_time_morning_empty'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'Sabah Tok', child: Text('med_time_morning_full'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'Öğle', child: Text('med_time_noon'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'Akşam Tok', child: Text('med_time_evening_full'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'Gece Yatarken', child: Text('med_time_night'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
                           ],
                           onChanged: (val) => setSheetState(() => selectedTime = val ?? selectedTime),
                         ),
@@ -181,16 +190,17 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                           initialValue: selectedCategory,
                           decoration: InputDecoration(
                             labelText: 'med_category_label'.tr(),
+                            labelStyle: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textSecondary),
                             filled: true,
                             fillColor: Colors.white,
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                           ),
                           items: [
-                            DropdownMenuItem(value: 'Vitamin', child: Text('med_cat_vitamin'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'Mineral', child: Text('med_cat_mineral'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'Demir', child: Text('med_cat_iron'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'İlaç', child: Text('med_cat_medication'.tr(), style: const TextStyle(fontSize: 13))),
-                            DropdownMenuItem(value: 'Takviye', child: Text('med_cat_supplement'.tr(), style: const TextStyle(fontSize: 13))),
+                            DropdownMenuItem(value: 'Vitamin', child: Text('med_cat_vitamin'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'Mineral', child: Text('med_cat_mineral'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'Demir', child: Text('med_cat_iron'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'İlaç', child: Text('med_cat_medication'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
+                            DropdownMenuItem(value: 'Takviye', child: Text('med_cat_supplement'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textPrimary))),
                           ],
                           onChanged: (val) => setSheetState(() => selectedCategory = val ?? selectedCategory),
                         ),
@@ -222,7 +232,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                         const SizedBox(width: 6),
                         Text(
                           'med_save_button'.tr(),
-                          style: const TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
                             color: AppColors.successGreen,
@@ -275,7 +285,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                     children: [
                       Text(
                         'med_tracker_title'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark,
@@ -283,7 +293,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                       ),
                       Text(
                         'med_taken_summary'.tr(args: [takenCount.toString(), totalCount.toString()]),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textSecondary,
@@ -304,7 +314,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                     const SizedBox(width: 2),
                     Text(
                       'med_add_button'.tr(),
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                      style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                     ),
                   ],
                 ),
@@ -323,7 +333,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                 child: Text(
                   'med_empty_state'.tr(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+                  style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                 ),
               ),
             )
@@ -371,7 +381,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                           children: [
                             Text(
                               med.name,
-                              style: TextStyle(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: isTaken ? AppColors.successGreen : AppColors.primaryDark,
@@ -381,7 +391,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                             const SizedBox(height: 2),
                             Text(
                               '${med.dosage} • ${med.time}',
-                              style: const TextStyle(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary,
@@ -419,7 +429,7 @@ class _MedicationTrackerCardState extends State<MedicationTrackerCard> {
                 Expanded(
                   child: Text(
                     'disclaimer_medication'.tr(),
-                    style: const TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textSecondary,

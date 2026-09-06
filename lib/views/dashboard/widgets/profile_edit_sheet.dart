@@ -87,19 +87,20 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         backgroundColor: AppColors.background,
+        elevation: 0,
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: AppColors.medicalAlertRed.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.delete_forever_rounded, color: AppColors.medicalAlertRed, size: 20),
+              child: const Icon(Icons.delete_forever_rounded, color: AppColors.medicalAlertRed, size: 22),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 'profile_edit_reset_confirm_title'.tr(),
@@ -122,10 +123,10 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: isFree ? const Color(0xFFE8F5E9) : const Color(0xFFFFF3E0),
+                color: isFree ? AppColors.clayMint : AppColors.clayPeach,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: isFree ? const Color(0xFF81C784) : const Color(0xFFFFB74D),
+                  color: isFree ? AppColors.successGreen.withValues(alpha: 0.4) : AppColors.secondaryPeach.withValues(alpha: 0.4),
                   width: 1,
                 ),
               ),
@@ -135,7 +136,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   Icon(
                     isFree ? Icons.check_circle_rounded : Icons.smart_display_rounded,
                     size: 14,
-                    color: isFree ? const Color(0xFF2E7D32) : const Color(0xFFE65100),
+                    color: isFree ? AppColors.successGreen : AppColors.secondaryPeach,
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -145,7 +146,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                     style: GoogleFonts.nunito(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
-                      color: isFree ? const Color(0xFF2E7D32) : const Color(0xFFE65100),
+                      color: isFree ? AppColors.successGreen : AppColors.secondaryPeach,
                     ),
                   ),
                 ],
@@ -153,26 +154,50 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             ),
           ],
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(
-              'profile_edit_reset_cancel_btn'.tr(),
-              style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w700),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.medicalAlertRed,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(
-              isFree
-                  ? 'profile_edit_reset_confirm_btn_free'.tr()
-                  : 'profile_edit_reset_confirm_btn_ad'.tr(),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.clayCardSurface,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => Navigator.pop(ctx, false),
+                  child: Center(
+                    child: Text(
+                      'profile_edit_reset_cancel_btn'.tr(),
+                      style: GoogleFonts.plusJakartaSans(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.medicalAlertRed,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => Navigator.pop(ctx, true),
+                  child: Center(
+                    child: Text(
+                      isFree
+                          ? 'profile_edit_reset_confirm_btn_free'.tr()
+                          : 'profile_edit_reset_confirm_btn_ad'.tr(),
+                      style: GoogleFonts.plusJakartaSans(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -277,7 +302,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             const SizedBox(height: 4),
             Text(
               'profile_edit_desc'.tr(),
-              style: const TextStyle(fontSize: 12, color: Color(0xFF7A6E78), fontWeight: FontWeight.w600),
+              style: GoogleFonts.plusJakartaSans(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
 
@@ -292,18 +317,24 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                     children: [
                       const Icon(Icons.face_rounded, size: 15, color: AppColors.primaryPink),
                       const SizedBox(width: 6),
-                      Text('profile_edit_mom_label'.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.primaryDark)),
+                      Text(
+                        'profile_edit_mom_label'.tr(),
+                        style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _momNameController,
+                    style: GoogleFonts.plusJakartaSans(fontSize: 13.5, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: 'onboarding_step3_mom_hint'.tr(),
-                      hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                      hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.primaryPink, width: 1.5)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     ),
                   ),
@@ -323,20 +354,29 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                     children: [
                       const Icon(Icons.child_friendly_rounded, size: 15, color: AppColors.primaryPink),
                       const SizedBox(width: 6),
-                      Text('profile_edit_baby_label'.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.primaryDark)),
+                      Text(
+                        'profile_edit_baby_label'.tr(),
+                        style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text('profile_edit_baby_desc'.tr(), style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                  const SizedBox(height: 6),
+                  Text(
+                    'profile_edit_baby_desc'.tr(),
+                    style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _babyNameController,
+                    style: GoogleFonts.plusJakartaSans(fontSize: 13.5, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: 'onboarding_step3_baby_hint'.tr(),
-                      hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                      hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
                       filled: true,
                       fillColor: Colors.white,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: AppColors.clayOuterDrop.withValues(alpha: 0.15), width: 1)),
+                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.primaryPink, width: 1.5)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     ),
                   ),
@@ -356,7 +396,10 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                     children: [
                       const Icon(Icons.stars_rounded, size: 15, color: AppColors.secondaryPeach),
                       const SizedBox(width: 6),
-                      Text('profile_edit_gender_label'.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.primaryDark)),
+                      Text(
+                        'profile_edit_gender_label'.tr(),
+                        style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -387,7 +430,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                       const SizedBox(width: 6),
                       Text(
                         'profile_edit_legal_title'.tr(),
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                        style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                       ),
                     ],
                   ),
@@ -454,7 +497,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   ),
                   const SizedBox(height: 8),
                   ClayButton(
-                    color: const Color(0xFFFFEBEE),
+                    color: AppColors.medicalAlertBg,
                     height: 48,
                     borderRadius: 14,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -480,9 +523,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _resetCount == 0
-                                ? const Color(0xFFE8F5E9)
-                                : const Color(0xFFFFF3E0),
+                            color: _resetCount == 0 ? AppColors.clayMint : AppColors.clayPeach,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -491,19 +532,17 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                               Icon(
                                 _resetCount == 0 ? Icons.check_circle_outline_rounded : Icons.smart_display_rounded,
                                 size: 11,
-                                color: _resetCount == 0 ? const Color(0xFF2E7D32) : const Color(0xFFE65100),
+                                color: _resetCount == 0 ? AppColors.successGreen : AppColors.secondaryPeach,
                               ),
                               const SizedBox(width: 3),
                               Text(
                                 _resetCount == 0
                                     ? 'profile_edit_reset_badge_free'.tr()
                                     : 'profile_edit_reset_badge_ad'.tr(),
-                                style: TextStyle(
+                                style: GoogleFonts.nunito(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w800,
-                                  color: _resetCount == 0
-                                      ? const Color(0xFF2E7D32)
-                                      : const Color(0xFFE65100),
+                                  color: _resetCount == 0 ? AppColors.successGreen : AppColors.secondaryPeach,
                                 ),
                               ),
                             ],
@@ -525,7 +564,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   ? const CircularProgressIndicator(color: AppColors.successGreen)
                   : Text(
                       'profile_edit_save'.tr(),
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.successGreen),
+                      style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.successGreen),
                     ),
             ),
           ],
@@ -561,7 +600,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
               const SizedBox(width: 4),
               Text(
                 label,
-                style: TextStyle(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w800,
                   color: isSelected ? Colors.white : AppColors.textPrimary,

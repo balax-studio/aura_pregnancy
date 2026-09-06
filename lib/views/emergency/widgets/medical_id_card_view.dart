@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/emergency_card_model.dart';
@@ -36,7 +37,7 @@ class MedicalIdCardView extends StatelessWidget {
                     children: [
                       Text(
                         'medical_card_title'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark,
@@ -44,7 +45,7 @@ class MedicalIdCardView extends StatelessWidget {
                       ),
                       Text(
                         'medical_card_sub'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textSecondary,
@@ -85,7 +86,7 @@ class MedicalIdCardView extends StatelessWidget {
           // Semptom Özeti
           Text(
             'medical_card_symptoms'.tr(),
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+            style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 4),
           Container(
@@ -96,7 +97,7 @@ class MedicalIdCardView extends StatelessWidget {
             ),
             child: Text(
               card.recentSymptoms,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+              style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
             ),
           ),
         ],
@@ -115,7 +116,7 @@ class MedicalIdCardView extends StatelessWidget {
             flex: 2,
             child: Text(
               label,
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textSecondary,
@@ -127,7 +128,7 @@ class MedicalIdCardView extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 color: isAlert

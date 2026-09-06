@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 
 /// Aura Pregnancy - Anne Karnında Hafif Hareketli Bebek Animasyonu Widget'ı
@@ -167,14 +168,14 @@ class _AnimatedWombBabyWidgetState extends State<AnimatedWombBabyWidget>
                             ),
                           ],
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.favorite_rounded, color: AppColors.primaryPink, size: 12),
-                            SizedBox(width: 4),
+                            const Icon(Icons.favorite_rounded, color: AppColors.primaryPink, size: 12),
+                            const SizedBox(width: 4),
                             Text(
                               'Kalp Atışı Aktif',
-                              style: TextStyle(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 9,
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.primaryDark,
@@ -210,7 +211,7 @@ class _AnimatedWombBabyWidgetState extends State<AnimatedWombBabyWidget>
                       const SizedBox(width: 4),
                       Text(
                         _getBabyActionText(week),
-                        style: const TextStyle(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/diary_model.dart';
@@ -91,16 +92,16 @@ class _VideoRendererDialogState extends State<VideoRendererDialog> {
             const SizedBox(height: 12),
             Text(
               'video_dialog_title'.tr(),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
+              style: GoogleFonts.outfit(
+                fontSize: 19,
+                fontWeight: FontWeight.w900,
                 color: AppColors.primaryDark,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'video_dialog_subtitle'.tr(),
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textSecondary,
@@ -137,7 +138,7 @@ class _VideoRendererDialogState extends State<VideoRendererDialog> {
               const SizedBox(height: 8),
               Text(
                 'video_processing'.tr(args: [(_progress * 100).toInt().toString()]),
-                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: AppColors.primaryDark),
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.primaryDark),
               ),
               const SizedBox(height: 16),
             ] else if (_isFinished) ...[
@@ -154,7 +155,7 @@ class _VideoRendererDialogState extends State<VideoRendererDialog> {
                     const SizedBox(width: 6),
                     Text(
                       'video_success'.tr(),
-                      style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.successGreen, fontSize: 13),
+                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: AppColors.successGreen, fontSize: 13),
                     ),
                   ],
                 ),
@@ -167,27 +168,45 @@ class _VideoRendererDialogState extends State<VideoRendererDialog> {
                 Expanded(
                   child: ClayButton(
                     color: AppColors.clayCardSurface,
+                    height: 44,
+                    borderRadius: 14,
                     onPressed: () => Navigator.pop(context),
-                    child: Text('common_close'.tr(), style: const TextStyle(fontWeight: FontWeight.w700)),
+                    child: Center(
+                      child: Text(
+                        'common_close'.tr(),
+                        style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: ClayButton(
                     color: _isFinished ? AppColors.clayMint : AppColors.clayPeach,
+                    height: 44,
+                    borderRadius: 14,
                     onPressed: _isRendering ? null : (_isFinished ? _watchVideoNow : _requestRenderWithReward),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         if (_isFinished) ...[
-                          const Icon(Icons.play_circle_filled_rounded, color: Color(0xFF2E6135), size: 18),
+                          const Icon(Icons.play_circle_filled_rounded, color: AppColors.successGreen, size: 18),
                           const SizedBox(width: 6),
                         ],
-                        Text(
-                          _isFinished ? 'video_ready'.tr() : 'video_start_render'.tr(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            color: _isFinished ? const Color(0xFF2E6135) : AppColors.primaryDark,
+                        Flexible(
+                          child: Text(
+                            _isFinished ? 'video_ready'.tr() : 'video_start_render'.tr(),
+                            style: GoogleFonts.plusJakartaSans(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13,
+                              color: _isFinished ? AppColors.successGreen : AppColors.primaryDark,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -208,8 +227,14 @@ class _VideoRendererDialogState extends State<VideoRendererDialog> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
-          Text(val, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+          Text(
+            label,
+            style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+          ),
+          Text(
+            val,
+            style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+          ),
         ],
       ),
     );

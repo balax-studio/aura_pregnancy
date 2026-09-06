@@ -186,27 +186,51 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
             ),
           ],
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
-          TextButton.icon(
-            icon: const Icon(Icons.share_rounded, size: 18, color: AppColors.primaryPink),
-            label: Text(
-              'Videoyu Paylaş',
-              style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryPink),
-            ),
-            onPressed: () async {
-              await FFmpegVideoService.shareLastVideo();
-            },
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryPink,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              'common_close'.tr(),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.clayRose,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () async {
+                    await FFmpegVideoService.shareLastVideo();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.share_rounded, size: 17, color: AppColors.primaryPink),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          'Videoyu Paylaş',
+                          style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 12.5, color: AppColors.primaryDark),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.clayMint,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Center(
+                    child: Text(
+                      'common_close'.tr(),
+                      style: GoogleFonts.outfit(color: AppColors.successGreen, fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -232,18 +256,38 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
     if (_frames.isEmpty) {
       return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        backgroundColor: AppColors.background,
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.movie_creation_rounded, size: 40, color: AppColors.primaryPink),
-              const SizedBox(height: 12),
-              Text('timelapse_no_records'.tr(), style: const TextStyle(fontWeight: FontWeight.w800)),
-              const SizedBox(height: 16),
-              ElevatedButton(
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: const BoxDecoration(
+                  color: AppColors.clayRose,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.movie_creation_rounded, size: 36, color: AppColors.primaryPink),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'timelapse_no_records'.tr(),
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 15, color: AppColors.textPrimary),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 18),
+              ClayButton(
+                color: AppColors.clayRose,
+                height: 44,
+                borderRadius: 14,
                 onPressed: () => Navigator.pop(context),
-                child: Text('common_close'.tr()),
+                child: Center(
+                  child: Text(
+                    'common_close'.tr(),
+                    style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                  ),
+                ),
               ),
             ],
           ),
@@ -502,16 +546,26 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
 
                       // TEKRAR İZLE BUTONU
                       Center(
-                        child: TextButton.icon(
+                        child: ClayButton(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          height: 36,
+                          borderRadius: 12,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           onPressed: _replayVideo,
-                          icon: const Icon(Icons.replay_rounded, color: Colors.white70, size: 16),
-                          label: Text(
-                            'video_replay_btn'.tr(),
-                            style: GoogleFonts.nunito(
-                              color: Colors.white70,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.replay_rounded, color: Colors.white, size: 16),
+                              const SizedBox(width: 6),
+                              Text(
+                                'video_replay_btn'.tr(),
+                                style: GoogleFonts.nunito(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

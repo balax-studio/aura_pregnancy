@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../services/audio_service.dart';
@@ -103,7 +104,7 @@ class _ClayAudioPlayerState extends State<ClayAudioPlayer> {
                         Expanded(
                           child: Text(
                             widget.title,
-                            style: const TextStyle(
+                            style: GoogleFonts.outfit(
                               fontSize: 13,
                               fontWeight: FontWeight.w800,
                               color: AppColors.primaryDark,
@@ -114,7 +115,7 @@ class _ClayAudioPlayerState extends State<ClayAudioPlayer> {
                         ),
                         Text(
                           '${_player.formatTime(pos)} / ${_player.formatTime(total)}',
-                          style: const TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                             color: AppColors.textSecondary,

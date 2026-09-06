@@ -257,11 +257,11 @@ class _BabyNameCardState extends State<BabyNameCard> {
                       children: [
                         TextSpan(
                           text: '${'names_character_label'.tr()}: ',
-                          style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                         ),
                         TextSpan(
                           text: widget.babyName.characteristics,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
