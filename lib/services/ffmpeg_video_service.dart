@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'dart:io' if (dart.library.html) 'io_stubs.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/diary_model.dart';
@@ -119,21 +120,46 @@ class FFmpegVideoService {
           dirPath = dir.path;
         }
 
-        final actualFileName = fileName.endsWith('.mp4') ? fileName : '$fileName.mp4';
+        // ponytail: Native FFmpeg video encoding requires native binary/ffmpeg_kit.
+        // Instead of writing a corrupted 32-byte dummy MP4, export the primary milestone/ultrasound journey image cleanly.
+        final cleanBaseName = fileName.replaceAll(RegExp(r'\.(mp4|jpg|png)$'), '');
+        final actualFileName = '$cleanBaseName.jpg';
         final savePath = '$dirPath/$actualFileName';
         
         final file = File(savePath);
-        final dummyBytes = Uint8List.fromList([
-          0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70, // ftyp
-          0x69, 0x73, 0x6F, 0x6D, 0x00, 0x00, 0x02, 0x00,
-          0x69, 0x73, 0x6F, 0x6D, 0x69, 0x73, 0x6F, 0x32,
-          0x61, 0x76, 0x63, 0x31, 0x6D, 0x70, 0x34, 0x31,
-        ]);
-        await file.writeAsBytes(dummyBytes);
+        Uint8List? imageBytes;
+        for (final frame in frames) {
+          if (frame.photoPath.isNotEmpty) {
+            try {
+              if (frame.photoPath.startsWith('assets/')) {
+                final byteData = await rootBundle.load(frame.photoPath);
+                imageBytes = byteData.buffer.asUint8List();
+                break;
+              } else {
+                final srcFile = File(frame.photoPath);
+                if (await srcFile.exists()) {
+                  imageBytes = await srcFile.readAsBytes();
+                  break;
+                }
+              }
+            } catch (_) {}
+          }
+        }
+
+        if (imageBytes == null) {
+          try {
+            final byteData = await rootBundle.load('assets/images/aura_logo.png');
+            imageBytes = byteData.buffer.asUint8List();
+          } catch (_) {}
+        }
+
+        if (imageBytes != null && imageBytes.isNotEmpty) {
+          await file.writeAsBytes(imageBytes);
+        }
         return savePath;
       } catch (e) {
         debugPrint('File save error: $e');
-        return 'İndirilenler / $fileName.mp4';
+        return 'İndirilenler / $fileName.jpg';
       }
     }
   }

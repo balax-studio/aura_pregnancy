@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
+import '../../core/services/ad_service.dart';
 
 /// Aura Pregnancy - Claymorphic Yerel Gelişmiş Reklam Kartı (Native Ad Card)
-/// Sıfır Dark-Pattern: Şeffaf sponsor rozeti, göz yormayan pastel kil yüzey ve zarif eylem butonu
-class ClayNativeAdCard extends StatelessWidget {
+/// Hem Android hem iOS için gerçek Google Mobile Ads NativeAd desteği sunar;
+/// Reklam yüklenemediğinde veya test/çevrimdışı ortamda şık Claymorphic tasarımı yedek gösterir.
+class ClayNativeAdCard extends StatefulWidget {
   final String? title;
   final String? description;
   final String? buttonText;
@@ -25,11 +28,69 @@ class ClayNativeAdCard extends StatelessWidget {
   });
 
   @override
+  State<ClayNativeAdCard> createState() => _ClayNativeAdCardState();
+}
+
+class _ClayNativeAdCardState extends State<ClayNativeAdCard> {
+  NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAd();
+  }
+
+  void _loadAd() {
+    if (AdService.instance.isMobile) {
+      _nativeAd = AdService.instance.createNativeAd(
+        onAdLoaded: (ad) {
+          if (mounted) {
+            setState(() {
+              _isAdLoaded = true;
+            });
+          }
+        },
+        onAdFailedToLoad: (error) {
+          if (mounted) {
+            setState(() {
+              _isAdLoaded = false;
+            });
+          }
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _nativeAd?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final effectiveTitle = title ?? 'ad_native_title_1'.tr();
-    final effectiveDesc = description ?? 'ad_native_desc_1'.tr();
-    final effectiveBtn = buttonText ?? 'ad_native_btn_1'.tr();
-    final surfaceColor = cardColor ?? AppColors.clayCardSurface;
+    if (_isAdLoaded && _nativeAd != null) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        height: 110,
+        decoration: ClayTheme.clayDecoration(
+          color: widget.cardColor ?? AppColors.clayCardSurface,
+          borderRadius: 26,
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: AdWidget(ad: _nativeAd!),
+      );
+    }
+
+    return _buildFallbackCard(context);
+  }
+
+  Widget _buildFallbackCard(BuildContext context) {
+    final effectiveTitle = widget.title ?? 'ad_native_title_1'.tr();
+    final effectiveDesc = widget.description ?? 'ad_native_desc_1'.tr();
+    final effectiveBtn = widget.buttonText ?? 'ad_native_btn_1'.tr();
+    final surfaceColor = widget.cardColor ?? AppColors.clayCardSurface;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -47,22 +108,26 @@ class ClayNativeAdCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: ClayTheme.clayButtonDecoration(
-                  color: AppColors.clayMint,
-                  borderRadius: 12,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.85),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: AppColors.secondaryPeach.withValues(alpha: 0.25),
+                    width: 1,
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.stars_rounded, color: Color(0xFF2E6135), size: 14),
+                    const Icon(Icons.campaign_outlined, color: AppColors.secondaryPeach, size: 14),
                     const SizedBox(width: 4),
                     Text(
                       'ad_native_sponsor_badge'.tr(),
                       style: GoogleFonts.nunito(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
-                        color: const Color(0xFF2E6135),
-                        letterSpacing: 0.2,
+                        color: AppColors.secondaryPeach,
+                        letterSpacing: 0.3,
                       ),
                     ),
                   ],
@@ -99,7 +164,7 @@ class ClayNativeAdCard extends StatelessWidget {
                   borderRadius: 16,
                 ),
                 child: Center(
-                  child: Icon(icon, color: AppColors.secondaryPeach, size: 24),
+                  child: Icon(widget.icon, color: AppColors.secondaryPeach, size: 24),
                 ),
               ),
               const SizedBox(width: 12),
@@ -141,7 +206,7 @@ class ClayNativeAdCard extends StatelessWidget {
               height: 42,
               borderRadius: 14,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              onPressed: onTap ??
+              onPressed: widget.onTap ??
                   () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

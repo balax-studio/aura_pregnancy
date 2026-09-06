@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'dart:io' if (dart.library.html) 'io_stubs.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:record/record.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -50,9 +51,9 @@ class AudioRecordingService extends ChangeNotifier {
     }
 
     if (status.isPermanentlyDenied) {
-      _lastErrorMessage = 'Ses kaydı yapabilmek için lütfen ayarlardan mikrofon iznini etkinleştirin.';
+      _lastErrorMessage = 'audio_mic_perm_denied_permanent'.tr();
     } else {
-      _lastErrorMessage = 'Mikrofon izni reddedildi. Sesli mektup kaydı yapılamıyor.';
+      _lastErrorMessage = 'audio_mic_perm_denied'.tr();
     }
     notifyListeners();
     return false;

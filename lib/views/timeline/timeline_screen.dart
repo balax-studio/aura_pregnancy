@@ -12,6 +12,7 @@ import '../journal/new_entry_screen.dart';
 import '../weekly_panel/widgets/ad_reward_dialog.dart';
 import '../widgets/clay_native_ad_card.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
+import 'widgets/clinical_summary_dialog.dart';
 
 enum TimelineFilter { all, diaries, steps, waterCaffeine, weight }
 
@@ -400,22 +401,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
       unlockTargetName: 'timeline_pdf_report_title'.tr(),
       onRewardEarned: () {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text('timeline_pdf_success_desc'.tr()),
-                ),
-              ],
-            ),
-            backgroundColor: AppColors.successGreen,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-        );
+        ClinicalSummaryDialog.show(context);
       },
     );
   }

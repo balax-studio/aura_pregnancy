@@ -5,6 +5,8 @@ import '../../core/theme/clay_theme.dart';
 import '../../controllers/journal_controller.dart';
 import 'widgets/journal_entry_card.dart';
 import 'widgets/video_renderer_dialog.dart';
+import 'widgets/watercolor_portrait_dialog.dart';
+import 'widgets/keepsake_card_dialog.dart';
 import 'new_entry_screen.dart';
 
 import '../../services/database_helper.dart';
@@ -139,6 +141,135 @@ class _JournalScreenState extends State<JournalScreen> {
                           child: Text(
                             'journal_generate_btn'.tr(),
                             style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.primaryDark),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // Mucize Hatıra & Portre Stüdyosu Başlığı
+                  Row(
+                    children: [
+                      const Icon(Icons.auto_awesome_rounded, color: AppColors.primaryPink, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'studio_section_title'.tr(),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.primaryDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Stüdyo Seçenekleri: Masalsı Suluboya & Özel Hatıra Kartı
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // 1. Masalsı Suluboya Portresi
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => WatercolorPortraitDialog.show(context),
+                            child: ClayCard(
+                              color: const Color(0xFFFEE6E0),
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: ClayTheme.clayDecoration(
+                                          color: Colors.white,
+                                          borderRadius: 12,
+                                        ),
+                                        child: const Icon(Icons.palette_rounded, color: AppColors.primaryPink, size: 20),
+                                      ),
+                                      const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.primaryPink),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'portrait_watercolor_title'.tr(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.primaryDark,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'portrait_watercolor_badge'.tr(),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.primaryPink,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+
+                        // 2. Özel Hatıra Kartı
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => KeepsakeCardDialog.show(context),
+                            child: ClayCard(
+                              color: const Color(0xFFF3E8FF),
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: ClayTheme.clayDecoration(
+                                          color: Colors.white,
+                                          borderRadius: 12,
+                                        ),
+                                        child: const Icon(Icons.card_giftcard_rounded, color: Color(0xFF8E24AA), size: 20),
+                                      ),
+                                      const Icon(Icons.lock_outline_rounded, size: 14, color: Color(0xFF8E24AA)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'keepsake_card_title'.tr(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.primaryDark,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'keepsake_card_badge'.tr(),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF8E24AA),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ],

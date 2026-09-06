@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'dart:io' if (dart.library.html) 'io_stubs.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
@@ -50,13 +51,13 @@ class MediaService {
               ),
               const SizedBox(height: 16),
 
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.camera_alt_rounded, color: AppColors.primaryPink, size: 24),
-                  SizedBox(width: 8),
+                  const Icon(Icons.camera_alt_rounded, color: AppColors.primaryPink, size: 24),
+                  const SizedBox(width: 8),
                   Text(
-                    'Fotoğraf Ekle',
-                    style: TextStyle(
+                    'media_picker_title'.tr(),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                       color: AppColors.primaryDark,
@@ -65,9 +66,9 @@ class MediaService {
                 ],
               ),
               const SizedBox(height: 6),
-              const Text(
-                'Galerinizden bebeğinizin ultrasonunu seçin veya yeni bir fotoğraf çekin',
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+              Text(
+                'media_picker_subtitle'.tr(),
+                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 18),
 
@@ -76,8 +77,8 @@ class MediaService {
                 icon: Icons.photo_library_rounded,
                 iconColor: AppColors.primaryPink,
                 backgroundColor: AppColors.clayRose,
-                title: 'Galeriden Seç',
-                subtitle: 'Cihazınızdaki fotoğraflardan ultrason veya hatıra seçin',
+                title: 'media_picker_gallery_title'.tr(),
+                subtitle: 'media_picker_gallery_desc'.tr(),
                 onTap: () async {
                   final path = await pickImageFromGallery(context);
                   if (ctx.mounted) {
@@ -92,8 +93,8 @@ class MediaService {
                 icon: Icons.camera_alt_rounded,
                 iconColor: AppColors.secondaryPeach,
                 backgroundColor: AppColors.clayPeach,
-                title: 'Fotoğraf Çek (Kamera)',
-                subtitle: 'Hemen şimdi yeni bir ultrason veya göbek fotoğrafı çekin',
+                title: 'media_picker_camera_title'.tr(),
+                subtitle: 'media_picker_camera_desc'.tr(),
                 onTap: () async {
                   final path = await captureImageFromCamera(context);
                   if (ctx.mounted) {
@@ -214,13 +215,13 @@ class MediaService {
         final cameraStatus = await Permission.camera.request();
         if (cameraStatus.isPermanentlyDenied) {
           if (context.mounted) {
-            _showPermissionDialog(context, 'Kamera İzni Gerekli', 'Anı fotoğrafı çekebilmek için lütfen ayarlardan kamera iznini etkinleştirin.');
+            _showPermissionDialog(context, 'media_perm_camera_title'.tr(), 'media_perm_camera_desc'.tr());
           }
           return null;
         }
         if (!cameraStatus.isGranted && !cameraStatus.isLimited) {
           if (context.mounted) {
-            _showErrorSnackBar(context, 'Fotoğraf çekebilmek için kamera izni vermeniz gerekmektedir.');
+            _showErrorSnackBar(context, 'media_error_camera_req'.tr());
           }
           return null;
         }
@@ -263,13 +264,13 @@ class MediaService {
 
     if (status.isPermanentlyDenied) {
       if (context.mounted) {
-        _showPermissionDialog(context, 'Galeri İzni Gerekli', 'Galerinizden ultrason ve hatıra fotoğrafı seçebilmek için lütfen ayarlardan fotoğraf erişimine izin verin.');
+        _showPermissionDialog(context, 'media_perm_gallery_title'.tr(), 'media_perm_gallery_desc'.tr());
       }
       return false;
     }
 
     if (context.mounted) {
-      _showErrorSnackBar(context, 'Fotoğraf seçebilmek için galeri erişimine onay vermelisiniz.');
+      _showErrorSnackBar(context, 'media_error_gallery_req'.tr());
     }
     return false;
   }
@@ -310,7 +311,7 @@ class MediaService {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Vazgeç', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+            child: Text('common_cancel_opt'.tr(), style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -322,7 +323,7 @@ class MediaService {
               Navigator.pop(ctx);
               openAppSettings();
             },
-            child: const Text('Ayarları Aç', style: TextStyle(fontWeight: FontWeight.w800)),
+            child: Text('media_perm_open_settings'.tr(), style: const TextStyle(fontWeight: FontWeight.w800)),
           ),
         ],
       ),

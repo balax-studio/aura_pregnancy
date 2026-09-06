@@ -2,12 +2,10 @@
 import 'dart:io';
 
 void main() {
-  const sourcePath =
-      r'C:\Users\ismai\.gemini\antigravity-ide\brain\2c84689d-a3c1-4949-a385-f364c05c0775\aura_logo_clay_1788038754876.jpg';
-  final sourceFile = File(sourcePath);
+  final sourceFile = File('assets/images/logo.png');
 
   if (!sourceFile.existsSync()) {
-    print('Source logo file not found: $sourcePath');
+    print('Source logo file not found: assets/images/logo.png');
     return;
   }
 

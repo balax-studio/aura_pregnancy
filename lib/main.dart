@@ -10,12 +10,11 @@ import 'core/theme/clay_theme.dart';
 import 'core/constants/app_colors.dart';
 import 'services/database_helper.dart';
 import 'services/att_tracking_service.dart';
+import 'core/services/ad_service.dart';
 import 'models/profile_model.dart';
 import 'views/welcome/language_selection_screen.dart';
 import 'views/onboarding/onboarding_screen.dart';
 import 'views/main_navigation_scaffold.dart';
-
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +30,9 @@ void main() async {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
+
+  // Google Mobile Ads servisi başlatma
+  await AdService.instance.initialize();
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('tr')],
@@ -89,9 +91,11 @@ class _RootGateScreenState extends State<RootGateScreen> {
         _hasSeenGuide = hasSeenGuide;
         _isLoading = false;
       });
-      // iOS ATT (App Tracking Transparency) izin kontrolü
+      // iOS ATT (App Tracking Transparency) izin kontrolü (Kullanıcı dostu Pre-ATT diyaloğu ile)
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        AttTrackingService.instance.requestConsentIfNeeded();
+        if (mounted) {
+          AttTrackingService.instance.requestConsentWithPreDialogIfNeeded(context);
+        }
       });
     } catch (e) {
       debugPrint('RootGateScreen error: $e');

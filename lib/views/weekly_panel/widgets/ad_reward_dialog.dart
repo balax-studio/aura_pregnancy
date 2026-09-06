@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
+import '../../../core/services/ad_service.dart';
 
 /// Aura Pregnancy - Ödüllü Reklam İzleme ve İçerik Kilit Açma Modalı
 class AdRewardDialog extends StatefulWidget {
@@ -59,13 +60,32 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
     )..repeat(reverse: true);
   }
 
-  void _startAdPlayback() {
+  Future<void> _startAdPlayback() async {
+    if (AdService.instance.isRewardedAdReady) {
+      final earned = await AdService.instance.showRealRewardedAd(
+        onRewardEarned: widget.onRewardEarned,
+      );
+      if (!mounted) return;
+      if (earned) {
+        setState(() {
+          _isCompleted = true;
+          _isPlaying = false;
+        });
+        return;
+      }
+    }
+
+    _runFallbackCountdown();
+  }
+
+  void _runFallbackCountdown() {
     setState(() {
       _isPlaying = true;
       _countdown = 5;
       _isCompleted = false;
     });
 
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) return;
       if (_countdown > 1) {
@@ -147,12 +167,12 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: ClayTheme.clayDecoration(
-                  color: AppColors.clayMint,
+                  color: AppColors.clayPeach,
                   borderRadius: 18,
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.smart_display_rounded, color: Color(0xFF2E6135), size: 22),
+                    const Icon(Icons.smart_display_rounded, color: AppColors.primaryDark, size: 22),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
@@ -160,7 +180,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                         style: GoogleFonts.nunito(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF2E6135),
+                          color: AppColors.primaryDark,
                         ),
                       ),
                     ),
@@ -170,20 +190,20 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
               const SizedBox(height: 20),
 
               ClayButton(
-                color: const Color(0xFFD4EBD6),
+                color: AppColors.clayPeach,
                 height: 52,
                 onPressed: _startAdPlayback,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.play_circle_filled_rounded, color: Color(0xFF2E6135), size: 22),
+                    const Icon(Icons.play_circle_filled_rounded, color: AppColors.primaryDark, size: 22),
                     const SizedBox(width: 8),
                     Text(
                       'ad_watch_btn'.tr(),
                       style: GoogleFonts.nunito(
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
-                        color: const Color(0xFF2E6135),
+                        color: AppColors.primaryDark,
                       ),
                     ),
                   ],
@@ -247,7 +267,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
               Container(
                 height: 180,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD6E4F0),
+                  color: AppColors.clayRose,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
@@ -271,13 +291,13 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.waterBlue.withValues(alpha: 0.3),
+                                color: AppColors.primaryPink.withValues(alpha: 0.2),
                                 blurRadius: 10,
                               ),
                             ],
                           ),
                           child: const Center(
-                            child: Icon(Icons.local_hospital_rounded, color: AppColors.waterBlue, size: 30),
+                            child: Icon(Icons.spa_rounded, color: AppColors.primaryPink, size: 28),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -310,7 +330,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                           value: (5 - _countdown) / 5.0,
                           minHeight: 6,
                           backgroundColor: Colors.white.withValues(alpha: 0.5),
-                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.waterBlue),
+                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryPink),
                         ),
                       ),
                     ),
@@ -368,7 +388,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
               const SizedBox(height: 20),
 
               ClayButton(
-                color: const Color(0xFFD4EBD6),
+                color: AppColors.clayPeach,
                 height: 52,
                 onPressed: () => Navigator.pop(context, true),
                 child: Text(
@@ -376,7 +396,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
                   style: GoogleFonts.nunito(
                     fontSize: 15,
                     fontWeight: FontWeight.w900,
-                    color: const Color(0xFF2E6135),
+                    color: AppColors.primaryDark,
                   ),
                 ),
               ),

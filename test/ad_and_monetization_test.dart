@@ -4,8 +4,21 @@ import 'package:aura_pregnancy/core/services/ad_service.dart';
 import 'package:aura_pregnancy/views/widgets/clay_native_ad_card.dart';
 import 'test_helper.dart';
 
+import 'package:flutter/services.dart';
+import 'package:aura_pregnancy/views/widgets/pre_att_dialog.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('plugins.flutter.io/google_mobile_ads'),
+      (MethodCall methodCall) async {
+        return null;
+      },
+    );
+  });
 
   group('Aura Monetizasyon ve Reklam Testleri', () {
     test('1. AdService test kimlikleri ve başlatma kontrolü', () async {
@@ -45,6 +58,21 @@ void main() {
       expect(find.text('Özel Sponsorlu Başlık'), findsOneWidget);
       expect(find.text('Özel sponsorlu açıklama metni'), findsOneWidget);
       expect(find.text('İncele'), findsOneWidget);
+    });
+
+    testWidgets('3. PreAttConsentDialog bileşeni doğru render edilir', (tester) async {
+      await tester.pumpWidget(
+        createLocalizedTestWidget(
+          child: const Scaffold(
+            body: PreAttConsentDialog(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Kişiselleştirilmiş ve Ücretsiz Deneyim'), findsOneWidget);
+      expect(find.text('Anladım, Devam Et'), findsOneWidget);
+      expect(find.text('Şimdilik Geç'), findsOneWidget);
     });
   });
 }

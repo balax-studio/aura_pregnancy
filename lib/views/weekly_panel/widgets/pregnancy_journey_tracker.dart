@@ -74,11 +74,12 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
   }
 
   Color _getThemeColorForWeek(int week) {
-    final colors = [
-      const Color(0xFF4E8D55), const Color(0xFF5C6BC0), const Color(0xFFE57373),
-      const Color(0xFFFBC02D), const Color(0xFF689F38), const Color(0xFFFFA000),
-      const Color(0xFF7B1FA2), const Color(0xFF8D6E63), const Color(0xFFFFB300),
-      const Color(0xFF43A047), const Color(0xFFE91E63)
+    const colors = [
+      AppColors.primaryPink,
+      AppColors.secondaryPeach,
+      AppColors.accentGold,
+      AppColors.lavenderPurple,
+      AppColors.primaryDark,
     ];
     return colors[(week - 1) % colors.length];
   }
@@ -182,20 +183,20 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: ClayTheme.clayButtonDecoration(
-                    color: const Color(0xFFD4EBD6),
+                    color: AppColors.clayPeach,
                     borderRadius: 16,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(activeStage.icon, size: 14, color: const Color(0xFF2E6135)),
+                      Icon(activeStage.icon, size: 14, color: AppColors.primaryDark),
                       const SizedBox(width: 4),
                       Text(
                         activeStage.weekRange,
                         style: GoogleFonts.nunito(
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF2E6135),
+                          color: AppColors.primaryDark,
                         ),
                       ),
                     ],
@@ -307,7 +308,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: isCurrent
-                                  ? Border.all(color: const Color(0xFF4E8D55), width: 2.5)
+                                  ? Border.all(color: AppColors.primaryPink, width: 2.5)
                                   : null,
                             ),
                             child: Fruit3DWidget(
@@ -323,7 +324,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                             style: GoogleFonts.nunito(
                               fontSize: isCurrent ? 11.5 : 10.0,
                               fontWeight: isCurrent ? FontWeight.w900 : FontWeight.w700,
-                              color: isCurrent ? const Color(0xFF2E6135) : const Color(0xFF5C4F53),
+                              color: isCurrent ? AppColors.primaryDark : AppColors.textSecondary,
                             ),
                           ),
                         ],
