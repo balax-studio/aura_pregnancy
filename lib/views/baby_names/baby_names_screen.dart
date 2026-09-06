@@ -158,6 +158,10 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> with SingleTickerProv
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primaryDark),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           'names_screen_title'.tr(),
           style: GoogleFonts.outfit(

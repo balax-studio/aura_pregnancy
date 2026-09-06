@@ -657,7 +657,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               isGlazed: true,
                               color: AppColors.clayRose,
                               padding: const EdgeInsets.all(14),
-                              onTap: () => widget.onNavigateTab(4), // Anı Günlüğü
+                              onTap: () => widget.onNavigateTab(3), // Anı Günlüğü
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -758,7 +758,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               isGlazed: true,
                               color: AppColors.clayLavender,
                               padding: const EdgeInsets.all(14),
-                              onTap: () => widget.onNavigateTab(4), // Anı Günlüğü
+                              onTap: () => widget.onNavigateTab(3), // Anı Günlüğü
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

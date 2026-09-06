@@ -120,6 +120,10 @@ class _NewEntryScreenState extends State<NewEntryScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primaryDark),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text(
           'journal_new_entry_title'.tr(),
           style: GoogleFonts.outfit(

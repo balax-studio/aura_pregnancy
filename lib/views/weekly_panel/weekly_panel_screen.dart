@@ -160,20 +160,6 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
       );
     }
 
-    if (_subTabIndex == 1) {
-      return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: Column(
-            children: [
-              _buildSubTabBar(),
-              const Expanded(child: TimelineScreen()),
-            ],
-          ),
-        ),
-      );
-    }
-
     final data = _controller.currentWeekData;
     final milestoneTest = data['milestone_test'] as Map<String, dynamic>?;
     final stageIndex = (_controller.selectedWeek - 1).clamp(0, 39);
@@ -188,27 +174,49 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Column(
-          children: [
-            Text(
-              'weekly_guide_title'.tr(args: [_controller.selectedWeek.toString()]),
-              style: GoogleFonts.outfit(
-                color: AppColors.primaryDark,
-                fontWeight: FontWeight.w800,
-                fontSize: 18,
-                letterSpacing: -0.3,
+        title: _subTabIndex == 0
+            ? Column(
+                children: [
+                  Text(
+                    'weekly_guide_title'.tr(args: [_controller.selectedWeek.toString()]),
+                    style: GoogleFonts.outfit(
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  Text(
+                    'weekly_trimester_status'.tr(args: [_controller.selectedTrimester.toString(), statusText]),
+                    style: GoogleFonts.plusJakartaSans(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  Text(
+                    'timeline_appbar_title'.tr(),
+                    style: GoogleFonts.outfit(
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  Text(
+                    'timeline_appbar_subtitle'.tr(),
+                    style: GoogleFonts.plusJakartaSans(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11.5,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Text(
-              'weekly_trimester_status'.tr(args: [_controller.selectedTrimester.toString(), statusText]),
-              style: GoogleFonts.plusJakartaSans(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
         actions: const [
           MedicalInfoButton(),
           SizedBox(width: 4),
@@ -222,19 +230,22 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
         child: Column(
           children: [
             _buildSubTabBar(),
-            // 1-40 Hafta Kaydırılabilir Şerit (Gelecek Haftalar Reklam Kilitli)
-            WeeklyTimelineStrip(
-              selectedWeek: _controller.selectedWeek,
-              currentWeek: _controller.actualPregnancyWeek,
-              unlockedWeeks: _controller.unlockedWeeks,
-              onWeekSelected: (w) => _controller.selectWeek(w),
-              onLockedWeekTapped: (w) => _handleLockedWeekTapped(w),
-            ),
-            const SizedBox(height: 12),
+            if (_subTabIndex == 1)
+              const Expanded(child: TimelineScreen(showAppBar: false))
+            else ...[
+              // 1-40 Hafta Kaydırılabilir Şerit (Gelecek Haftalar Reklam Kilitli)
+              WeeklyTimelineStrip(
+                selectedWeek: _controller.selectedWeek,
+                currentWeek: _controller.actualPregnancyWeek,
+                unlockedWeeks: _controller.unlockedWeeks,
+                onWeekSelected: (w) => _controller.selectWeek(w),
+                onLockedWeekTapped: (w) => _handleLockedWeekTapped(w),
+              ),
+              const SizedBox(height: 12),
 
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -292,8 +303,9 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
               ),
             ),
           ],
-        ),
+        ],
       ),
-    );
+    ),
+  );
   }
 }
