@@ -198,7 +198,6 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
         title: 'profile_edit_reset_ad_title'.tr(),
         subtitle: 'profile_edit_reset_ad_sub'.tr(),
         unlockTargetName: 'profile_edit_reset_ad_target'.tr(),
-        onRewardEarned: () {},
       );
 
       if (rewardEarned == true) {

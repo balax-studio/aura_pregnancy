@@ -11,14 +11,14 @@ class AdRewardDialog extends StatefulWidget {
   final String title;
   final String subtitle;
   final String unlockTargetName;
-  final VoidCallback onRewardEarned;
+  final VoidCallback? onRewardEarned;
 
   const AdRewardDialog({
     super.key,
     required this.title,
     required this.subtitle,
     required this.unlockTargetName,
-    required this.onRewardEarned,
+    this.onRewardEarned,
   });
 
   static Future<bool?> show({
@@ -26,7 +26,7 @@ class AdRewardDialog extends StatefulWidget {
     required String title,
     required String subtitle,
     required String unlockTargetName,
-    required VoidCallback onRewardEarned,
+    VoidCallback? onRewardEarned,
   }) {
     return showDialog<bool>(
       context: context,
@@ -63,7 +63,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
   Future<void> _startAdPlayback() async {
     if (AdService.instance.isRewardedAdReady) {
       final earned = await AdService.instance.showRealRewardedAd(
-        onRewardEarned: widget.onRewardEarned,
+        onRewardEarned: widget.onRewardEarned ?? () {},
       );
       if (!mounted) return;
       if (earned) {
@@ -97,7 +97,7 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
           _isCompleted = true;
           _isPlaying = false;
         });
-        widget.onRewardEarned();
+        widget.onRewardEarned?.call();
       }
     });
   }

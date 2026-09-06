@@ -110,7 +110,6 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> with SingleTickerProv
       title: 'names_ad_reward_title'.tr(),
       subtitle: 'names_ad_reward_desc'.tr(),
       unlockTargetName: 'names_ad_reward_target'.tr(),
-      onRewardEarned: () {},
     );
 
     if (rewardEarned == true && mounted) {

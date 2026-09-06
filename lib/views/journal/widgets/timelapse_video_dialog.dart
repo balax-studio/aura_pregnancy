@@ -97,7 +97,6 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
       title: 'video_download_reward_title'.tr(),
       subtitle: 'video_download_reward_sub'.tr(),
       unlockTargetName: 'video_download_reward_target'.tr(),
-      onRewardEarned: () {},
     );
 
     if (rewardEarned == true && mounted) {
