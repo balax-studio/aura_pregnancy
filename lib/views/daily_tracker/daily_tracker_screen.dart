@@ -13,6 +13,8 @@ import 'widgets/caffeine_tracker_card.dart';
 import 'widgets/walking_tracker_card.dart';
 import 'widgets/trimester_nutrition_card.dart';
 import 'widgets/weight_tracker_card.dart';
+import 'widgets/safety_radar_sheet.dart';
+import 'widgets/doctor_vault_sheet.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 import '../widgets/emergency_beacon_button.dart';
 import '../../services/database_helper.dart';
@@ -232,6 +234,91 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
             children: [
               // Üst Canlılık Göstergesi
               _buildVitalitySummaryBar(log),
+
+              // Aura İnovatif Araçlar: Güvenlik Radarı & Doktora Sorulacaklar
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        SafetyRadarSheet.show(
+                          context,
+                          partnerName: _controller.profile?.partnerName,
+                          babyName: _controller.profile?.babyName,
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: ClayCard(
+                        color: AppColors.clayMint,
+                        borderRadius: 20,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        child: Row(
+                          children: [
+                            const Text('🔍', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Güvenlik Radarı',
+                                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                  ),
+                                  Text(
+                                    'Yiyebilir Miyim?',
+                                    style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        HapticFeedback.selectionClick();
+                        DoctorVaultSheet.show(
+                          context,
+                          currentWeek: _controller.profile?.currentWeek ?? 1,
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: ClayCard(
+                        color: AppColors.clayLavender,
+                        borderRadius: 20,
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        child: Row(
+                          children: [
+                            const Text('🩺', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Soru Kasası',
+                                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                  ),
+                                  Text(
+                                    'Doktora Notlar',
+                                    style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
 
               // Segmentli Kategori Filtre Butonları
               _buildFilterBar(),

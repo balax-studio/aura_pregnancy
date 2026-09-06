@@ -88,7 +88,7 @@ class ClinicalPdfService {
                           children: [
                             pw.Text(
                               'Aura Pregnancy',
-                              style: pw.TextStyle(
+                              style: const pw.TextStyle(
                                 color: primaryPink,
                                 fontSize: 18,
                                 fontWeight: pw.FontWeight.bold,
@@ -127,7 +127,7 @@ class ClinicalPdfService {
                         ),
                         pw.Text(
                           todayStr,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: darkCharcoal,
                             fontSize: 11,
                             fontWeight: pw.FontWeight.bold,
@@ -386,8 +386,8 @@ class ClinicalPdfService {
         pw.Expanded(
           child: pw.Text(
             value,
-            style: pw.TextStyle(
-              color: const PdfColor.fromInt(0xFF2D232E),
+            style: const pw.TextStyle(
+              color: PdfColor.fromInt(0xFF2D232E),
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
             ),

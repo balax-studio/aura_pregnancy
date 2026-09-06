@@ -9,11 +9,16 @@ import '../models/notification_model.dart';
 import '../models/medication_model.dart';
 import '../models/emergency_card_model.dart';
 import '../models/baby_name_model.dart';
+import '../models/hospital_bag_item.dart';
+import '../models/doctor_question_model.dart';
+import '../models/time_capsule_model.dart';
+import '../models/birth_plan_model.dart';
+import '../core/constants/doctor_questions_data.dart';
 
 /// Aura Pregnancy - SQLite & Web Uyumlu Yerel Veritabanı Yöneticisi (DatabaseHelper)
 class DatabaseHelper {
   static const String _databaseName = 'aura_pregnancy.db';
-  static const int _databaseVersion = 5;
+  static const int _databaseVersion = 6;
 
   // Singleton Örneği
   DatabaseHelper._internal();
@@ -39,6 +44,13 @@ class DatabaseHelper {
   int _webResetCount = 0;
   final List<BabyNameModel> _webFavoriteNames = [];
   final Map<String, String> _webSettings = {};
+  final List<HospitalBagItem> _webHospitalBag = [];
+  bool _webHospitalBagSeeded = false;
+  final List<DoctorQuestion> _webDoctorQuestions = [];
+  bool _webDoctorQuestionsSeeded = false;
+  final List<TimeCapsuleLetter> _webTimeCapsule = [];
+  BirthPlanModel _webBirthPlan = const BirthPlanModel();
+  final Set<String> _webSafetyFavorites = {};
 
   /// Veritabanı örneğini döndürür (Lazy initialization)
   Future<Database?> get database async {
@@ -184,6 +196,78 @@ class DatabaseHelper {
       )
     ''');
 
+    // 9. hospital_bag_items tablosu
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS hospital_bag_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        category TEXT NOT NULL,
+        title TEXT NOT NULL,
+        is_packed INTEGER DEFAULT 0,
+        is_custom INTEGER DEFAULT 0,
+        quantity INTEGER DEFAULT 1
+      )
+    ''');
+
+    // 10. doctor_questions tablosu
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS doctor_questions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pregnancy_week INTEGER NOT NULL,
+        trimester INTEGER NOT NULL,
+        question TEXT NOT NULL,
+        answer_note TEXT,
+        is_answered INTEGER DEFAULT 0,
+        is_predefined INTEGER DEFAULT 0,
+        created_date TEXT NOT NULL
+      )
+    ''');
+
+    // 11. future_time_capsule tablosu
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS future_time_capsule (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        unlock_milestone TEXT NOT NULL,
+        title TEXT NOT NULL,
+        letter_text TEXT NOT NULL,
+        audio_path TEXT,
+        photo_path TEXT,
+        is_sealed INTEGER DEFAULT 1,
+        created_date TEXT NOT NULL,
+        target_unlock_date TEXT NOT NULL
+      )
+    ''');
+
+    // 12. birth_plan tablosu
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS birth_plan (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        dim_lights INTEGER DEFAULT 1,
+        ambient_music INTEGER DEFAULT 1,
+        aromatherapy INTEGER DEFAULT 0,
+        quiet_environment INTEGER DEFAULT 1,
+        epidural_preferred INTEGER DEFAULT 0,
+        natural_pain_relief INTEGER DEFAULT 1,
+        birthing_ball INTEGER DEFAULT 1,
+        warm_water_shower INTEGER DEFAULT 1,
+        delayed_cord_clamping INTEGER DEFAULT 1,
+        partner_cuts_cord INTEGER DEFAULT 1,
+        immediate_skin_to_skin INTEGER DEFAULT 1,
+        delay_newborn_bath_24h INTEGER DEFAULT 1,
+        discuss_before_intervention INTEGER DEFAULT 1,
+        spontaneous_pushing INTEGER DEFAULT 1,
+        special_wishes TEXT,
+        pediatrician_name TEXT,
+        emergency_contact TEXT
+      )
+    ''');
+
+    // 13. safety_cravings tablosu
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS safety_cravings (
+        item_id TEXT PRIMARY KEY
+      )
+    ''');
+
     // İndeksler (Hızlı sorgulama için)
     await db.execute('CREATE INDEX idx_diary_week ON diary(pregnancy_week)');
     await db.execute('CREATE INDEX idx_diary_date ON diary(date)');
@@ -254,6 +338,72 @@ class DatabaseHelper {
           CREATE TABLE IF NOT EXISTS app_settings (
             key TEXT PRIMARY KEY,
             value TEXT
+          )
+        ''');
+      } catch (_) {}
+    }
+    if (oldVersion < 6) {
+      try {
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS hospital_bag_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            category TEXT NOT NULL,
+            title TEXT NOT NULL,
+            is_packed INTEGER DEFAULT 0,
+            is_custom INTEGER DEFAULT 0,
+            quantity INTEGER DEFAULT 1
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS doctor_questions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pregnancy_week INTEGER NOT NULL,
+            trimester INTEGER NOT NULL,
+            question TEXT NOT NULL,
+            answer_note TEXT,
+            is_answered INTEGER DEFAULT 0,
+            is_predefined INTEGER DEFAULT 0,
+            created_date TEXT NOT NULL
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS future_time_capsule (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            unlock_milestone TEXT NOT NULL,
+            title TEXT NOT NULL,
+            letter_text TEXT NOT NULL,
+            audio_path TEXT,
+            photo_path TEXT,
+            is_sealed INTEGER DEFAULT 1,
+            created_date TEXT NOT NULL,
+            target_unlock_date TEXT NOT NULL
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS birth_plan (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            dim_lights INTEGER DEFAULT 1,
+            ambient_music INTEGER DEFAULT 1,
+            aromatherapy INTEGER DEFAULT 0,
+            quiet_environment INTEGER DEFAULT 1,
+            epidural_preferred INTEGER DEFAULT 0,
+            natural_pain_relief INTEGER DEFAULT 1,
+            birthing_ball INTEGER DEFAULT 1,
+            warm_water_shower INTEGER DEFAULT 1,
+            delayed_cord_clamping INTEGER DEFAULT 1,
+            partner_cuts_cord INTEGER DEFAULT 1,
+            immediate_skin_to_skin INTEGER DEFAULT 1,
+            delay_newborn_bath_24h INTEGER DEFAULT 1,
+            discuss_before_intervention INTEGER DEFAULT 1,
+            spontaneous_pushing INTEGER DEFAULT 1,
+            special_wishes TEXT,
+            pediatrician_name TEXT,
+            emergency_contact TEXT
+          )
+        ''');
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS safety_cravings (
+            item_id TEXT PRIMARY KEY
           )
         ''');
       } catch (_) {}
@@ -1062,6 +1212,13 @@ class DatabaseHelper {
           await db.delete('favorite_names');
         } catch (_) {}
         await db.delete('app_settings');
+        try {
+          await db.delete('hospital_bag_items');
+          await db.delete('doctor_questions');
+          await db.delete('future_time_capsule');
+          await db.delete('birth_plan');
+          await db.delete('safety_cravings');
+        } catch (_) {}
         if (preserveResetCount && currentResetCount > 0) {
           await db.insert(
             'app_settings',
@@ -1073,7 +1230,360 @@ class DatabaseHelper {
         debugPrint('clearAllData error: $e');
       }
     }
+    _webHospitalBag.clear();
+    _webHospitalBagSeeded = false;
+    _webDoctorQuestions.clear();
+    _webDoctorQuestionsSeeded = false;
+    _webTimeCapsule.clear();
+    _webBirthPlan = const BirthPlanModel();
+    _webSafetyFavorites.clear();
     notifyDataChanged();
+  }
+
+  // ==========================================
+  // 9. DOĞUM ÇANTASI (HOSPITAL BAG) CRUD
+  // ==========================================
+  Future<void> _ensureHospitalBagSeeded(Database? db) async {
+    if (db != null) {
+      try {
+        final countResult = await db.rawQuery('SELECT COUNT(*) as count FROM hospital_bag_items');
+        final count = Sqflite.firstIntValue(countResult) ?? 0;
+        if (count == 0) {
+          final batch = db.batch();
+          for (final item in _defaultHospitalBag) {
+            batch.insert('hospital_bag_items', item.toMap());
+          }
+          await batch.commit(noResult: true);
+        }
+      } catch (_) {}
+    } else {
+      if (!_webHospitalBagSeeded) {
+        _webHospitalBag.addAll(_defaultHospitalBag);
+        _webHospitalBagSeeded = true;
+      }
+    }
+  }
+
+  static const List<HospitalBagItem> _defaultHospitalBag = [
+    // Anne
+    HospitalBagItem(category: 'mom', title: 'Önden açılan lohusa geceliği / pijama (2 takım)'),
+    HospitalBagItem(category: 'mom', title: 'Emzirme sütyeni & yıkanabilir göğüs pedleri'),
+    HospitalBagItem(category: 'mom', title: 'Göğüs ucu bakım kremi (Lanolin)'),
+    HospitalBagItem(category: 'mom', title: 'Organik pamuklu lohusa pedi (büyük boy)'),
+    HospitalBagItem(category: 'mom', title: 'Kaymayan yumuşak terlik & kalın sıcak çorap'),
+    HospitalBagItem(category: 'mom', title: 'Kimlik, hastane kartı ve doktor doğum tercih planı'),
+    HospitalBagItem(category: 'mom', title: 'Dudak nemlendiricisi & saç bandı/lastik'),
+    HospitalBagItem(category: 'mom', title: 'Diş fırçası, macun & seyahat boy şampuan'),
+    // Bebek
+    HospitalBagItem(category: 'baby', title: 'Yenidoğan hastane çıkış seti (zıbın, tulum, şapka, eldiven)'),
+    HospitalBagItem(category: 'baby', title: 'Yenidoğan bebek bezi (1 paket mini boy)'),
+    HospitalBagItem(category: 'baby', title: 'Yumuşak müslin örtü & pamuklu kundak battaniyesi'),
+    HospitalBagItem(category: 'baby', title: 'Alkolsüz yenidoğan ıslak mendili / pamuk'),
+    HospitalBagItem(category: 'baby', title: 'Doğal pişik önleyici krem'),
+    HospitalBagItem(category: 'baby', title: 'Yenidoğan anakucağı / oto koltuğu (hastane çıkışı için)'),
+    // Refakatçi / Baba
+    HospitalBagItem(category: 'partner', title: 'Rahat yedek tişört & eşofman altı'),
+    HospitalBagItem(category: 'partner', title: 'Uzun kablolu telefon şarj aleti & powerbank'),
+    HospitalBagItem(category: 'partner', title: 'Sağlıklı atıştırmalıklar (kuruyemiş, meyve barları)'),
+    HospitalBagItem(category: 'partner', title: 'Termos matarada taze su'),
+    HospitalBagItem(category: 'partner', title: 'Otopark ve otomat için nakit bozuk para'),
+  ];
+
+  Future<List<HospitalBagItem>> getHospitalBagItems({String? category}) async {
+    final db = await database;
+    await _ensureHospitalBagSeeded(db);
+    if (db != null) {
+      try {
+        final List<Map<String, dynamic>> maps;
+        if (category != null) {
+          maps = await db.query('hospital_bag_items', where: 'category = ?', whereArgs: [category]);
+        } else {
+          maps = await db.query('hospital_bag_items');
+        }
+        return maps.map((m) => HospitalBagItem.fromMap(m)).toList();
+      } catch (e) {
+        debugPrint('getHospitalBagItems error: $e');
+      }
+    }
+    if (category != null) {
+      return _webHospitalBag.where((i) => i.category == category).toList();
+    }
+    return List.unmodifiable(_webHospitalBag);
+  }
+
+  Future<int> insertHospitalBagItem(HospitalBagItem item) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        final id = await db.insert('hospital_bag_items', item.toMap());
+        notifyDataChanged();
+        return id;
+      } catch (e) {
+        debugPrint('insertHospitalBagItem error: $e');
+      }
+    }
+    final newId = _webHospitalBag.length + 1;
+    final newItem = item.copyWith(id: newId);
+    _webHospitalBag.add(newItem);
+    notifyDataChanged();
+    return newId;
+  }
+
+  Future<void> toggleHospitalBagItem(int id, bool isPacked) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        await db.update(
+          'hospital_bag_items',
+          {'is_packed': isPacked ? 1 : 0},
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      } catch (e) {
+        debugPrint('toggleHospitalBagItem error: $e');
+      }
+    }
+    final index = _webHospitalBag.indexWhere((i) => i.id == id);
+    if (index != -1) {
+      _webHospitalBag[index] = _webHospitalBag[index].copyWith(isPacked: isPacked);
+    }
+    notifyDataChanged();
+  }
+
+  Future<void> deleteHospitalBagItem(int id) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        await db.delete('hospital_bag_items', where: 'id = ?', whereArgs: [id]);
+      } catch (e) {
+        debugPrint('deleteHospitalBagItem error: $e');
+      }
+    }
+    _webHospitalBag.removeWhere((i) => i.id == id);
+    notifyDataChanged();
+  }
+
+  // ==========================================
+  // 10. DOKTORA SORULACAK SORULAR (DOCTOR VAULT) CRUD
+  // ==========================================
+  Future<void> _ensureDoctorQuestionsSeeded(Database? db) async {
+    if (db != null) {
+      try {
+        final countResult = await db.rawQuery('SELECT COUNT(*) as count FROM doctor_questions');
+        final count = Sqflite.firstIntValue(countResult) ?? 0;
+        if (count == 0) {
+          final batch = db.batch();
+          for (int t = 1; t <= 3; t++) {
+            for (final q in DoctorQuestionsData.getPredefinedQuestions(t)) {
+              batch.insert('doctor_questions', q.toMap());
+            }
+          }
+          await batch.commit(noResult: true);
+        }
+      } catch (_) {}
+    } else {
+      if (!_webDoctorQuestionsSeeded) {
+        int idGen = 1;
+        for (int t = 1; t <= 3; t++) {
+          for (final q in DoctorQuestionsData.getPredefinedQuestions(t)) {
+            _webDoctorQuestions.add(q.copyWith(id: idGen++));
+          }
+        }
+        _webDoctorQuestionsSeeded = true;
+      }
+    }
+  }
+
+  Future<List<DoctorQuestion>> getDoctorQuestions({int? trimester}) async {
+    final db = await database;
+    await _ensureDoctorQuestionsSeeded(db);
+    if (db != null) {
+      try {
+        final List<Map<String, dynamic>> maps;
+        if (trimester != null) {
+          maps = await db.query('doctor_questions', where: 'trimester = ?', whereArgs: [trimester]);
+        } else {
+          maps = await db.query('doctor_questions');
+        }
+        return maps.map((m) => DoctorQuestion.fromMap(m)).toList();
+      } catch (e) {
+        debugPrint('getDoctorQuestions error: $e');
+      }
+    }
+    if (trimester != null) {
+      return _webDoctorQuestions.where((q) => q.trimester == trimester).toList();
+    }
+    return List.unmodifiable(_webDoctorQuestions);
+  }
+
+  Future<int> insertDoctorQuestion(DoctorQuestion question) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        final id = await db.insert('doctor_questions', question.toMap());
+        notifyDataChanged();
+        return id;
+      } catch (e) {
+        debugPrint('insertDoctorQuestion error: $e');
+      }
+    }
+    final newId = _webDoctorQuestions.length + 1;
+    _webDoctorQuestions.add(question.copyWith(id: newId));
+    notifyDataChanged();
+    return newId;
+  }
+
+  Future<void> updateDoctorQuestionAnswer(int id, String answer, bool isAnswered) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        await db.update(
+          'doctor_questions',
+          {'answer_note': answer, 'is_answered': isAnswered ? 1 : 0},
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      } catch (e) {
+        debugPrint('updateDoctorQuestionAnswer error: $e');
+      }
+    }
+    final idx = _webDoctorQuestions.indexWhere((q) => q.id == id);
+    if (idx != -1) {
+      _webDoctorQuestions[idx] = _webDoctorQuestions[idx].copyWith(
+        answerNote: answer,
+        isAnswered: isAnswered,
+      );
+    }
+    notifyDataChanged();
+  }
+
+  Future<void> deleteDoctorQuestion(int id) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        await db.delete('doctor_questions', where: 'id = ?', whereArgs: [id]);
+      } catch (e) {
+        debugPrint('deleteDoctorQuestion error: $e');
+      }
+    }
+    _webDoctorQuestions.removeWhere((q) => q.id == id);
+    notifyDataChanged();
+  }
+
+  // ==========================================
+  // 11. KİŞİSEL DOĞUM PLANI CRUD
+  // ==========================================
+  Future<BirthPlanModel> getBirthPlan() async {
+    final db = await database;
+    if (db != null) {
+      try {
+        final maps = await db.query('birth_plan', where: 'id = 1');
+        if (maps.isNotEmpty) {
+          return BirthPlanModel.fromMap(maps.first);
+        }
+      } catch (e) {
+        debugPrint('getBirthPlan error: $e');
+      }
+    }
+    return _webBirthPlan;
+  }
+
+  Future<void> saveBirthPlan(BirthPlanModel plan) async {
+    final db = await database;
+    final map = plan.toMap()..['id'] = 1;
+    if (db != null) {
+      try {
+        await db.insert('birth_plan', map, conflictAlgorithm: ConflictAlgorithm.replace);
+      } catch (e) {
+        debugPrint('saveBirthPlan error: $e');
+      }
+    }
+    _webBirthPlan = plan;
+    notifyDataChanged();
+  }
+
+  // ==========================================
+  // 12. 18. YAŞ DİJİTAL ZAMAN KAPSÜLÜ CRUD
+  // ==========================================
+  Future<List<TimeCapsuleLetter>> getTimeCapsuleLetters() async {
+    final db = await database;
+    if (db != null) {
+      try {
+        final maps = await db.query('future_time_capsule', orderBy: 'created_date DESC');
+        return maps.map((m) => TimeCapsuleLetter.fromMap(m)).toList();
+      } catch (e) {
+        debugPrint('getTimeCapsuleLetters error: $e');
+      }
+    }
+    return List.unmodifiable(_webTimeCapsule);
+  }
+
+  Future<int> insertTimeCapsuleLetter(TimeCapsuleLetter letter) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        final id = await db.insert('future_time_capsule', letter.toMap());
+        notifyDataChanged();
+        return id;
+      } catch (e) {
+        debugPrint('insertTimeCapsuleLetter error: $e');
+      }
+    }
+    final newId = _webTimeCapsule.length + 1;
+    _webTimeCapsule.insert(0, letter.copyWith(id: newId));
+    notifyDataChanged();
+    return newId;
+  }
+
+  Future<void> deleteTimeCapsuleLetter(int id) async {
+    final db = await database;
+    if (db != null) {
+      try {
+        await db.delete('future_time_capsule', where: 'id = ?', whereArgs: [id]);
+      } catch (e) {
+        debugPrint('deleteTimeCapsuleLetter error: $e');
+      }
+    }
+    _webTimeCapsule.removeWhere((l) => l.id == id);
+    notifyDataChanged();
+  }
+
+  // ==========================================
+  // 13. GÜVENLİK RADARI AŞERME FAVORİLERİ
+  // ==========================================
+  Future<Set<String>> getSafetyFavorites() async {
+    final db = await database;
+    if (db != null) {
+      try {
+        final maps = await db.query('safety_cravings');
+        return maps.map((m) => m['item_id'] as String).toSet();
+      } catch (e) {
+        debugPrint('getSafetyFavorites error: $e');
+      }
+    }
+    return Set.unmodifiable(_webSafetyFavorites);
+  }
+
+  Future<bool> toggleSafetyFavorite(String itemId) async {
+    final db = await database;
+    final isFav = _webSafetyFavorites.contains(itemId);
+    if (isFav) {
+      _webSafetyFavorites.remove(itemId);
+      if (db != null) {
+        try {
+          await db.delete('safety_cravings', where: 'item_id = ?', whereArgs: [itemId]);
+        } catch (_) {}
+      }
+    } else {
+      _webSafetyFavorites.add(itemId);
+      if (db != null) {
+        try {
+          await db.insert('safety_cravings', {'item_id': itemId}, conflictAlgorithm: ConflictAlgorithm.replace);
+        } catch (_) {}
+      }
+    }
+    notifyDataChanged();
+    return !isFav;
   }
 
   Future<void> close() async {

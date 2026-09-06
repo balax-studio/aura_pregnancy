@@ -8,6 +8,7 @@ import 'widgets/journal_entry_card.dart';
 import 'widgets/video_renderer_dialog.dart';
 import 'widgets/watercolor_portrait_dialog.dart';
 import 'widgets/keepsake_card_dialog.dart';
+import 'widgets/time_capsule_sheet.dart';
 import '../widgets/emergency_beacon_button.dart';
 import 'new_entry_screen.dart';
 
@@ -113,7 +114,7 @@ class _JournalScreenState extends State<JournalScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          '3 Atölye',
+                          '4 Atölye',
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
@@ -300,6 +301,72 @@ class _JournalScreenState extends State<JournalScreen> {
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.primaryPink,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+
+                        // 4. 18. Yaş Dijital Zaman Kapsülü
+                        SizedBox(
+                          width: 190,
+                          child: GestureDetector(
+                            onTap: () => TimeCapsuleSheet.show(context),
+                            child: ClayCard(
+                              color: AppColors.clayMint,
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.90),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: const Icon(Icons.mark_email_unread_rounded, color: AppColors.successGreen, size: 20),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.6),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          '18. YAŞ',
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.w800,
+                                            color: AppColors.successGreen,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    '18. Yaş Kapsülü',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.primaryDark,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Bebeğime Mektup 💌',
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.successGreen,
                                     ),
                                   ),
                                 ],

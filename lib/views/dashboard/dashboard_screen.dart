@@ -14,6 +14,10 @@ import '../../models/daily_log_model.dart';
 import '../../utils/date_utils.dart';
 import 'widgets/profile_edit_sheet.dart';
 import 'widgets/interactive_3d_fetus_widget.dart';
+import 'widgets/womb_ambience_modal.dart';
+import 'widgets/partner_share_modal.dart';
+import 'widgets/lockscreen_capsule_preview.dart';
+import '../postpartum/postpartum_bridge_screen.dart';
 import '../../core/widgets/fruit_3d_widget.dart';
 import '../../core/widgets/micro_animations.dart';
 import '../widgets/emergency_beacon_button.dart';
@@ -379,6 +383,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             color: AppColors.textSecondary,
                           ),
                         ),
+                        const SizedBox(height: 12),
+
+                        // Aura İnovatif Kapsüller: Sakinleşme Çanı & Kilit Ekranı
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Sakinleşme Çanı
+                            InkWell(
+                              onTap: () {
+                                HapticFeedback.selectionClick();
+                                WombAmbienceModal.show(context);
+                              },
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                                decoration: BoxDecoration(
+                                  color: AppColors.clayLavender,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.white, width: 1),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text('🎧', style: TextStyle(fontSize: 14)),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Sakinleşme Çanı',
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primaryDark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            // Canlı Kilit Ekranı
+                            InkWell(
+                              onTap: () {
+                                HapticFeedback.selectionClick();
+                                LockscreenCapsulePreview.show(context, profile: _profile);
+                              },
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                                decoration: BoxDecoration(
+                                  color: AppColors.clayMint,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.white, width: 1),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text('📱', style: TextStyle(fontSize: 14)),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Kilit Ekranı',
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primaryDark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -692,6 +767,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       height: 1.35,
                                     ),
                                   ),
+                                  const SizedBox(height: 8),
+                                  GestureDetector(
+                                    onTap: () {
+                                      HapticFeedback.selectionClick();
+                                      PartnerShareModal.show(context, profile: _profile);
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(alpha: 0.85),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text('💌 ', style: TextStyle(fontSize: 12)),
+                                          Text(
+                                            'Eşinle Paylaş',
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.primaryPink,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -801,6 +904,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                // Aura 4. Trimester: Altın 40 Gün Lohusalık Köprüsü
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    PostpartumBridgeScreen.show(context, profile: _profile);
+                  },
+                  borderRadius: BorderRadius.circular(22),
+                  child: ClayCard(
+                    color: AppColors.clayPeach,
+                    borderRadius: 22,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.9),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: const Text('🕊️', style: TextStyle(fontSize: 22)),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Aura 4. Trimester: Altın 40 Gün',
+                                style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                              ),
+                              Text(
+                                'Bebeğim Doğdu! Anne lohusa iyileşme moduna geç.',
+                                style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppColors.textSecondary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.primaryPink),
+                      ],
+                    ),
                   ),
                 ),
 

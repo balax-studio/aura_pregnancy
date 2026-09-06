@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:path_provider/path_provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../services/media_service.dart';

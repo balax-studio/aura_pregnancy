@@ -7,7 +7,6 @@ import '../services/app_nav_observer.dart';
 import 'dashboard/dashboard_screen.dart';
 import 'weekly_panel/weekly_panel_screen.dart';
 import 'daily_tracker/daily_tracker_screen.dart';
-import 'timeline/timeline_screen.dart';
 import 'journal/journal_screen.dart';
 import 'emergency/emergency_screen.dart';
 
