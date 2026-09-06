@@ -66,7 +66,7 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
             label: 'nav_weekly'.tr(),
           ),
           FluidNavItem(
-            icon: Icons.search_rounded, // Büyüteç ikonu
+            icon: Icons.monitor_heart_rounded, // Sağlık & Rutin Takibi
             label: 'nav_tracker'.tr(),
           ),
           FluidNavItem(

@@ -707,5 +707,7 @@
   "keepsake_card_saved": "Keepsake card saved to your device.",
   "studio_pick_ultrasound": "Choose Ultrasound Photo",
   "studio_change_photo": "Change Photo",
-  "studio_use_sample": "Use Sample Ultrasound"
+  "studio_use_sample": "Use Sample Ultrasound",
+  "journal_empty_title": "No Memories Recorded Yet",
+  "journal_empty_desc": "Tap the button below to write down your thoughts and capture precious moments of your pregnancy."
 }

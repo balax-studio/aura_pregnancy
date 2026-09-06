@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
@@ -227,7 +228,7 @@ class _JournalScreenState extends State<JournalScreen> {
                           child: GestureDetector(
                             onTap: () => KeepsakeCardDialog.show(context),
                             child: ClayCard(
-                              color: const Color(0xFFF3E8FF),
+                              color: const Color(0xFFFFF0E6),
                               padding: const EdgeInsets.all(14),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,9 +242,9 @@ class _JournalScreenState extends State<JournalScreen> {
                                           color: Colors.white,
                                           borderRadius: 12,
                                         ),
-                                        child: const Icon(Icons.card_giftcard_rounded, color: Color(0xFF8E24AA), size: 20),
+                                        child: const Icon(Icons.card_giftcard_rounded, color: AppColors.secondaryPeach, size: 20),
                                       ),
-                                      const Icon(Icons.lock_outline_rounded, size: 14, color: Color(0xFF8E24AA)),
+                                      const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.secondaryPeach),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
@@ -264,7 +265,7 @@ class _JournalScreenState extends State<JournalScreen> {
                                     style: const TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700,
-                                      color: Color(0xFF8E24AA),
+                                      color: AppColors.secondaryPeach,
                                     ),
                                   ),
                                 ],
@@ -287,13 +288,58 @@ class _JournalScreenState extends State<JournalScreen> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Günlük Kartları
-                  ..._controller.entries.map(
-                    (entry) => JournalEntryCard(
-                      entry: entry,
-                      onDelete: () => _controller.deleteEntry(entry.id!),
+                  // Günlük Kartları veya Boş Durum (Empty State)
+                  if (_controller.entries.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                      decoration: ClayTheme.clayDecoration(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        borderRadius: 22,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 54,
+                            height: 54,
+                            decoration: ClayTheme.clayDecoration(
+                              color: AppColors.clayRose,
+                              borderRadius: 27,
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.edit_note_rounded, color: AppColors.primaryPink, size: 28),
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          Text(
+                            'journal_empty_title'.tr(),
+                            style: GoogleFonts.outfit(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primaryDark,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'journal_empty_desc'.tr(),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.quicksand(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textSecondary,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ..._controller.entries.map(
+                      (entry) => JournalEntryCard(
+                        entry: entry,
+                        onDelete: () => _controller.deleteEntry(entry.id!),
+                      ),
                     ),
-                  ),
                 ],
               ),
       ),

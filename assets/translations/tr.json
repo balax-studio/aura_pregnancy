@@ -707,5 +707,7 @@
   "keepsake_card_saved": "Hatıra kartı cihazınıza kaydedildi.",
   "studio_pick_ultrasound": "Ultrason Fotoğrafı Seç",
   "studio_change_photo": "Fotoğrafı Değiştir",
-  "studio_use_sample": "Örnek Ultrason Kullan"
+  "studio_use_sample": "Örnek Ultrason Kullan",
+  "journal_empty_title": "Henüz Bir Anı Kaydedilmedi",
+  "journal_empty_desc": "Bebeğinizle geçirdiğiniz bu özel günlerde hissettiklerinizi ve ilk anılarınızı not etmek için aşağıdaki butona dokunun."
 }
