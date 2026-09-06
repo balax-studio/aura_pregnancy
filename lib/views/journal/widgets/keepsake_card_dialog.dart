@@ -109,19 +109,10 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
         final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
         if (byteData != null) {
           final pngBytes = byteData.buffer.asUint8List();
-          String? dirPath;
-          if (!kIsWeb && Platform.isAndroid) {
-            final publicDownload = Directory('/storage/emulated/0/Download');
-            if (publicDownload.existsSync()) {
-              dirPath = publicDownload.path;
-            }
-          }
-          if (dirPath == null) {
-            final dir = await getDownloadsDirectory() ?? await getApplicationDocumentsDirectory();
-            dirPath = dir.path;
-          }
-          final file = File('$dirPath/Aura_Hatira_Karti_${DateTime.now().millisecondsSinceEpoch}.png');
-          await file.writeAsBytes(pngBytes);
+          await MediaService.instance.saveImageToGallery(
+            imageBytes: pngBytes,
+            fileNamePrefix: 'Aura_Hatira_Karti',
+          );
         }
       }
       if (mounted) {
@@ -149,7 +140,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
               children: [
                 const Icon(Icons.info_outline_rounded, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
-                Expanded(child: Text('media_error_select'.tr(args: [e.toString()]))),
+                Expanded(child: Text('media_error_save'.tr(args: [e.toString()]))),
               ],
             ),
             backgroundColor: Colors.redAccent,
@@ -173,9 +164,14 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
           fit: BoxFit.cover,
         ),
       );
+    } else if (kIsWeb) {
+      return Image.asset(
+        'assets/images/sample_ultrasound.png',
+        fit: BoxFit.cover,
+      );
     } else {
       return Image.file(
-        File(_photoPath),
+        File(_photoPath) as dynamic,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Image.asset(
           'assets/images/sample_ultrasound.png',

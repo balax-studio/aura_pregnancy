@@ -673,6 +673,7 @@
   "media_perm_gallery_desc": "Galerinizden ultrason ve hatıra fotoğrafı seçebilmek için lütfen ayarlardan fotoğraf erişimine izin verin.",
   "media_perm_open_settings": "Ayarları Aç",
   "media_error_select": "Fotoğraf seçilirken bir sorun oluştu: {}",
+  "media_error_save": "Görsel kaydedilirken bir sorun oluştu: {}",
   "media_error_camera_req": "Fotoğraf çekebilmek için kamera izni vermeniz gerekmektedir.",
   "media_error_gallery_req": "Fotoğraf seçebilmek için galeri erişimine onay vermelisiniz.",
   "audio_mic_perm_title": "Mikrofon İzni Gerekli",

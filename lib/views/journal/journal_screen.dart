@@ -8,6 +8,7 @@ import 'widgets/journal_entry_card.dart';
 import 'widgets/video_renderer_dialog.dart';
 import 'widgets/watercolor_portrait_dialog.dart';
 import 'widgets/keepsake_card_dialog.dart';
+import '../widgets/emergency_beacon_button.dart';
 import 'new_entry_screen.dart';
 
 import '../../services/database_helper.dart';
@@ -79,6 +80,10 @@ class _JournalScreenState extends State<JournalScreen> {
               );
             },
           ),
+          const Padding(
+            padding: EdgeInsets.only(right: 14),
+            child: EmergencyBeaconButton(),
+          ),
         ],
       ),
       body: SafeArea(
@@ -87,69 +92,7 @@ class _JournalScreenState extends State<JournalScreen> {
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 children: [
-                  // Üst Bilgi ve Video Banner
-                  ClayCard(
-                    color: AppColors.clayLavender,
-                    padding: const EdgeInsets.all(18),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: ClayTheme.clayDecoration(
-                            color: AppColors.clayRose,
-                            borderRadius: 16,
-                          ),
-                          child: const Center(
-                            child: Icon(Icons.movie_creation_rounded, color: AppColors.primaryPink, size: 24),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'journal_timelapse_title'.tr(),
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.primaryDark,
-                                ),
-                              ),
-                              Text(
-                                'journal_timelapse_subtitle'.tr(args: [_controller.highlightEntries.length.toString()]),
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ClayButton(
-                          color: AppColors.clayRose,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (ctx) => VideoRendererDialog(
-                                highlightEntries: _controller.highlightEntries,
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'journal_generate_btn'.tr(),
-                            style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.primaryDark),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-
-                  // Mucize Hatıra & Portre Stüdyosu Başlığı
+                  // Aura Yaratıcı Atölye (Suluboya, Hatıra Kartı, Time-Lapse Video Konsolide Vitrini)
                   Row(
                     children: [
                       const Icon(Icons.auto_awesome_rounded, color: AppColors.primaryPink, size: 18),
@@ -157,26 +100,45 @@ class _JournalScreenState extends State<JournalScreen> {
                       Text(
                         'studio_section_title'.tr(),
                         style: GoogleFonts.outfit(
-                          fontSize: 15,
+                          fontSize: 16,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark,
                         ),
                       ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.clayLavender,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '3 Atölye',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryPink,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
 
-                  // Stüdyo Seçenekleri: Masalsı Suluboya & Özel Hatıra Kartı
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                  // Yatay Kaydırılabilir Stüdyo Kartları
+                  SizedBox(
+                    height: 160,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      clipBehavior: Clip.none,
                       children: [
                         // 1. Masalsı Suluboya Portresi
-                        Expanded(
+                        SizedBox(
+                          width: 190,
                           child: GestureDetector(
                             onTap: () => WatercolorPortraitDialog.show(context),
                             child: ClayCard(
-                              color: const Color(0xFFFEE6E0),
+                              color: AppColors.clayRose,
                               padding: const EdgeInsets.all(14),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,16 +148,16 @@ class _JournalScreenState extends State<JournalScreen> {
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.all(8),
-                                        decoration: ClayTheme.clayDecoration(
-                                          color: Colors.white,
-                                          borderRadius: 12,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.90),
+                                          borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: const Icon(Icons.palette_rounded, color: AppColors.primaryPink, size: 20),
                                       ),
                                       const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.primaryPink),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
+                                  const Spacer(),
                                   Text(
                                     'portrait_watercolor_title'.tr(),
                                     maxLines: 2,
@@ -206,8 +168,7 @@ class _JournalScreenState extends State<JournalScreen> {
                                       color: AppColors.primaryDark,
                                     ),
                                   ),
-                                  const Spacer(),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 4),
                                   Text(
                                     'portrait_watercolor_badge'.tr(),
                                     style: GoogleFonts.plusJakartaSans(
@@ -224,11 +185,12 @@ class _JournalScreenState extends State<JournalScreen> {
                         const SizedBox(width: 12),
 
                         // 2. Özel Hatıra Kartı
-                        Expanded(
+                        SizedBox(
+                          width: 190,
                           child: GestureDetector(
                             onTap: () => KeepsakeCardDialog.show(context),
                             child: ClayCard(
-                              color: const Color(0xFFFFF0E6),
+                              color: AppColors.clayPeach,
                               padding: const EdgeInsets.all(14),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,16 +200,16 @@ class _JournalScreenState extends State<JournalScreen> {
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.all(8),
-                                        decoration: ClayTheme.clayDecoration(
-                                          color: Colors.white,
-                                          borderRadius: 12,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.90),
+                                          borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: const Icon(Icons.card_giftcard_rounded, color: AppColors.secondaryPeach, size: 20),
                                       ),
                                       const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.secondaryPeach),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
+                                  const Spacer(),
                                   Text(
                                     'keepsake_card_title'.tr(),
                                     maxLines: 2,
@@ -258,8 +220,7 @@ class _JournalScreenState extends State<JournalScreen> {
                                       color: AppColors.primaryDark,
                                     ),
                                   ),
-                                  const Spacer(),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 4),
                                   Text(
                                     'keepsake_card_badge'.tr(),
                                     style: GoogleFonts.plusJakartaSans(
@@ -273,10 +234,83 @@ class _JournalScreenState extends State<JournalScreen> {
                             ),
                           ),
                         ),
+                        const SizedBox(width: 12),
+
+                        // 3. Time-Lapse Video Üretici
+                        SizedBox(
+                          width: 190,
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => VideoRendererDialog(
+                                  highlightEntries: _controller.highlightEntries,
+                                ),
+                              );
+                            },
+                            child: ClayCard(
+                              color: AppColors.clayLavender,
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.90),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: const Icon(Icons.movie_creation_rounded, color: AppColors.primaryPink, size: 20),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.6),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          '${_controller.highlightEntries.length}',
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w800,
+                                            color: AppColors.primaryPink,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    'journal_timelapse_title'.tr(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w900,
+                                      color: AppColors.primaryDark,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'journal_generate_btn'.tr(),
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.primaryPink,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 20),
 
                   Text(
                     'journal_timeline_heading'.tr(),
@@ -340,6 +374,7 @@ class _JournalScreenState extends State<JournalScreen> {
                         onDelete: () => _controller.deleteEntry(entry.id!),
                       ),
                     ),
+                  const SizedBox(height: 84),
                 ],
               ),
       ),

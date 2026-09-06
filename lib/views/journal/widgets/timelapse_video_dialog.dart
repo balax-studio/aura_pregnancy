@@ -187,6 +187,16 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
           ],
         ),
         actions: [
+          TextButton.icon(
+            icon: const Icon(Icons.share_rounded, size: 18, color: AppColors.primaryPink),
+            label: Text(
+              'Videoyu Paylaş',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryPink),
+            ),
+            onPressed: () async {
+              await FFmpegVideoService.shareLastVideo();
+            },
+          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryPink,

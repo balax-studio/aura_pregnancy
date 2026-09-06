@@ -5,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/src/localization.dart';
 import 'package:easy_localization/src/translations.dart';
 
+import 'package:aura_pregnancy/services/app_nav_observer.dart';
+
 class JsonAssetLoader extends AssetLoader {
   final Map<String, dynamic> data;
 
@@ -33,6 +35,7 @@ Widget createLocalizedTestWidget({
   required Widget child,
   Locale locale = const Locale('tr'),
 }) {
+  AppNavObserver.instance.reset();
   EasyLocalization.logger.enableLevels = [];
   final translations = Translations(getTrTranslations());
   Localization.load(locale, translations: translations);
@@ -47,6 +50,9 @@ Widget createLocalizedTestWidget({
     child: Builder(
       builder: (context) {
         return MaterialApp(
+          navigatorObservers: [
+            AppNavObserver.instance,
+          ],
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

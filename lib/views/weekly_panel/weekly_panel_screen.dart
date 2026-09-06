@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../core/constants/app_colors.dart';
@@ -11,11 +12,15 @@ import 'widgets/medical_tests_checklist_card.dart';
 import 'widgets/ad_reward_dialog.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 import '../widgets/clay_native_ad_card.dart';
+import '../widgets/emergency_beacon_button.dart';
+import '../timeline/timeline_screen.dart';
 import '../../core/widgets/micro_animations.dart';
+import '../../core/theme/clay_theme.dart';
 
 /// Hafta Hafta Tıbbi Bilgilendirme ve Test Takvimi Ekranı
 class WeeklyPanelScreen extends StatefulWidget {
-  const WeeklyPanelScreen({super.key});
+  final int initialSubTab;
+  const WeeklyPanelScreen({super.key, this.initialSubTab = 0});
 
   @override
   State<WeeklyPanelScreen> createState() => _WeeklyPanelScreenState();
@@ -23,10 +28,12 @@ class WeeklyPanelScreen extends StatefulWidget {
 
 class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
   final WeeklyPanelController _controller = WeeklyPanelController();
+  late int _subTabIndex;
 
   @override
   void initState() {
     super.initState();
+    _subTabIndex = widget.initialSubTab;
     _controller.loadProfileWeek();
     _controller.addListener(() => setState(() {}));
     DatabaseHelper.appDataRevision.addListener(_onAppDataChanged);
@@ -57,12 +64,113 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
     );
   }
 
+  Widget _buildSubTabBar() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppColors.clayCardSurface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 1),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() => _subTabIndex = 0);
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: _subTabIndex == 0
+                    ? BoxDecoration(
+                        color: AppColors.primaryPink,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryPink.withValues(alpha: 0.28),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      )
+                    : null,
+                child: Center(
+                  child: Text(
+                    'nav_weekly'.tr(),
+                    style: GoogleFonts.outfit(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      color: _subTabIndex == 0 ? Colors.white : AppColors.textSecondary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() => _subTabIndex = 1);
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: _subTabIndex == 1
+                    ? BoxDecoration(
+                        color: AppColors.primaryPink,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryPink.withValues(alpha: 0.28),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      )
+                    : null,
+                child: Center(
+                  child: Text(
+                    'nav_journey'.tr(),
+                    style: GoogleFonts.outfit(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      color: _subTabIndex == 1 ? Colors.white : AppColors.textSecondary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_controller.isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
         body: Center(child: CircularProgressIndicator(color: AppColors.primaryPink)),
+      );
+    }
+
+    if (_subTabIndex == 1) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildSubTabBar(),
+              const Expanded(child: TimelineScreen()),
+            ],
+          ),
+        ),
       );
     }
 
@@ -102,15 +210,18 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
           ],
         ),
         actions: const [
+          MedicalInfoButton(),
+          SizedBox(width: 4),
           Padding(
             padding: EdgeInsets.only(right: 14),
-            child: MedicalInfoButton(),
+            child: EmergencyBeaconButton(),
           ),
         ],
       ),
       body: SafeArea(
         child: Column(
           children: [
+            _buildSubTabBar(),
             // 1-40 Hafta Kaydırılabilir Şerit (Gelecek Haftalar Reklam Kilitli)
             WeeklyTimelineStrip(
               selectedWeek: _controller.selectedWeek,
@@ -164,7 +275,7 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
                     const StaggeredSlideFade(
                       index: 3,
                       child: ClayNativeAdCard(
-                        cardColor: Color(0xFFFEE6E0),
+                        cardColor: AppColors.clayRose,
                         icon: Icons.spa_rounded,
                       ),
                     ),
@@ -175,7 +286,7 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
                       index: 4,
                       child: MedicalDisclaimerBanner(),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 84),
                   ],
                 ),
               ),

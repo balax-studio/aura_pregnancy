@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:aura_pregnancy/views/main_navigation_scaffold.dart';
+import 'package:aura_pregnancy/core/widgets/fluid_clay_bottom_bar.dart';
 import 'package:aura_pregnancy/views/dashboard/dashboard_screen.dart';
 import 'package:aura_pregnancy/views/dashboard/widgets/interactive_3d_fetus_widget.dart';
 import 'package:aura_pregnancy/core/widgets/fruit_3d_widget.dart';
@@ -119,10 +120,50 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.byType(JournalScreen), findsOneWidget);
 
-      // 4: Acil
-      await tester.tap(find.text('nav_emergency'.tr()));
-      await tester.pump(const Duration(milliseconds: 300));
+      // 4: Acil Durum (Kalıcı AppBar Güvenlik Rozeti)
+      await tester.tap(find.byKey(const ValueKey('appbar_emergency_beacon')).first);
+      await tester.pumpAndSettle();
       expect(find.byType(EmergencyScreen), findsOneWidget);
+    });
+
+    testWidgets('5. Dialog açıldığında alt navigasyon çubuğu otomatik gizlenir, kapanınca geri gelir', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        createLocalizedTestWidget(
+          child: const MainNavigationScaffold(),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.byType(FluidClayBottomNavBar), findsOneWidget);
+
+      // Dialog aç
+      final context = tester.element(find.byType(MainNavigationScaffold));
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Test Dialog'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Kapat'),
+            ),
+          ],
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Dialog açıkken alt bar gizlenmiş olmalı
+      expect(find.text('Test Dialog'), findsOneWidget);
+      expect(find.byType(FluidClayBottomNavBar), findsNothing);
+
+      // Dialogu kapat
+      await tester.tap(find.text('Kapat'));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Alt bar tekrar görünür olmalı
+      expect(find.byType(FluidClayBottomNavBar), findsOneWidget);
     });
   });
 }

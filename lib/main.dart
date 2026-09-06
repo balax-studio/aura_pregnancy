@@ -10,6 +10,7 @@ import 'core/theme/clay_theme.dart';
 import 'core/constants/app_colors.dart';
 import 'services/database_helper.dart';
 import 'services/att_tracking_service.dart';
+import 'services/app_nav_observer.dart';
 import 'core/services/ad_service.dart';
 import 'models/profile_model.dart';
 import 'views/welcome/language_selection_screen.dart';
@@ -51,6 +52,9 @@ class AuraPregnancyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Aura Pregnancy',
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [
+        AppNavObserver.instance,
+      ],
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,

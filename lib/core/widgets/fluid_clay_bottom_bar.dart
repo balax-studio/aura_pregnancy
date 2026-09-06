@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
 
 /// Alt gezinti çubuğu sekme öğesi tanımı
@@ -97,8 +99,10 @@ class _FluidClayBottomNavBarState extends State<FluidClayBottomNavBar>
         : AppColors
             .primaryPink; // Belirgin, yüksek kontrastlı ve sıcak Clay Pembe
 
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, math.max(12.0, bottomInset)),
       height: 72,
       child: AnimatedBuilder(
         animation: _animController,
@@ -130,7 +134,7 @@ class _FluidClayBottomNavBarState extends State<FluidClayBottomNavBar>
                         barColor: AppColors.clayCardSurface,
                         bubbleColor: activeBubbleColor,
                         stretchFactor: stretchFactor,
-                        shadowTint: const Color(0xFF9E7B83),
+                        shadowTint: AppColors.clayOuterDrop,
                       ),
                     ),
                   ),
@@ -153,7 +157,10 @@ class _FluidClayBottomNavBarState extends State<FluidClayBottomNavBar>
                         return Expanded(
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: () => widget.onTabSelected(index),
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              widget.onTabSelected(index);
+                            },
                             child: _NavItemWidget(
                               item: item,
                               isSelected: isSelected,
@@ -195,12 +202,12 @@ class _NavItemWidget extends StatelessWidget {
     // Aktif baloncuk üzerinde bembeyaz yüksek kontrastlı ikon, pasifken koyu kömür
     final iconColor = item.isEmergency
         ? (activeFactor > 0.4 ? Colors.white : AppColors.medicalAlertRed)
-        : (activeFactor > 0.4 ? Colors.white : const Color(0xFF5C4F53));
+        : (activeFactor > 0.4 ? Colors.white : AppColors.textSecondary);
 
     // Başlık metni rengi (aktif baloncuk dışındadır, altta net ve belirgindir)
     final textColor = item.isEmergency
         ? AppColors.medicalAlertRed
-        : (isSelected ? AppColors.primaryPink : const Color(0xFF6B5E62));
+        : (isSelected ? AppColors.primaryPink : AppColors.textSecondary);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -210,12 +217,12 @@ class _NavItemWidget extends StatelessWidget {
           child: Transform.scale(
             scale: scale,
             child: SizedBox(
-              width: 38,
-              height: 28,
+              width: 44,
+              height: 30,
               child: Center(
                 child: Icon(
                   item.icon,
-                  size: 21,
+                  size: 23,
                   color: iconColor,
                 ),
               ),
@@ -227,11 +234,11 @@ class _NavItemWidget extends StatelessWidget {
           item.label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 10.5,
-            fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+          style: GoogleFonts.quicksand(
+            fontSize: 11.5,
+            fontWeight: isSelected ? FontWeight.w900 : FontWeight.w800,
             color: textColor,
-            fontFamily: 'Quicksand',
+            letterSpacing: -0.2,
           ),
         ),
       ],
@@ -299,9 +306,9 @@ class _FluidMeltBarPainter extends CustomPainter {
     canvas.save();
     canvas.clipRRect(rrect);
 
-    // Baloncuk sadece ikonun arkasına kompakt oturur (yükseklik ~32px)
-    final bubbleRadiusX = 22.0 * (1.0 + stretchFactor);
-    const bubbleRadiusY = 16.0;
+    // Baloncuk 4 sekmeli ferah genişliğe tam oturur
+    final bubbleRadiusX = 26.0 * (1.0 + stretchFactor);
+    const bubbleRadiusY = 18.0;
     const bubbleCenterY = 22.0;
 
     // Sınır güvenliği (clamp)
@@ -359,14 +366,14 @@ class _FluidMeltBarPainter extends CustomPainter {
           Colors.white.withValues(alpha: 0.45),
           bubbleColor,
           bubbleColor,
-          const Color(0xFF6B1B36).withValues(alpha: 0.20),
+          AppColors.primaryDark.withValues(alpha: 0.25),
         ],
         stops: const [0.0, 0.22, 0.78, 1.0],
       ).createShader(bubbleRect);
 
     // Baloncuğun taban gölgesi
     final bubbleShadowPaint = Paint()
-      ..color = const Color(0xFF5C2636).withValues(alpha: 0.20)
+      ..color = AppColors.primaryDark.withValues(alpha: 0.20)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
     canvas.drawRRect(bubbleRRect.shift(const Offset(0, 3)), bubbleShadowPaint);
 

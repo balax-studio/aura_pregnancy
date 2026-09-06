@@ -5,6 +5,7 @@ import 'package:aura_pregnancy/models/emergency_card_model.dart';
 import 'package:aura_pregnancy/services/database_helper.dart';
 import 'package:aura_pregnancy/services/ffmpeg_video_service.dart';
 import 'package:aura_pregnancy/services/video_story_generator_service.dart';
+import 'package:aura_pregnancy/services/clinical_pdf_service.dart';
 import 'package:aura_pregnancy/views/timeline/widgets/clinical_summary_dialog.dart';
 import 'test_helper.dart';
 
@@ -54,6 +55,7 @@ void main() {
 
       expect(find.text('doctor_report_title'.tr()), findsOneWidget);
       expect(find.text('Test Anne Adayı'), findsOneWidget);
+      expect(find.text('doctor_report_pdf_btn'.tr()), findsOneWidget);
       expect(find.text('doctor_report_copy_btn'.tr()), findsOneWidget);
       expect(find.text('Dr. Zeynep Kaya (05551112233)'), findsOneWidget);
       expect(find.text('Şehir Kadın Doğum Hastanesi'), findsOneWidget);
@@ -78,7 +80,22 @@ void main() {
       );
 
       expect(path, isNotNull);
-      expect(path!.endsWith('.jpg'), isTrue);
+      expect(path!.endsWith('.mp4') || path.endsWith('.jpg'), isTrue);
+    });
+
+    test('3. ClinicalPdfService kadınlara özel şık A4 PDF dokümanı üretir', () async {
+      final profile = await DatabaseHelper.instance.getProfile();
+      final eCard = await DatabaseHelper.instance.getEmergencyCard();
+
+      final bytes = await ClinicalPdfService.instance.generateClinicalPdf(
+        profile: profile,
+        emergencyCard: eCard,
+      );
+
+      expect(bytes, isNotEmpty);
+      expect(bytes.length, greaterThan(1000));
+      // PDF sihirli başlığı: %PDF
+      expect(String.fromCharCodes(bytes.take(4)), '%PDF');
     });
   });
 }

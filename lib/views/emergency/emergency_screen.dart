@@ -12,7 +12,8 @@ import '../../services/database_helper.dart';
 
 /// Gebelikte Acil Tıbbi Kart ve Hızlı Doktor Arama Ekranı
 class EmergencyScreen extends StatefulWidget {
-  const EmergencyScreen({super.key});
+  final VoidCallback? onBack;
+  const EmergencyScreen({super.key, this.onBack});
 
   @override
   State<EmergencyScreen> createState() => _EmergencyScreenState();
@@ -123,6 +124,18 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        leading: (widget.onBack != null || Navigator.canPop(context))
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primaryDark),
+                onPressed: () {
+                  if (widget.onBack != null) {
+                    widget.onBack!();
+                  } else if (Navigator.canPop(context)) {
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            : null,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

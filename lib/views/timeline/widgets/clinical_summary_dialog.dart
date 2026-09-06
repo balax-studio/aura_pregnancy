@@ -7,6 +7,7 @@ import '../../../core/theme/clay_theme.dart';
 import '../../../models/profile_model.dart';
 import '../../../models/emergency_card_model.dart';
 import '../../../services/database_helper.dart';
+import '../../../services/clinical_pdf_service.dart';
 
 /// Aura Pregnancy - Klinik Hekim Raporu & Sağlık Özeti Diyaloğu
 /// Hekim randevularında anne adayının klinik verilerini tek tıkla incelemesini ve paylaşmasını sağlar.
@@ -84,6 +85,32 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
     return buffer.toString();
   }
 
+  bool _isGeneratingPdf = false;
+
+  Future<void> _generateAndSharePdf() async {
+    setState(() => _isGeneratingPdf = true);
+    try {
+      await ClinicalPdfService.instance.generateAndShareReport(
+        profile: _profile,
+        emergencyCard: _emergencyCard,
+      );
+    } catch (e) {
+      debugPrint('Error generating/sharing clinical PDF: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('PDF oluşturulurken bir sorun oluştu: $e'),
+            backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isGeneratingPdf = false);
+    }
+  }
+
   void _copyToClipboard() {
     final text = _generateClinicalText();
     Clipboard.setData(ClipboardData(text: text));
@@ -115,7 +142,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Container(
-        constraints: const BoxConstraints(maxHeight: 620),
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
         padding: const EdgeInsets.all(22),
         decoration: ClayTheme.clayDecoration(
           color: AppColors.clayCardSurface,
@@ -213,22 +240,63 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Kopyala / Paylaş Eylem Butonu
+                  // 1. Ana Eylem: Kadınlara Özel A4 PDF Raporu Oluştur & İndir
+                  ClayButton(
+                    color: const Color(0xFFFEE6E0),
+                    height: 52,
+                    borderRadius: 16,
+                    onPressed: _isGeneratingPdf ? null : _generateAndSharePdf,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (_isGeneratingPdf) ...[
+                          const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primaryPink),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            'doctor_report_pdf_loading'.tr(),
+                            style: GoogleFonts.nunito(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primaryDark,
+                            ),
+                          ),
+                        ] else ...[
+                          const Icon(Icons.picture_as_pdf_rounded, color: AppColors.primaryPink, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            'doctor_report_pdf_btn'.tr(),
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.primaryDark,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // 2. İkincil Eylem: Özeti Panoya Kopyala
                   ClayButton(
                     color: const Color(0xFFD4EBD6),
-                    height: 52,
+                    height: 46,
                     borderRadius: 16,
                     onPressed: _copyToClipboard,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.copy_rounded, color: Color(0xFF2E6135), size: 20),
+                        const Icon(Icons.copy_rounded, color: Color(0xFF2E6135), size: 18),
                         const SizedBox(width: 8),
                         Text(
                           'doctor_report_copy_btn'.tr(),
                           style: GoogleFonts.nunito(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
                             color: const Color(0xFF2E6135),
                           ),
                         ),

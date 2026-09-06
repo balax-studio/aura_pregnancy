@@ -92,19 +92,10 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
         final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
         if (byteData != null) {
           final pngBytes = byteData.buffer.asUint8List();
-          String? dirPath;
-          if (!kIsWeb && Platform.isAndroid) {
-            final publicDownload = Directory('/storage/emulated/0/Download');
-            if (publicDownload.existsSync()) {
-              dirPath = publicDownload.path;
-            }
-          }
-          if (dirPath == null) {
-            final dir = await getDownloadsDirectory() ?? await getApplicationDocumentsDirectory();
-            dirPath = dir.path;
-          }
-          final file = File('$dirPath/Aura_Ultrason_Portresi_${DateTime.now().millisecondsSinceEpoch}.png');
-          await file.writeAsBytes(pngBytes);
+          await MediaService.instance.saveImageToGallery(
+            imageBytes: pngBytes,
+            fileNamePrefix: 'Aura_Suluboya_Portresi',
+          );
         }
       }
       if (mounted) {
@@ -132,7 +123,7 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
               children: [
                 const Icon(Icons.info_outline_rounded, color: Colors.white, size: 20),
                 const SizedBox(width: 8),
-                Expanded(child: Text('media_error_select'.tr(args: [e.toString()]))),
+                Expanded(child: Text('media_error_save'.tr(args: [e.toString()]))),
               ],
             ),
             backgroundColor: Colors.redAccent,
@@ -146,6 +137,22 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
     }
   }
 
+  // Suluboya Temel Pigment Matrisi: Sert siyah/gri ultrason görüntüsünü sıcak pastel sepya, gül kurusu ve fildişine dönüştürür
+  static const List<double> _watercolorBaseMatrix = [
+    0.45, 0.35, 0.20, 0, 115,
+    0.28, 0.45, 0.18, 0, 90,
+    0.22, 0.28, 0.42, 0, 100,
+    0.00, 0.00, 0.00, 1, 0,
+  ];
+
+  // Suluboya Işıma ve Su Yayılma Matrisi (Pigment Bleed / Glow)
+  static const List<double> _watercolorBleedMatrix = [
+    0.55, 0.30, 0.15, 0, 130,
+    0.20, 0.50, 0.15, 0, 80,
+    0.15, 0.20, 0.55, 0, 95,
+    0.00, 0.00, 0.00, 1, 0,
+  ];
+
   Widget _buildUltrasoundImage({bool applyFilter = false}) {
     Widget rawImage;
     if (_photoPath.startsWith('assets/')) {
@@ -157,9 +164,14 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
           fit: BoxFit.cover,
         ),
       );
+    } else if (kIsWeb) {
+      rawImage = Image.asset(
+        'assets/images/sample_ultrasound.png',
+        fit: BoxFit.cover,
+      );
     } else {
       rawImage = Image.file(
-        File(_photoPath),
+        File(_photoPath) as dynamic,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Image.asset(
           'assets/images/sample_ultrasound.png',
@@ -172,28 +184,65 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
       return rawImage;
     }
 
-    // Masalsı Suluboya & Pastel Efekt Katmanları
+    // Masalsı Çok Katmanlı Suluboya & Pastel Sanat Tablosu
     return Stack(
       fit: StackFit.expand,
       children: [
-        // 1. Temel Görüntü
-        rawImage,
-        // 2. Sıcak Pastel Ten & Suluboya Renk Geçişi
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color(0xFFFFE0D6).withValues(alpha: 0.65),
-                const Color(0xFFFDE8E4).withValues(alpha: 0.50),
-                const Color(0xFFE8F0FE).withValues(alpha: 0.55),
-              ],
+        // 1. Temel Sanatsal Renk Dönüşümü (Sıcak Sepya / Gül Kurusu Pigmenti)
+        ColorFiltered(
+          colorFilter: const ColorFilter.matrix(_watercolorBaseMatrix),
+          child: rawImage,
+        ),
+        // 2. Islak Üzerine Islak Pigment Yayılması (Watercolor Bleed & Bloom)
+        Positioned.fill(
+          child: ImageFiltered(
+            imageFilter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+            child: Opacity(
+              opacity: 0.55,
+              child: ColorFiltered(
+                colorFilter: const ColorFilter.matrix(_watercolorBleedMatrix),
+                child: rawImage,
+              ),
             ),
           ),
         ),
-        // 3. Masalsı Yumuşak Işık Efekti
-        CustomPaint(
+        // 3. Masalsı Suluboya Degradesi (Pastel Fırça Yıkaması)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color(0xFFFFD4C4).withValues(alpha: 0.65), // Sıcak pudra şeftali
+                  const Color(0xFFFBE0DC).withValues(alpha: 0.45), // Narin gül
+                  const Color(0xFFEADBFA).withValues(alpha: 0.50), // Bebek leylağı
+                  const Color(0xFFD2EFF7).withValues(alpha: 0.50), // Masalsı gökyüzü mavisi
+                ],
+                stops: const [0.0, 0.35, 0.70, 1.0],
+              ),
+            ),
+          ),
+        ),
+        // 4. Masumiyet Işıltısı (Yumuşak Merkez Aydınlatması)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.center,
+                radius: 0.85,
+                colors: [
+                  Colors.white.withValues(alpha: 0.30),
+                  const Color(0xFFFFF4F0).withValues(alpha: 0.15),
+                  Colors.transparent,
+                ],
+                stops: const [0.0, 0.50, 1.0],
+              ),
+            ),
+          ),
+        ),
+        // 5. Suluboya Kağıdı Dokusu, Fırça Kenar Erimesi ve Sanatçı Sıçratmaları
+        const CustomPaint(
           painter: _WatercolorTexturePainter(),
         ),
       ],
@@ -495,26 +544,76 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
   }
 }
 
-/// Suluboya ve Fırça Dokusu Çizicisi
+/// Suluboya Kağıdı Dokusu, Fırça Kenar Erimesi ve Sanatçı Damlacıkları Çizicisi
 class _WatercolorTexturePainter extends CustomPainter {
+  const _WatercolorTexturePainter();
+
+  // Doğal suluboya sıçratmaları için sabit sanatsal koordinat ve renkler
+  static const List<_SplatterDot> _splatters = [
+    _SplatterDot(Offset(0.08, 0.12), 2.8, Color(0x55E5989B)), // Narin gül
+    _SplatterDot(Offset(0.12, 0.16), 1.6, Color(0x44B5838D)),
+    _SplatterDot(Offset(0.88, 0.14), 2.6, Color(0x55C5BAE8)), // Pastel lavanta
+    _SplatterDot(Offset(0.84, 0.20), 1.8, Color(0x449DBBE2)), // Bebek mavisi
+    _SplatterDot(Offset(0.10, 0.82), 2.4, Color(0x44E0A899)), // Şeftali
+    _SplatterDot(Offset(0.15, 0.88), 1.5, Color(0x55D4A373)), // Ilık kehribar
+    _SplatterDot(Offset(0.86, 0.84), 3.0, Color(0x44E29578)), // Mercan
+    _SplatterDot(Offset(0.80, 0.89), 1.9, Color(0x4483C5BE)), // Nane dokunuşu
+  ];
+
   @override
   void paint(Canvas canvas, Size size) {
-    // Yumuşak Köşe Vignette
     final rect = Offset.zero & size;
-    final paint = Paint()
+
+    // 1. Kenar Fırça Erimesi ve Vignette (Deckle Edge / Feathery wash)
+    final vignettePaint = Paint()
       ..shader = RadialGradient(
         center: Alignment.center,
         radius: 0.95,
         colors: [
           Colors.transparent,
-          const Color(0xFFFBE4DC).withValues(alpha: 0.35),
-          const Color(0xFFE8D5C8).withValues(alpha: 0.20),
+          const Color(0xFFFBE4DC).withValues(alpha: 0.25),
+          const Color(0xFFF0DCD3).withValues(alpha: 0.50),
+          const Color(0xFFE8D0C5).withValues(alpha: 0.70),
         ],
-        stops: const [0.65, 0.90, 1.0],
+        stops: const [0.60, 0.80, 0.92, 1.0],
       ).createShader(rect);
-    canvas.drawRect(rect, paint);
+    canvas.drawRect(rect, vignettePaint);
+
+    // 2. 300g Cold-Pressed Suluboya Kağıdı Dokusu (Subtle Paper Grain)
+    final grainPaint = Paint()
+      ..color = const Color(0xFF7A5848).withValues(alpha: 0.035)
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
+
+    const step = 8.0;
+    for (double x = 4; x < size.width; x += step) {
+      for (double y = 4; y < size.height; y += step) {
+        if (((x * 17 + y * 31).toInt() % 7) == 0) {
+          canvas.drawCircle(Offset(x, y), 0.8, grainPaint);
+        }
+      }
+    }
+
+    // 3. Sanatsal Suluboya Leke ve Sıçratmaları (Pigment Splatters)
+    final splatterPaint = Paint()..style = PaintingStyle.fill;
+    for (final dot in _splatters) {
+      splatterPaint.color = dot.color;
+      canvas.drawCircle(
+        Offset(dot.normalizedPos.dx * size.width, dot.normalizedPos.dy * size.height),
+        dot.radius,
+        splatterPaint,
+      );
+    }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SplatterDot {
+  final Offset normalizedPos;
+  final double radius;
+  final Color color;
+
+  const _SplatterDot(this.normalizedPos, this.radius, this.color);
 }

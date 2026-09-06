@@ -80,9 +80,15 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 300));
 
-      // Yolculuk sekmesine tıkla
+      // 1. Haftalık & Yolculuk ana sekmesine tıkla
+      await tester.tap(find.text('nav_weekly'.tr()));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      // 2. Zaman Tüneli / Yolculuk alt sekmesine tıkla
       await tester.tap(find.text('nav_journey'.tr()));
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(TimelineScreen), findsOneWidget);
       expect(find.text('timeline_appbar_title'.tr()), findsOneWidget);

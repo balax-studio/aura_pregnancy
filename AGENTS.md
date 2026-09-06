@@ -35,5 +35,10 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 - **Gradle & AGP:** `gradle-8.9-all.zip`, Android Gradle Plugin `8.7.0`, Kotlin `1.9.24`.
 - **gradle.properties:** `org.gradle.java.home=C\:\\Program Files\\Eclipse Adoptium\\jdk-17.0.20.101-hotspot` sabit bulunmalıdır.
 - **VS Code:** `.vscode/settings.json` içinde `"java.import.gradle.enabled": false` ve `"gradle.autoDetect": "off"` tanımlı kalarak IDE arka plan çakışmaları engellenir.
-- **Tekil Format:** Yalnızca `.gradle` (Groovy) kullanılır, çift `.gradle.kts` dosyaları oluşturulmaz.
-- **Android SDK & NDK Standartı:** Paket veya plugin kaynaklı SDK/NDK eksikliği olduğunda suni sürüm düşürme yapılmayacak; doğrudan Android Studio SDK Manager üzerinden gerekli SDK Platform (API 35/36) ve NDK/CMake kurulumu yönlendirilecektir.
+## 4. UI Slop Önleme Standartları (Anti-Slop Kuralları)
+- **Token Zorunluluğu:** Widget dosyalarında rastgele inline `Color(0xFF...)` yazılmayacak; tüm renkler `AppColors` token'ları üzerinden alınacaktır (`AppColors.clayRose`, `AppColors.claySky`, vb.).
+- **İç İçe Gölge Slop'ı (No Nested Shadow Bleed):** `ClayCard` içine konan küçük ikon ve sayaç kutularına tekrar ağır clay gölgesi verilmeyecek; temiz düz `BoxDecoration` kullanılacaktır.
+- **Tipografi Standartı:** Fontlar asla `fontFamily: 'Quicksand'` gibi ham string ile çağrılmayacak; doğrudan `GoogleFonts.outfit`, `GoogleFonts.quicksand` veya `GoogleFonts.plusJakartaSans` üzerinden bağlanacaktır.
+- **Alt Bar Boşluğu (Bottom Inset):** Alt gezinti çubuğunun ekran içeriğini kapatmaması için tüm kaydırılabilir listelerin sonuna `SizedBox(height: 84)` bırakılacaktır.
+- **Klavye Gizlenmesi:** Form elemanları odaklandığında ve klavye açıldığında (`viewInsets.bottom > 0`), alt gezinme çubuğu formun üzerine çıkmayıp gizlenecektir.
+

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'dart:io' if (dart.library.html) 'io_stubs.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -14,7 +15,45 @@ class MediaService {
   MediaService._internal();
   static final MediaService instance = MediaService._internal();
 
+  static const MethodChannel _galleryChannel = MethodChannel('com.balaxstudio.aura/gallery');
   final ImagePicker _picker = ImagePicker();
+
+  /// Görseli cihaza / galeriye kaydeder (iOS'ta Fotoğraflar / Camera Roll, Android'de MediaStore Fotoğraflar albümü)
+  Future<bool> saveImageToGallery({
+    required Uint8List imageBytes,
+    required String fileNamePrefix,
+  }) async {
+    if (kIsWeb) return false;
+
+    // Mobil (Android & iOS): Yerel MethodChannel ile doğrudan sistem galerisine kaydet
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+      try {
+        final success = await _galleryChannel.invokeMethod<bool>(
+          'saveImageToGallery',
+          {
+            'imageBytes': imageBytes,
+            'fileNamePrefix': fileNamePrefix,
+          },
+        );
+        if (success == true) {
+          return true;
+        }
+      } catch (e) {
+        debugPrint('Native saveImageToGallery error: $e');
+      }
+    }
+
+    // Güvenli Fallback: Uygulama belgeler dizinine kaydet
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final file = File('${dir.path}/${fileNamePrefix}_${DateTime.now().millisecondsSinceEpoch}.png');
+      await file.writeAsBytes(imageBytes);
+      return true;
+    } catch (e) {
+      debugPrint('Error saving file to disk fallback: $e');
+      return false;
+    }
+  }
 
   /// Fotoğraf Seçim Diyaloğu (Galeri ve Kamera)
   Future<String?> showPhotoPickerDialog(BuildContext context) async {
@@ -197,7 +236,7 @@ class MediaService {
       }
 
       // Mobilde fotoğrafı uygulamanın kalıcı belgeler dizinine kopyala
-      return await _saveFileLocally(pickedFile.path);
+      return await _saveFileLocally(pickedFile);
     } catch (e) {
       debugPrint('pickImageFromGallery error: $e');
       if (context.mounted) {
@@ -240,7 +279,7 @@ class MediaService {
         return capturedFile.path;
       }
 
-      return await _saveFileLocally(capturedFile.path);
+      return await _saveFileLocally(capturedFile);
     } catch (e) {
       debugPrint('captureImageFromCamera error: $e');
       if (context.mounted) {
@@ -275,9 +314,10 @@ class MediaService {
     return false;
   }
 
-  /// Seçilen resmi yerel kalıcı dizine kaydeder (Mobil)
-  Future<String> _saveFileLocally(String originalPath) async {
-    if (kIsWeb) return originalPath;
+  /// Seçilen resmi yerel kalıcı dizine güvenli şekilde kaydeder (Mobil)
+  /// Scoped Storage ve izin kısıtlamalarına takılmamak için XFile.readAsBytes kullanılır.
+  Future<String> _saveFileLocally(XFile pickedFile) async {
+    if (kIsWeb) return pickedFile.path;
 
     try {
       final appDocDir = await getApplicationDocumentsDirectory();
@@ -286,16 +326,17 @@ class MediaService {
         await memoriesDir.create(recursive: true);
       }
 
-      final extension = p.extension(originalPath).isNotEmpty ? p.extension(originalPath) : '.jpg';
+      final extension = p.extension(pickedFile.path).isNotEmpty ? p.extension(pickedFile.path) : '.jpg';
       final fileName = 'memory_photo_${DateTime.now().millisecondsSinceEpoch}$extension';
       final targetPath = p.join(memoriesDir.path, fileName);
 
-      final originalFile = File(originalPath);
-      await originalFile.copy(targetPath);
+      final bytes = await pickedFile.readAsBytes();
+      final targetFile = File(targetPath);
+      await targetFile.writeAsBytes(bytes);
       return targetPath;
     } catch (e) {
       debugPrint('Error saving file locally, returning original path: $e');
-      return originalPath;
+      return pickedFile.path;
     }
   }
 
@@ -375,10 +416,17 @@ class MediaService {
     } else if (kIsWeb) {
       imageContent = _buildPlaceholder(width, height);
     } else {
-      final file = File(photoPath);
-      if (file.existsSync()) {
+      bool fileExists = false;
+      try {
+        final file = File(photoPath);
+        fileExists = file.existsSync();
+      } catch (_) {
+        fileExists = false;
+      }
+
+      if (fileExists) {
         imageContent = Image.file(
-          file as dynamic,
+          File(photoPath) as dynamic,
           width: width,
           height: height,
           fit: fit,
