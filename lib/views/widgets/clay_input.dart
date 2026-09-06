@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 
@@ -37,7 +38,7 @@ class _ClayTextFieldState extends State<ClayTextField> {
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
+          style: GoogleFonts.outfit(
             fontSize: 14,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
@@ -71,14 +72,14 @@ class _ClayTextFieldState extends State<ClayTextField> {
                     controller: widget.controller,
                     keyboardType: widget.keyboardType,
                     onChanged: widget.onChanged,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                     decoration: InputDecoration(
                       hintText: widget.hint,
-                      hintStyle: const TextStyle(
+                      hintStyle: GoogleFonts.plusJakartaSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textMuted,

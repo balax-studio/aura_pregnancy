@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
@@ -163,18 +164,19 @@ class _TimelineScreenState extends State<TimelineScreen> {
           children: [
             Text(
               'timeline_appbar_title'.tr(),
-              style: const TextStyle(
+              style: GoogleFonts.outfit(
                 color: AppColors.primaryDark,
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
+                letterSpacing: -0.3,
               ),
             ),
             Text(
               'timeline_appbar_subtitle'.tr(),
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.w600,
-                fontSize: 11,
+                fontSize: 11.5,
               ),
             ),
           ],
@@ -262,7 +264,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
             const SizedBox(width: 8),
             Text(
               'journal_write_memory'.tr(),
-              style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.white, fontSize: 14),
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: Colors.white, fontSize: 14),
             ),
           ],
         ),
@@ -286,7 +288,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
               const SizedBox(width: 8),
               Text(
                 'timeline_summary_title'.tr(),
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
               ),
             ],
           ),
@@ -347,19 +349,19 @@ class _TimelineScreenState extends State<TimelineScreen> {
               children: [
                 Text(
                   'timeline_pdf_report_title'.tr(),
-                  style: const TextStyle(
-                    fontSize: 13,
+                  style: GoogleFonts.outfit(
+                    fontSize: 13.5,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF2E6135),
+                    color: const Color(0xFF2E6135),
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'timeline_pdf_report_sub'.tr(),
-                  style: const TextStyle(
-                    fontSize: 10,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 10.5,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF4A6B50),
+                    color: const Color(0xFF4A6B50),
                   ),
                 ),
               ],
@@ -379,10 +381,10 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 const SizedBox(width: 6),
                 Text(
                   'timeline_pdf_report_btn'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF2E6135),
+                    color: const Color(0xFF2E6135),
                   ),
                 ),
               ],
@@ -420,12 +422,12 @@ class _TimelineScreenState extends State<TimelineScreen> {
             children: [
               Icon(icon, size: 14, color: AppColors.primaryDark),
               const SizedBox(width: 4),
-              Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+              Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
             ],
           ),
           const SizedBox(height: 4),
-          Text(mainValue, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.primaryDark)),
-          Text(subValue, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+          Text(mainValue, style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.primaryDark)),
+          Text(subValue, style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
         ],
       ),
     );
@@ -468,7 +470,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
               const SizedBox(width: 5),
               Text(
                 label,
-                style: TextStyle(
+                style: GoogleFonts.outfit(
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
                   color: isSelected ? AppColors.primaryPink : AppColors.textPrimary,
@@ -541,8 +543,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
                         children: [
                           Text(
                             AppDateUtils.formatDisplay(day.date),
-                            style: const TextStyle(
-                              fontSize: 14,
+                            style: GoogleFonts.outfit(
+                              fontSize: 14.5,
                               fontWeight: FontWeight.w800,
                               color: AppColors.primaryDark,
                             ),
@@ -555,7 +557,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                                 color: AppColors.primaryPink,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text('common_today'.tr(), style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w800)),
+                              child: Text('common_today'.tr(), style: GoogleFonts.plusJakartaSans(color: Colors.white, fontSize: 9.5, fontWeight: FontWeight.w800)),
                             ),
                           ],
                         ],
@@ -568,7 +570,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                         ),
                         child: Text(
                           'weekly_week_range'.tr(args: [day.pregnancyWeek.toString()]),
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.secondaryPeach),
+                          style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.secondaryPeach),
                         ),
                       ),
                     ],
@@ -612,7 +614,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                           Expanded(
                             child: Text(
                               day.symptomNotes!,
-                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                              style: GoogleFonts.plusJakartaSans(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                             ),
                           ),
                         ],
@@ -664,7 +666,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
           const SizedBox(width: 4),
           Text(
             label,
-            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: textColor),
+            style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w800, color: textColor),
           ),
         ],
       ),
@@ -681,13 +683,13 @@ class _TimelineScreenState extends State<TimelineScreen> {
             const SizedBox(height: 12),
             Text(
               'timeline_empty_title'.tr(),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+              style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
             ),
             const SizedBox(height: 6),
             Text(
               'timeline_empty_desc'.tr(),
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+              style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
             ),
           ],
         ),

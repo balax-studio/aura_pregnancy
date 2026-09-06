@@ -49,7 +49,7 @@ class BabyGrowthCard extends StatelessWidget {
                       children: [
                         Text(
                           'baby_week_name_label'.tr(args: [week.toString(), babyName]),
-                          style: const TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: AppColors.secondaryPeach,
@@ -58,10 +58,11 @@ class BabyGrowthCard extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           fruitName,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
+                          style: GoogleFonts.outfit(
+                            fontSize: 19,
+                            fontWeight: FontWeight.w900,
                             color: AppColors.primaryDark,
+                            letterSpacing: -0.3,
                           ),
                         ),
                       ],
@@ -83,9 +84,9 @@ class BabyGrowthCard extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Text('baby_est_length'.tr(), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+                          Text('baby_est_length'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
                           const SizedBox(height: 2),
-                          Text(length, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.primaryDark)),
+                          Text(length, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.primaryDark)),
                         ],
                       ),
                     ),
@@ -100,9 +101,9 @@ class BabyGrowthCard extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Text('baby_est_weight'.tr(), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+                          Text('baby_est_weight'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
                           const SizedBox(height: 2),
-                          Text(weight, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.primaryDark)),
+                          Text(weight, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.primaryDark)),
                         ],
                       ),
                     ),
@@ -221,7 +222,7 @@ class BabyGrowthCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   'disclaimer_weekly'.tr(),
-                  style: const TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,

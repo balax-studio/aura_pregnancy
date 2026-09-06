@@ -136,20 +136,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(width: 6),
                 Text(
                   'dashboard_welcome'.tr(args: [momName]),
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     color: AppColors.primaryDark,
                     fontWeight: FontWeight.w800,
-                    fontSize: 16,
+                    fontSize: 17,
+                    letterSpacing: -0.2,
                   ),
                 ),
               ],
             ),
             Text(
               AppDateUtils.formatToday(),
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.w600,
-                fontSize: 11,
+                fontSize: 11.5,
               ),
             ),
           ],
@@ -179,8 +180,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(width: 4),
                     Text(
                       'dashboard_emergency'.tr(),
-                      style: const TextStyle(
-                        fontSize: 11,
+                      style: GoogleFonts.outfit(
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w800,
                         color: AppColors.medicalAlertRed,
                       ),
@@ -226,8 +227,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                                 child: Text(
                                   'dashboard_trimester'.tr(args: [trimester.toString()]),
-                                  style: const TextStyle(
-                                    fontSize: 11,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 11.5,
                                     fontWeight: FontWeight.w800,
                                     color: AppColors.lavenderPurple,
                                   ),
@@ -246,8 +247,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     const SizedBox(width: 5),
                                     Text(
                                       'dashboard_weeks_left'.tr(args: [weeksRemaining.toString()]),
-                                      style: const TextStyle(
-                                        fontSize: 11,
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 11.5,
                                         fontWeight: FontWeight.w800,
                                         color: AppColors.primaryDark,
                                       ),
@@ -272,8 +273,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Text(
                             'dashboard_week_day'.tr(args: [weekNumber.toString(), dayNumber.toString()]),
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 24,
+                            style: GoogleFonts.outfit(
+                              fontSize: 25,
                               fontWeight: FontWeight.w900,
                               color: AppColors.primaryDark,
                               letterSpacing: -0.5,
@@ -301,8 +302,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 Flexible(
                                   child: Text(
                                     'dashboard_fruit_size'.tr(args: [fruitName]),
-                                    style: const TextStyle(
-                                      fontSize: 13,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 13.5,
                                       fontWeight: FontWeight.w800,
                                       color: AppColors.primaryDark,
                                     ),
@@ -316,8 +317,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           // Boy & Kilo Detayı
                           Text(
                             'dashboard_measurements'.tr(args: [weekData['length']?.toString() ?? '~30.0 cm', weekData['weight']?.toString() ?? '~600 gr']),
-                            style: const TextStyle(
-                              fontSize: 11,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5,
                               fontWeight: FontWeight.w700,
                               color: AppColors.textSecondary,
                             ),

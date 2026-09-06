@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
@@ -75,7 +76,7 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
               const SizedBox(width: 10),
               Text(
                 'weight_tracker_title'.tr(),
-                style: const TextStyle(
+                style: GoogleFonts.outfit(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
                   color: AppColors.primaryDark,
@@ -101,7 +102,7 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                         child: TextField(
                           controller: _controller,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          style: const TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                             color: AppColors.textPrimary,
@@ -109,6 +110,10 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText: 'weight_hint'.tr(),
+                            hintStyle: GoogleFonts.plusJakartaSans(
+                              color: AppColors.textMuted,
+                              fontSize: 14,
+                            ),
                           ),
                           onSubmitted: (val) {
                             final parsed = double.tryParse(val);
@@ -116,9 +121,9 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                           },
                         ),
                       ),
-                      const Text(
+                      Text(
                         'kg',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                        style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -139,7 +144,7 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                 },
                 child: Text(
                   'common_save'.tr(),
-                  style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                  style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                 ),
               ),
             ],
@@ -158,26 +163,26 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('weight_start_label'.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                    Text('${preWeight.toStringAsFixed(1)} kg', style: const TextStyle(fontWeight: FontWeight.w800)),
+                    Text('weight_start_label'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                    Text('${preWeight.toStringAsFixed(1)} kg', style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('weight_target_label'.tr(args: [week.toString()]), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                    Text('${targetWeight.toStringAsFixed(1)} kg', style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.successGreen)),
+                    Text('weight_target_label'.tr(args: [week.toString()]), style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                    Text('${targetWeight.toStringAsFixed(1)} kg', style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.successGreen)),
                   ],
                 ),
                 const Divider(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('weight_total_gain_label'.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                    Text('weight_total_gain_label'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.primaryDark)),
                     Text(
                       '${diff >= 0 ? "+" : ""}${diff.toStringAsFixed(1)} kg',
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         fontWeight: FontWeight.w800,
                         fontSize: 15,
                         color: diff > 5.0 ? AppColors.secondaryPeach : AppColors.primaryDark,
@@ -193,3 +198,4 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
     );
   }
 }
+

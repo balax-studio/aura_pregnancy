@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
@@ -65,7 +66,7 @@ class WeeklyTimelineStrip extends StatelessWidget {
                       children: [
                         Text(
                           'common_week_label'.tr(),
-                          style: TextStyle(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
                             color: isSelected
@@ -76,7 +77,7 @@ class WeeklyTimelineStrip extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           '$week',
-                          style: TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                             color: isSelected

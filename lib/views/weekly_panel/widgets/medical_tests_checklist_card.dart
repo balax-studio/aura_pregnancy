@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
@@ -43,7 +44,7 @@ class _MedicalTestsChecklistCardState extends State<MedicalTestsChecklistCard> {
               Expanded(
                 child: Text(
                   title,
-                  style: TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                     color: _isCompleted ? AppColors.successGreen : AppColors.waterBlue,
@@ -70,8 +71,8 @@ class _MedicalTestsChecklistCardState extends State<MedicalTestsChecklistCard> {
                       const SizedBox(width: 4),
                       Text(
                         _isCompleted ? 'test_completed'.tr() : 'test_to_do'.tr(),
-                        style: TextStyle(
-                          fontSize: 11,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 11.5,
                           fontWeight: FontWeight.w800,
                           color: _isCompleted ? AppColors.successGreen : AppColors.textPrimary,
                         ),
@@ -86,11 +87,11 @@ class _MedicalTestsChecklistCardState extends State<MedicalTestsChecklistCard> {
 
           Text(
             desc,
-            style: const TextStyle(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
-              height: 1.4,
+              height: 1.45,
             ),
           ),
           const SizedBox(height: 10),
@@ -108,7 +109,7 @@ class _MedicalTestsChecklistCardState extends State<MedicalTestsChecklistCard> {
                 Expanded(
                   child: Text(
                     action,
-                    style: const TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,

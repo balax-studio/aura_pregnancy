@@ -59,10 +59,10 @@ class _JournalScreenState extends State<JournalScreen> {
         centerTitle: true,
         title: Text(
           'journal_app_bar_title'.tr(),
-          style: const TextStyle(
-            color: AppColors.primaryDark,
-            fontWeight: FontWeight.w800,
+          style: GoogleFonts.outfit(
             fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: AppColors.primaryDark,
           ),
         ),
         actions: [
@@ -111,7 +111,7 @@ class _JournalScreenState extends State<JournalScreen> {
                             children: [
                               Text(
                                 'journal_timelapse_title'.tr(),
-                                style: const TextStyle(
+                                style: GoogleFonts.outfit(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w800,
                                   color: AppColors.primaryDark,
@@ -119,7 +119,7 @@ class _JournalScreenState extends State<JournalScreen> {
                               ),
                               Text(
                                 'journal_timelapse_subtitle'.tr(args: [_controller.highlightEntries.length.toString()]),
-                                style: const TextStyle(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textSecondary,
@@ -141,7 +141,7 @@ class _JournalScreenState extends State<JournalScreen> {
                           },
                           child: Text(
                             'journal_generate_btn'.tr(),
-                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.primaryDark),
+                            style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 12, color: AppColors.primaryDark),
                           ),
                         ),
                       ],
@@ -156,7 +156,7 @@ class _JournalScreenState extends State<JournalScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'studio_section_title'.tr(),
-                        style: const TextStyle(
+                        style: GoogleFonts.outfit(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
                           color: AppColors.primaryDark,
@@ -200,7 +200,7 @@ class _JournalScreenState extends State<JournalScreen> {
                                     'portrait_watercolor_title'.tr(),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.primaryDark,
@@ -210,7 +210,7 @@ class _JournalScreenState extends State<JournalScreen> {
                                   const SizedBox(height: 6),
                                   Text(
                                     'portrait_watercolor_badge'.tr(),
-                                    style: const TextStyle(
+                                    style: GoogleFonts.plusJakartaSans(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.primaryPink,
@@ -252,7 +252,7 @@ class _JournalScreenState extends State<JournalScreen> {
                                     'keepsake_card_title'.tr(),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: GoogleFonts.outfit(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w900,
                                       color: AppColors.primaryDark,
@@ -262,7 +262,7 @@ class _JournalScreenState extends State<JournalScreen> {
                                   const SizedBox(height: 6),
                                   Text(
                                     'keepsake_card_badge'.tr(),
-                                    style: const TextStyle(
+                                    style: GoogleFonts.plusJakartaSans(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.secondaryPeach,
@@ -280,10 +280,10 @@ class _JournalScreenState extends State<JournalScreen> {
 
                   Text(
                     'journal_timeline_heading'.tr(),
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: GoogleFonts.outfit(
+                      fontSize: 14,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
+                      color: AppColors.primaryDark,
                     ),
                   ),
                   const SizedBox(height: 12),

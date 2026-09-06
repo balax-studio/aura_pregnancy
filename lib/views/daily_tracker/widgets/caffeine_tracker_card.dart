@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/medical_specs.dart';
@@ -52,7 +53,7 @@ class CaffeineTrackerCard extends StatelessWidget {
                   const SizedBox(width: 10),
                   Text(
                     'caffeine_tracker_title'.tr(),
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 17,
                       fontWeight: FontWeight.w800,
                       color: isOverLimit ? AppColors.medicalAlertRed : AppColors.secondaryPeach,
@@ -74,7 +75,7 @@ class CaffeineTrackerCard extends StatelessWidget {
             children: [
               Text(
                 '$currentCaffeineMg / ${maxLimit.toInt()} mg',
-                style: TextStyle(
+                style: GoogleFonts.outfit(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: isOverLimit ? AppColors.medicalAlertRed : AppColors.textPrimary,
@@ -95,7 +96,7 @@ class CaffeineTrackerCard extends StatelessWidget {
                     ],
                     Text(
                       isOverLimit ? 'caffeine_tracker_limit_exceeded'.tr() : 'caffeine_tracker_remaining'.tr(args: [remaining.toString()]),
-                      style: TextStyle(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                         color: isOverLimit ? Colors.white : AppColors.secondaryPeach,
@@ -148,11 +149,11 @@ class CaffeineTrackerCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'caffeine_tracker_warning'.tr(),
-                      style: const TextStyle(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: AppColors.medicalAlertRed,
-                        height: 1.3,
+                        height: 1.35,
                       ),
                     ),
                   ),
@@ -186,9 +187,9 @@ class CaffeineTrackerCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.textPrimary)),
+          Text(name, style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 12, color: AppColors.textPrimary)),
           const SizedBox(width: 4),
-          Text(amountStr, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: AppColors.secondaryPeach)),
+          Text(amountStr, style: GoogleFonts.outfit(fontWeight: FontWeight.w800, fontSize: 11.5, color: AppColors.secondaryPeach)),
         ],
       ),
     );

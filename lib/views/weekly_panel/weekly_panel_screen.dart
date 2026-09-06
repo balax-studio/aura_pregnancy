@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../core/constants/app_colors.dart';
 import '../../controllers/weekly_panel_controller.dart';
@@ -83,15 +84,16 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
           children: [
             Text(
               'weekly_guide_title'.tr(args: [_controller.selectedWeek.toString()]),
-              style: const TextStyle(
+              style: GoogleFonts.outfit(
                 color: AppColors.primaryDark,
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
+                letterSpacing: -0.3,
               ),
             ),
             Text(
               'weekly_trimester_status'.tr(args: [_controller.selectedTrimester.toString(), statusText]),
-              style: const TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
