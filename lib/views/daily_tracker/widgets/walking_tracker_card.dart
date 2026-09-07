@@ -221,11 +221,17 @@ class _WalkingTrackerCardState extends State<WalkingTrackerCard> {
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
-                      decoration: ClayTheme.clayButtonDecoration(
+                      decoration: BoxDecoration(
                         color: isTargetReached
                             ? AppColors.clayMint
                             : AppColors.clayRose,
-                        borderRadius: 16,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isTargetReached
+                              ? AppColors.successGreen.withValues(alpha: 0.3)
+                              : AppColors.primaryPink.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

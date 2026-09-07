@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/safety_radar_data.dart';
+import '../../../core/theme/clay_theme.dart';
 import '../../../models/safety_item_model.dart';
 import '../../../services/database_helper.dart';
 
@@ -107,8 +108,19 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('🔎', style: TextStyle(fontSize: 44)),
-                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: AppColors.clayLavender.withValues(alpha: 0.5),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.search_off_rounded,
+                              size: 42,
+                              color: AppColors.primaryPink,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
                           Text(
                             'safety_empty_title'.tr(),
                             style: GoogleFonts.outfit(
@@ -153,28 +165,14 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
-          InkWell(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
-            },
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    offset: const Offset(0, 4),
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
-            ),
+          ClayButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: AppColors.clayCardSurface,
+            width: 44,
+            height: 44,
+            borderRadius: 16,
+            padding: EdgeInsets.zero,
+            child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -204,8 +202,9 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
             decoration: BoxDecoration(
               color: AppColors.clayMint,
               borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.clinicalGreen.withValues(alpha: 0.2)),
             ),
-            child: const Text('🔍', style: TextStyle(fontSize: 20)),
+            child: const Icon(Icons.radar_rounded, size: 22, color: AppColors.clinicalGreen),
           ),
         ],
       ),
@@ -312,24 +311,24 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
   Widget _buildSafetyCard(SafetyItem item, bool isFav) {
     Color badgeColor;
     String badgeText;
-    Color cardBorder;
+    Color cardColor;
     final isEn = context.locale.languageCode == 'en';
 
     switch (item.level) {
       case SafetyLevel.safe:
         badgeColor = AppColors.successGreen;
         badgeText = isEn ? 'SAFE' : 'GÜVENLİ';
-        cardBorder = AppColors.successGreen.withValues(alpha: 0.3);
+        cardColor = AppColors.clayMint;
         break;
       case SafetyLevel.moderate:
         badgeColor = AppColors.amberCaution;
         badgeText = isEn ? 'CAUTION' : 'ÖLÇÜLÜ / DİKKAT';
-        cardBorder = AppColors.amberCaution.withValues(alpha: 0.3);
+        cardColor = AppColors.clayPeach;
         break;
       case SafetyLevel.unsafe:
         badgeColor = AppColors.medicalAlertRed;
         badgeText = isEn ? 'AVOID' : 'SAKINCALI';
-        cardBorder = AppColors.medicalAlertRed.withValues(alpha: 0.3);
+        cardColor = AppColors.clayRose;
         break;
     }
 
@@ -338,179 +337,163 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
     final itemReason = item.localizedMedicalReason(context.locale.languageCode);
     final itemAlternative = item.localizedAlternative(context.locale.languageCode);
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: cardBorder, width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              offset: const Offset(0, 4),
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return ClayCard(
+      color: cardColor,
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(16),
+      borderRadius: 24,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Text(item.emoji, style: const TextStyle(fontSize: 26)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          itemTitle,
-                          style: GoogleFonts.outfit(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.primaryDark,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          item.category == SafetyCategory.food
-                              ? 'safety_filter_food'.tr()
-                              : (item.category == SafetyCategory.skincare ? 'safety_filter_skincare'.tr() : 'safety_filter_herb'.tr()),
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 11,
-                            color: AppColors.textMuted,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: badgeColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: badgeColor.withValues(alpha: 0.4)),
-                    ),
-                    child: Text(
-                      badgeText,
-                      style: GoogleFonts.outfit(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        color: badgeColor,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  IconButton(
-                    icon: Icon(
-                      isFav ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                      color: isFav ? AppColors.primaryPink : AppColors.textMuted,
-                      size: 22,
-                    ),
-                    onPressed: () => _toggleFavorite(item.id),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Text(
-                  itemSummary,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 13,
-                    color: AppColors.primaryDark,
-                    height: 1.35,
-                  ),
-                ),
-              ),
-              if (itemReason.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('🩺 ', style: TextStyle(fontSize: 13)),
-                      Expanded(
-                        child: Text(
-                          itemReason,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.textSecondary,
-                            height: 1.35,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-              if (itemAlternative != null && itemAlternative.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Row(
+              Text(item.emoji, style: const TextStyle(fontSize: 26)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('💡 ', style: TextStyle(fontSize: 12)),
-                    Expanded(
-                      child: Text(
-                        '${'safety_card_alternative'.tr()}: $itemAlternative',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.successGreen,
-                        ),
+                    Text(
+                      itemTitle,
+                      style: GoogleFonts.outfit(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.primaryDark,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      item.category == SafetyCategory.food
+                          ? 'safety_filter_food'.tr()
+                          : (item.category == SafetyCategory.skincare ? 'safety_filter_skincare'.tr() : 'safety_filter_herb'.tr()),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11,
+                        color: AppColors.textMuted,
                       ),
                     ),
                   ],
                 ),
-              ],
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: badgeColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: badgeColor.withValues(alpha: 0.4)),
+                ),
+                child: Text(
+                  badgeText,
+                  style: GoogleFonts.outfit(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    color: badgeColor,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+              IconButton(
+                icon: Icon(
+                  isFav ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                  color: isFav ? AppColors.primaryPink : AppColors.textMuted,
+                  size: 22,
+                ),
+                onPressed: () => _toggleFavorite(item.id),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.82),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Text(
+              itemSummary,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 13,
+                color: AppColors.primaryDark,
+                height: 1.35,
+              ),
+            ),
+          ),
+          if (itemReason.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InkWell(
-                    onTap: () => _shareCravingWithPartner(item),
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppColors.clayPeach,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          const Text('🍓', style: TextStyle(fontSize: 13)),
-                          const SizedBox(width: 6),
-                          Text(
-                            'safety_card_partner_share_btn'.tr(),
-                            style: GoogleFonts.outfit(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.primaryDark,
-                            ),
-                          ),
-                        ],
+                  const Icon(Icons.medical_services_outlined, size: 14, color: AppColors.textSecondary),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      itemReason,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textSecondary,
+                        height: 1.35,
                       ),
                     ),
                   ),
                 ],
               ),
+            ),
+          ],
+          if (itemAlternative != null && itemAlternative.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.lightbulb_outline_rounded, size: 14, color: AppColors.successGreen),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    '${'safety_card_alternative'.tr()}: $itemAlternative',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.successGreen,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ClayButton(
+                onPressed: () => _shareCravingWithPartner(item),
+                color: AppColors.clayCardSurface,
+                borderRadius: 14,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.favorite_rounded, size: 14, color: AppColors.primaryPink),
+                    const SizedBox(width: 6),
+                    Text(
+                      'safety_card_partner_share_btn'.tr(),
+                      style: GoogleFonts.outfit(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primaryDark,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

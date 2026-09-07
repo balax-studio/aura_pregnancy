@@ -96,28 +96,14 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
-          InkWell(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
-            },
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    offset: const Offset(0, 4),
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
-            ),
+          ClayButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: AppColors.clayCardSurface,
+            width: 44,
+            height: 44,
+            borderRadius: 16,
+            padding: EdgeInsets.zero,
+            child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -148,7 +134,7 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
               color: AppColors.clayRose,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Text('💌', style: TextStyle(fontSize: 20)),
+            child: const Icon(Icons.mark_email_unread_rounded, size: 20, color: AppColors.primaryDark),
           ),
         ],
       ),
@@ -234,15 +220,9 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.white.withValues(alpha: 0.85),
               borderRadius: BorderRadius.circular(18),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  offset: const Offset(0, 4),
-                  blurRadius: 10,
-                ),
-              ],
+              border: Border.all(color: Colors.white.withValues(alpha: 0.6)),
             ),
             child: Text(
               card['message'] as String,
@@ -265,7 +245,7 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
                   color: AppColors.textSecondary,
                 ),
               ),
-              const Text('💕', style: TextStyle(fontSize: 14)),
+              const Icon(Icons.favorite_rounded, size: 16, color: AppColors.primaryPink),
             ],
           ),
         ],
@@ -274,44 +254,38 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
   }
 
   Widget _buildShareButton(String message) {
-    return SizedBox(
-      width: double.infinity,
+    return ClayButton(
+      onPressed: () {
+        HapticFeedback.mediumImpact();
+        Clipboard.setData(ClipboardData(text: message));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Kart metni kopyalandı! Eşinize gönderebilirsiniz: "$message"',
+              style: GoogleFonts.plusJakartaSans(fontSize: 12),
+            ),
+            backgroundColor: AppColors.primaryPink,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      },
+      color: AppColors.primaryPink,
+      borderRadius: 20,
       height: 54,
-      child: ElevatedButton(
-        onPressed: () {
-          HapticFeedback.mediumImpact();
-          Clipboard.setData(ClipboardData(text: message));
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Kart metni kopyalandı! Eşinize gönderebilirsiniz: "$message"',
-                style: GoogleFonts.plusJakartaSans(fontSize: 12),
-              ),
-              backgroundColor: AppColors.primaryPink,
-              duration: const Duration(seconds: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.copy_rounded, color: Colors.white, size: 20),
+          const SizedBox(width: 10),
+          Text(
+            'Mesajı Kopyala & WhatsApp\'a Yapıştır',
+            style: GoogleFonts.outfit(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
             ),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryPink,
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.copy_rounded, color: Colors.white, size: 20),
-            const SizedBox(width: 10),
-            Text(
-              'Mesajı Kopyala & WhatsApp\'a Yapıştır',
-              style: GoogleFonts.outfit(
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

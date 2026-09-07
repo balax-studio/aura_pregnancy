@@ -239,7 +239,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: InkWell(
+                    child: ClayCard(
                       onTap: () {
                         HapticFeedback.selectionClick();
                         SafetyRadarScreen.open(
@@ -248,38 +248,35 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                           babyName: _controller.profile?.babyName,
                         );
                       },
-                      borderRadius: BorderRadius.circular(20),
-                      child: ClayCard(
-                        color: AppColors.clayMint,
-                        borderRadius: 20,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                        child: Row(
-                          children: [
-                            const Text('🔍', style: TextStyle(fontSize: 20)),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'daily_safety_radar'.tr(),
-                                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
-                                  ),
-                                  Text(
-                                    'daily_safety_radar_sub'.tr(),
-                                    style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
-                                  ),
-                                ],
-                              ),
+                      color: AppColors.clayMint,
+                      borderRadius: 20,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.radar_rounded, size: 20, color: AppColors.clinicalGreen),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'daily_safety_radar'.tr(),
+                                  style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                ),
+                                Text(
+                                  'daily_safety_radar_sub'.tr(),
+                                  style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: InkWell(
+                    child: ClayCard(
                       onTap: () {
                         HapticFeedback.selectionClick();
                         DoctorVaultScreen.open(
@@ -287,32 +284,29 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                           currentWeek: _controller.profile?.currentWeek ?? 1,
                         );
                       },
-                      borderRadius: BorderRadius.circular(20),
-                      child: ClayCard(
-                        color: AppColors.clayLavender,
-                        borderRadius: 20,
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                        child: Row(
-                          children: [
-                            const Text('🩺', style: TextStyle(fontSize: 20)),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'daily_doctor_vault'.tr(),
-                                    style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
-                                  ),
-                                  Text(
-                                    'daily_doctor_vault_sub'.tr(),
-                                    style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
-                                  ),
-                                ],
-                              ),
+                      color: AppColors.clayLavender,
+                      borderRadius: 20,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.medical_services_rounded, size: 20, color: AppColors.lavenderPurple),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'daily_doctor_vault'.tr(),
+                                  style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                ),
+                                Text(
+                                  'daily_doctor_vault_sub'.tr(),
+                                  style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

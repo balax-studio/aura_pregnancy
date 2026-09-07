@@ -145,7 +145,7 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
             Container(
               padding: const EdgeInsets.all(6),
               decoration: const BoxDecoration(
-                color: Color(0xFFFDE8E8),
+                color: AppColors.medicalAlertBg,
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.error_outline_rounded, color: AppColors.medicalAlertRed, size: 24),

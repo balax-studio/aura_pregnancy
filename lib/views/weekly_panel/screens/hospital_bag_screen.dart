@@ -139,19 +139,46 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
-          ),
-          ElevatedButton(
-            onPressed: () => _addItem(category),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryPink,
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            ),
-            child: Text('hospital_bag_add_btn'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.clayCardSurface,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: Center(
+                    child: Text(
+                      'doctor_vault_btn_cancel'.tr(),
+                      style: GoogleFonts.outfit(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.primaryPink,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => _addItem(category),
+                  child: Center(
+                    child: Text(
+                      'hospital_bag_add_btn'.tr(),
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -195,22 +222,29 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: ClayButton(
+        color: AppColors.primaryPink,
+        height: 50,
+        borderRadius: 22,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         onPressed: () {
           final currentCatKey = _categories[_tabController.index]['key'] as String;
           _showAddDialog(currentCatKey);
         },
-        backgroundColor: AppColors.primaryPink,
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        icon: const Icon(Icons.add_rounded, color: Colors.white),
-        label: Text(
-          'hospital_bag_btn_add'.tr(),
-          style: GoogleFonts.outfit(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: 14,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.add_rounded, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'hospital_bag_btn_add'.tr(),
+              style: GoogleFonts.outfit(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -461,46 +495,28 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
   Widget _buildItemCard(HospitalBagItem item) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => _toggleItem(item),
-          borderRadius: BorderRadius.circular(18),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: item.isPacked ? AppColors.itemPackedGreenBg : Colors.white,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: item.isPacked ? AppColors.successGreen.withValues(alpha: 0.3) : Colors.transparent,
-                width: 1.5,
+      child: ClayCard(
+        color: item.isPacked ? AppColors.clayMint : AppColors.clayCardSurface,
+        borderRadius: 18,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        onTap: () => _toggleItem(item),
+        child: Row(
+          children: [
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: item.isPacked ? AppColors.successGreen : Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: item.isPacked ? AppColors.successGreen : AppColors.textMuted.withValues(alpha: 0.4),
+                  width: 2,
+                ),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  offset: const Offset(0, 3),
-                  blurRadius: 8,
-                ),
-              ],
+              child: item.isPacked
+                  ? const Icon(Icons.check_rounded, size: 18, color: Colors.white)
+                  : null,
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: item.isPacked ? AppColors.successGreen : Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: item.isPacked ? AppColors.successGreen : AppColors.textMuted.withValues(alpha: 0.4),
-                      width: 2,
-                    ),
-                  ),
-                  child: item.isPacked
-                      ? const Icon(Icons.check_rounded, size: 18, color: Colors.white)
-                      : null,
-                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -541,8 +557,6 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
               ],
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

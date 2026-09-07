@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/clay_theme.dart';
 import '../../../models/profile_model.dart';
 
 /// Aura Pregnancy - Canlı Kilit Ekranı Fetus Kapsülü (Lockscreen Activity Preview)
@@ -24,7 +25,7 @@ class LockscreenCapsulePreview extends StatelessWidget {
                 color: AppColors.clayPeach,
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Text('📱', style: TextStyle(fontSize: 20)),
+              child: const Icon(Icons.phone_iphone_rounded, color: AppColors.primaryDark, size: 20),
             ),
             const SizedBox(width: 10),
             Text(
@@ -35,9 +36,12 @@ class LockscreenCapsulePreview extends StatelessWidget {
         ),
         content: LockscreenCapsulePreview(profile: profile),
         actions: [
-          TextButton(
+          ClayButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('btn_close'.tr(), style: GoogleFonts.outfit(color: AppColors.primaryPink, fontWeight: FontWeight.bold)),
+            color: AppColors.clayCardSurface,
+            borderRadius: 14,
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+            child: Text('btn_close'.tr(), style: GoogleFonts.outfit(color: AppColors.primaryPink, fontWeight: FontWeight.bold, fontSize: 13)),
           ),
         ],
       ),
@@ -89,7 +93,7 @@ class LockscreenCapsulePreview extends StatelessWidget {
                       color: AppColors.primaryPink.withValues(alpha: 0.25),
                       shape: BoxShape.circle,
                     ),
-                    child: const Center(child: Text('👶', style: TextStyle(fontSize: 20))),
+                    child: const Center(child: Icon(Icons.child_care_rounded, color: Colors.white, size: 22)),
                   ),
                   const SizedBox(width: 10),
                   Expanded(

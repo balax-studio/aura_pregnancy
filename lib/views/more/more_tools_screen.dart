@@ -479,54 +479,58 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
               itemCount: tools.length,
               itemBuilder: (context, index) {
                 final tool = tools[index];
-                return InkWell(
+                return ClayCard(
                   onTap: tool.onTap,
-                  borderRadius: BorderRadius.circular(22),
-                  child: ClayCard(
-                    color: tool.color,
-                    borderRadius: 22,
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(tool.emoji, style: const TextStyle(fontSize: 26)),
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.85),
-                                borderRadius: BorderRadius.circular(10),
+                  color: tool.color,
+                  borderRadius: 22,
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.85),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: tool.accentColor.withValues(alpha: 0.25),
+                                width: 1.2,
                               ),
-                              child: Icon(tool.icon, color: tool.accentColor, size: 16),
                             ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Text(
-                          tool.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.primaryDark,
+                            child: Center(
+                              child: Icon(tool.icon, color: tool.accentColor, size: 22),
+                            ),
                           ),
+                          Icon(Icons.arrow_forward_ios_rounded, size: 13, color: tool.accentColor.withValues(alpha: 0.6)),
+                        ],
+                      ),
+                      const Spacer(),
+                      Text(
+                        tool.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.outfit(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.primaryDark,
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          tool.subtitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textSecondary,
-                          ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        tool.subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textSecondary,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },

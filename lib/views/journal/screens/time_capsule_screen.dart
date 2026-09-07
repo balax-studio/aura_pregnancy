@@ -132,35 +132,48 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final t = titleCtrl.text.trim();
-                final l = letterCtrl.text.trim();
-                if (t.isEmpty || l.isEmpty) return;
-                HapticFeedback.mediumImpact();
-                await DatabaseHelper.instance.insertTimeCapsuleLetter(
-                  TimeCapsuleLetter(
-                    unlockMilestone: milestone,
-                    title: t,
-                    letterText: l,
-                    createdDate: DateTime.now().toIso8601String(),
-                    targetUnlockDate: '2044-09-07',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ClayButton(
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  color: AppColors.clayCardSurface,
+                  borderRadius: 14,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: Text(
+                    'doctor_vault_btn_cancel'.tr(),
+                    style: GoogleFonts.outfit(color: AppColors.textSecondary, fontWeight: FontWeight.w700, fontSize: 13),
                   ),
-                );
-                if (ctx.mounted) {
-                  Navigator.of(ctx).pop();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentGold,
-                elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              ),
-              child: Text('time_capsule_seal_btn'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(width: 10),
+                ClayButton(
+                  onPressed: () async {
+                    final t = titleCtrl.text.trim();
+                    final l = letterCtrl.text.trim();
+                    if (t.isEmpty || l.isEmpty) return;
+                    HapticFeedback.mediumImpact();
+                    await DatabaseHelper.instance.insertTimeCapsuleLetter(
+                      TimeCapsuleLetter(
+                        unlockMilestone: milestone,
+                        title: t,
+                        letterText: l,
+                        createdDate: DateTime.now().toIso8601String(),
+                        targetUnlockDate: '2044-09-07',
+                      ),
+                    );
+                    if (ctx.mounted) {
+                      Navigator.of(ctx).pop();
+                    }
+                  },
+                  color: AppColors.accentGold,
+                  borderRadius: 14,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                  child: Text(
+                    'time_capsule_seal_btn'.tr(),
+                    style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -176,8 +189,15 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Row(
           children: [
-            const Text('💌', style: TextStyle(fontSize: 22)),
-            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.accentGold.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.mark_email_unread_rounded, size: 20, color: AppColors.accentGold),
+            ),
+            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 letter.title,
@@ -219,17 +239,28 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('btn_close'.tr(), style: GoogleFonts.outfit(color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline_rounded, color: AppColors.medicalAlertRed, size: 20),
-            onPressed: () async {
-              HapticFeedback.lightImpact();
-              await DatabaseHelper.instance.deleteTimeCapsuleLetter(letter.id!);
-              if (ctx.mounted) Navigator.of(ctx).pop();
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.delete_outline_rounded, color: AppColors.medicalAlertRed, size: 20),
+                onPressed: () async {
+                  HapticFeedback.lightImpact();
+                  await DatabaseHelper.instance.deleteTimeCapsuleLetter(letter.id!);
+                  if (ctx.mounted) Navigator.of(ctx).pop();
+                },
+              ),
+              ClayButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                color: AppColors.clayCardSurface,
+                borderRadius: 14,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  'btn_close'.tr(),
+                  style: GoogleFonts.outfit(color: AppColors.primaryDark, fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -277,15 +308,21 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: ClayButton(
         onPressed: _showNewLetterDialog,
-        backgroundColor: AppColors.accentGold,
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        icon: const Icon(Icons.edit_note_rounded, color: Colors.white),
-        label: Text(
-          'time_capsule_btn_seal'.tr(),
-          style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
+        color: AppColors.accentGold,
+        borderRadius: 22,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.edit_note_rounded, color: Colors.white, size: 22),
+            const SizedBox(width: 8),
+            Text(
+              'time_capsule_btn_seal'.tr(),
+              style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
+            ),
+          ],
         ),
       ),
     );
@@ -296,28 +333,14 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
-          InkWell(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
-            },
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    offset: const Offset(0, 4),
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
-            ),
+          ClayButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: AppColors.clayCardSurface,
+            width: 44,
+            height: 44,
+            borderRadius: 16,
+            padding: EdgeInsets.zero,
+            child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -348,7 +371,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
               color: AppColors.accentGold.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Text('⏳', style: TextStyle(fontSize: 20)),
+            child: const Icon(Icons.hourglass_top_rounded, size: 20, color: AppColors.accentGold),
           ),
         ],
       ),
@@ -362,7 +385,14 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          const Text('💌', style: TextStyle(fontSize: 32)),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.65),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(Icons.mark_email_read_rounded, size: 26, color: AppColors.primaryDark),
+          ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -399,8 +429,15 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
         padding: const EdgeInsets.symmetric(vertical: 40),
         child: Column(
           children: [
-            const Text('📜', style: TextStyle(fontSize: 48)),
-            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: AppColors.accentGold.withValues(alpha: 0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.history_edu_rounded, size: 44, color: AppColors.accentGold),
+            ),
+            const SizedBox(height: 14),
             Text(
               'time_capsule_empty_title'.tr(),
               style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
@@ -417,66 +454,52 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
   }
 
   Widget _buildLetterCard(TimeCapsuleLetter letter) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: () => _showLetterDetail(letter),
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                offset: const Offset(0, 4),
-                blurRadius: 10,
-              ),
-            ],
+    return ClayCard(
+      color: AppColors.clayCardSurface,
+      borderRadius: 20,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      onTap: () => _showLetterDetail(letter),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppColors.accentGold.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Icon(Icons.lock_rounded, size: 20, color: AppColors.accentGold),
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: AppColors.accentGold.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(child: Text('🔒', style: TextStyle(fontSize: 20))),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        letter.title,
-                        style: GoogleFonts.outfit(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.primaryDark,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        'time_capsule_seal_tag'.tr(args: [_getLocalizedMilestone(letter.unlockMilestone)]),
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 12,
-                          color: AppColors.accentGold,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
+                Text(
+                  letter.title,
+                  style: GoogleFonts.outfit(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primaryDark,
                   ),
                 ),
-                const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.textMuted),
+                const SizedBox(height: 3),
+                Text(
+                  'time_capsule_seal_tag'.tr(args: [_getLocalizedMilestone(letter.unlockMilestone)]),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    color: AppColors.accentGold,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ],
             ),
           ),
-        ),
+          const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: AppColors.textMuted),
+        ],
       ),
     );
   }

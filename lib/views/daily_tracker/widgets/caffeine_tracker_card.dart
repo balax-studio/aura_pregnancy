@@ -83,9 +83,15 @@ class CaffeineTrackerCard extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: ClayTheme.clayButtonDecoration(
-                  color: isOverLimit ? AppColors.medicalAlertRed : Colors.white,
-                  borderRadius: 12,
+                decoration: BoxDecoration(
+                  color: isOverLimit ? AppColors.medicalAlertRed : Colors.white.withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isOverLimit
+                        ? AppColors.medicalAlertRed
+                        : AppColors.secondaryPeach.withValues(alpha: 0.25),
+                    width: 1,
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

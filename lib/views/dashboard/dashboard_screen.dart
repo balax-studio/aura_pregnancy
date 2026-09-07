@@ -268,9 +268,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: ClayTheme.clayButtonDecoration(
-                                color: AppColors.clayLavender,
-                                borderRadius: 14,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.85),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: AppColors.lavenderPurple.withValues(alpha: 0.25),
+                                  width: 1,
+                                ),
                               ),
                               child: Text(
                                 'dashboard_trimester'.tr(args: [trimester.toString()]),
@@ -283,9 +287,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: ClayTheme.clayButtonDecoration(
-                                color: AppColors.clayRose,
-                                borderRadius: 14,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.85),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: AppColors.primaryPink.withValues(alpha: 0.25),
+                                  width: 1,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -337,9 +345,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Container(
                           margin: const EdgeInsets.only(top: 6),
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          decoration: ClayTheme.clayButtonDecoration(
-                            color: AppColors.clayPeach,
-                            borderRadius: 18,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.85),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: AppColors.secondaryPeach.withValues(alpha: 0.25),
+                              width: 1,
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

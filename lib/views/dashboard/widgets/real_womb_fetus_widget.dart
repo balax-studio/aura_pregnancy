@@ -202,7 +202,7 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF231826),
+        color: AppColors.deepCinematicDark,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: AppColors.primaryPink.withValues(alpha: 0.35), width: 2),
         boxShadow: [

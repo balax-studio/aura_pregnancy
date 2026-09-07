@@ -152,6 +152,24 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
     return '$m:$s';
   }
 
+  IconData _getTrackIcon(String id) {
+    switch (id) {
+      case 'calm_bell':
+        return Icons.notifications_active_rounded;
+      case 'heartbeat':
+        return Icons.favorite_rounded;
+      case 'amniotic_fluid':
+        return Icons.water_drop_rounded;
+      case 'pink_rain':
+        return Icons.cloud_rounded;
+      case 'white_noise':
+        return Icons.air_rounded;
+      case 'lullaby_box':
+      default:
+        return Icons.music_note_rounded;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final activeTrack = _tracks[_selectedTrackIndex];
@@ -196,9 +214,10 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                                     color: AppColors.primaryPink,
                                   ),
                                 )
-                              : Text(
-                                  activeTrack['emoji']!,
-                                  style: const TextStyle(fontSize: 60),
+                              : Icon(
+                                  _getTrackIcon(activeTrack['id']!),
+                                  size: 54,
+                                  color: AppColors.primaryPink,
                                 ),
                         ),
                       ),
@@ -264,27 +283,17 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                     ),
                     const SizedBox(height: 20),
                     // Büyük Oynat / Durdur Butonu
-                    GestureDetector(
-                      onTap: _togglePlay,
-                      child: Container(
-                        width: 72,
-                        height: 72,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.primaryPink,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primaryPink.withValues(alpha: 0.35),
-                              offset: const Offset(0, 8),
-                              blurRadius: 18,
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          _isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                          size: 38,
-                          color: Colors.white,
-                        ),
+                    ClayButton(
+                      onPressed: _togglePlay,
+                      color: AppColors.primaryPink,
+                      borderRadius: 36,
+                      width: 72,
+                      height: 72,
+                      padding: EdgeInsets.zero,
+                      child: Icon(
+                        _isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                        size: 38,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -358,28 +367,14 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
         children: [
-          InkWell(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
-            },
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    offset: const Offset(0, 4),
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
-            ),
+          ClayButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: AppColors.clayCardSurface,
+            width: 44,
+            height: 44,
+            borderRadius: 16,
+            padding: EdgeInsets.zero,
+            child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -410,7 +405,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
               color: AppColors.clayRose,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Text('🎧', style: TextStyle(fontSize: 20)),
+            child: const Icon(Icons.headphones_rounded, size: 20, color: AppColors.primaryDark),
           ),
         ],
       ),
@@ -449,7 +444,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                   ],
                 ),
                 child: Text(
-                  mins == 0 ? 'Sürekli' : '$mins dk',
+                  mins == 0 ? 'womb_timer_continuous'.tr() : '$mins dk',
                   style: GoogleFonts.outfit(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
@@ -465,66 +460,60 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
   }
 
   Widget _buildTrackTile(Map<String, String> track, int index, bool isSelected) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: InkWell(
-        onTap: () => _switchTrack(index),
-        borderRadius: BorderRadius.circular(18),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.clayRose : Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: isSelected ? AppColors.primaryPink.withValues(alpha: 0.5) : Colors.transparent,
-              width: 1.5,
+    return ClayCard(
+      color: isSelected ? AppColors.clayRose : AppColors.clayCardSurface,
+      borderRadius: 20,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      onTap: () => _switchTrack(index),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.primaryPink : AppColors.primaryPink.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(14),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                offset: const Offset(0, 3),
-                blurRadius: 8,
-              ),
-            ],
+            child: Icon(
+              _getTrackIcon(track['id']!),
+              color: isSelected ? Colors.white : AppColors.primaryPink,
+              size: 20,
+            ),
           ),
-          child: Row(
-            children: [
-              Text(track['emoji']!, style: const TextStyle(fontSize: 26)),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      track['titleKey']!.tr(),
-                      style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.primaryDark,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      track['subtitleKey']!.tr(),
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 11,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  track['titleKey']!.tr(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primaryDark,
+                  ),
                 ),
-              ),
-              if (isSelected && _isPlaying)
-                const Icon(Icons.graphic_eq_rounded, color: AppColors.primaryPink, size: 24)
-              else
-                Icon(
-                  isSelected ? Icons.check_circle_rounded : Icons.play_circle_outline_rounded,
-                  color: isSelected ? AppColors.primaryPink : AppColors.textMuted,
-                  size: 24,
+                const SizedBox(height: 2),
+                Text(
+                  track['subtitleKey']!.tr(),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-            ],
+              ],
+            ),
           ),
-        ),
+          if (isSelected && _isPlaying)
+            const Icon(Icons.graphic_eq_rounded, color: AppColors.primaryPink, size: 24)
+          else
+            Icon(
+              isSelected ? Icons.check_circle_rounded : Icons.play_circle_outline_rounded,
+              color: isSelected ? AppColors.primaryPink : AppColors.textMuted,
+              size: 24,
+            ),
+        ],
       ),
     );
   }

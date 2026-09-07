@@ -99,19 +99,46 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
-          ),
-          ElevatedButton(
-            onPressed: () => _addQuestion(trimester),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryPink,
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            ),
-            child: Text('doctor_vault_btn_save'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.clayCardSurface,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: Center(
+                    child: Text(
+                      'doctor_vault_btn_cancel'.tr(),
+                      style: GoogleFonts.outfit(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.primaryPink,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => _addQuestion(trimester),
+                  child: Center(
+                    child: Text(
+                      'doctor_vault_btn_save'.tr(),
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -159,29 +186,56 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
             ),
           ],
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              HapticFeedback.lightImpact();
-              await DatabaseHelper.instance.updateDoctorQuestionAnswer(
-                q.id!,
-                answerCtrl.text.trim(),
-                answerCtrl.text.trim().isNotEmpty,
-              );
-              if (ctx.mounted) {
-                Navigator.of(ctx).pop();
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryPink,
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            ),
-            child: Text('doctor_vault_btn_save_mark'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.clayCardSurface,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: Center(
+                    child: Text(
+                      'doctor_vault_btn_cancel'.tr(),
+                      style: GoogleFonts.outfit(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClayButton(
+                  color: AppColors.primaryPink,
+                  height: 44,
+                  borderRadius: 14,
+                  onPressed: () async {
+                    HapticFeedback.lightImpact();
+                    await DatabaseHelper.instance.updateDoctorQuestionAnswer(
+                      q.id!,
+                      answerCtrl.text.trim(),
+                      answerCtrl.text.trim().isNotEmpty,
+                    );
+                    if (ctx.mounted) {
+                      Navigator.of(ctx).pop();
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      'doctor_vault_btn_save_mark'.tr(),
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -429,21 +483,11 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              offset: const Offset(0, 4),
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+      child: ClayCard(
+        color: q.isAnswered ? AppColors.clayMint : AppColors.clayCardSurface,
+        borderRadius: 20,
+        padding: const EdgeInsets.all(16),
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -592,7 +636,6 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }

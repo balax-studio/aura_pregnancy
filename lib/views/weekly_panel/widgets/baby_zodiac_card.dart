@@ -92,13 +92,10 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.lavenderPurple.withValues(alpha: 0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  border: Border.all(
+                    color: AppColors.lavenderPurple.withValues(alpha: 0.3),
+                    width: 1.5,
+                  ),
                 ),
                 child: Center(
                   child: Text(
@@ -195,7 +192,8 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                     children: [
                       Row(
                         children: [
-                          const Text('🌙 ', style: TextStyle(fontSize: 12)),
+                          const Icon(Icons.bedtime_rounded, size: 14, color: AppColors.lavenderPurple),
+                          const SizedBox(width: 4),
                           Text(
                             'zodiac_sleep_tendency'.tr(),
                             style: GoogleFonts.outfit(
@@ -234,7 +232,8 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                     children: [
                       Row(
                         children: [
-                          const Text('💎 ', style: TextStyle(fontSize: 12)),
+                          const Icon(Icons.diamond_rounded, size: 14, color: AppColors.lavenderPurple),
+                          const SizedBox(width: 4),
                           Text(
                             'zodiac_gemstone'.tr(),
                             style: GoogleFonts.outfit(

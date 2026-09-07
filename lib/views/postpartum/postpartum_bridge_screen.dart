@@ -36,7 +36,12 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
     'postpartum_mood_3',
   ];
 
-  static const List<String> _moodEmojis = ['🌧️', '🥺', '🌸', '☀️'];
+  static const List<IconData> _moodIcons = [
+    Icons.grain_rounded,
+    Icons.sentiment_dissatisfied_rounded,
+    Icons.spa_rounded,
+    Icons.wb_sunny_rounded,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +55,17 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primaryDark, size: 20),
-          onPressed: () => Navigator.of(context).pop(),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: ClayButton(
+            onPressed: () => Navigator.of(context).pop(),
+            color: AppColors.clayCardSurface,
+            width: 40,
+            height: 40,
+            borderRadius: 14,
+            padding: EdgeInsets.zero,
+            child: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primaryDark, size: 18),
+          ),
         ),
         title: Text(
           'postpartum_appbar_title'.tr(),
@@ -79,8 +92,15 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                   children: [
                     Row(
                       children: [
-                        const Text('🕊️', style: TextStyle(fontSize: 28)),
-                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.8),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: const Icon(Icons.volunteer_activism_rounded, size: 24, color: AppColors.primaryPink),
+                        ),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +168,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: index < 3 ? 6 : 0),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
                           color: isSelected ? AppColors.primaryPink : AppColors.clayCardSurface,
                           borderRadius: BorderRadius.circular(14),
@@ -158,9 +178,10 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                           ),
                         ),
                         child: Center(
-                          child: Text(
-                            _moodEmojis[index],
-                            style: const TextStyle(fontSize: 20),
+                          child: Icon(
+                            _moodIcons[index],
+                            color: isSelected ? Colors.white : AppColors.primaryDark,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -180,7 +201,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                   children: [
                     Row(
                       children: [
-                        const Text('💧', style: TextStyle(fontSize: 20)),
+                        const Icon(Icons.water_drop_rounded, size: 20, color: AppColors.waterBlue),
                         const SizedBox(width: 8),
                         Text(
                           'postpartum_hydration_title'.tr(),
@@ -281,7 +302,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                   children: [
                     Row(
                       children: [
-                        const Text('🤱', style: TextStyle(fontSize: 20)),
+                        const Icon(Icons.baby_changing_station_rounded, size: 20, color: AppColors.primaryPink),
                         const SizedBox(width: 8),
                         Text(
                           'postpartum_nipple_title'.tr(),
@@ -317,7 +338,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                   children: [
                     Row(
                       children: [
-                        const Text('🧘‍♀️', style: TextStyle(fontSize: 20)),
+                        const Icon(Icons.self_improvement_rounded, size: 20, color: AppColors.clinicalGreen),
                         const SizedBox(width: 8),
                         Text(
                           'postpartum_pelvic_title'.tr(),

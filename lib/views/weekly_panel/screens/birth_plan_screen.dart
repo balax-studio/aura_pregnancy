@@ -393,38 +393,32 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
   }
 
   Widget _buildExportButton() {
-    return SizedBox(
-      width: double.infinity,
+    return ClayButton(
+      color: AppColors.primaryPink,
       height: 54,
-      child: ElevatedButton(
-        onPressed: _isExporting ? null : _exportPdf,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryPink,
-          elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        ),
-        child: _isExporting
-            ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('📜', style: TextStyle(fontSize: 18)),
-                  const SizedBox(width: 10),
-                  Text(
-                    'birth_plan_export_pdf_btn'.tr(),
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
+      borderRadius: 20,
+      onPressed: _isExporting ? null : _exportPdf,
+      child: _isExporting
+          ? const SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.picture_as_pdf_rounded, color: Colors.white, size: 20),
+                const SizedBox(width: 10),
+                Text(
+                  'birth_plan_export_pdf_btn'.tr(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
                   ),
-                ],
-              ),
-      ),
+                ),
+              ],
+            ),
     );
   }
 }

@@ -103,21 +103,23 @@ class _JournalScreenState extends State<JournalScreen> {
 
                   // Günlük Kartları veya Boş Durum (Empty State)
                   if (_controller.entries.isEmpty)
-                    Container(
+                    ClayCard(
+                      color: AppColors.clayCardSurface,
+                      borderRadius: 22,
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-                      decoration: ClayTheme.clayDecoration(
-                        color: Colors.white.withValues(alpha: 0.7),
-                        borderRadius: 22,
-                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width: 54,
                             height: 54,
-                            decoration: ClayTheme.clayDecoration(
+                            decoration: BoxDecoration(
                               color: AppColors.clayRose,
-                              borderRadius: 27,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.primaryPink.withValues(alpha: 0.25),
+                                width: 1.5,
+                              ),
                             ),
                             child: const Center(
                               child: Icon(Icons.edit_note_rounded, color: AppColors.primaryPink, size: 28),
@@ -157,10 +159,11 @@ class _JournalScreenState extends State<JournalScreen> {
                 ],
               ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppColors.primaryPink,
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+      floatingActionButton: ClayButton(
+        color: AppColors.primaryPink,
+        height: 50,
+        borderRadius: 22,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         onPressed: () {
           Navigator.push(
             context,
@@ -172,10 +175,21 @@ class _JournalScreenState extends State<JournalScreen> {
             ),
           );
         },
-        icon: const Icon(Icons.favorite_rounded, color: Colors.white),
-        label: Text(
-          'journal_write_memory'.tr(),
-          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: 0.2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.favorite_rounded, color: Colors.white, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              'journal_write_memory'.tr(),
+              style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                fontSize: 13,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ],
         ),
       ),
     );

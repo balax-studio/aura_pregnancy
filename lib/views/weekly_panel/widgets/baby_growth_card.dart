@@ -105,9 +105,13 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                            decoration: ClayTheme.clayButtonDecoration(
-                              color: Colors.white,
-                              borderRadius: 16,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.85),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.secondaryPeach.withValues(alpha: 0.2),
+                                width: 1,
+                              ),
                             ),
                             child: Column(
                               children: [
@@ -137,9 +141,13 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                            decoration: ClayTheme.clayButtonDecoration(
-                              color: Colors.white,
-                              borderRadius: 16,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.85),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.secondaryPeach.withValues(alpha: 0.2),
+                                width: 1,
+                              ),
                             ),
                             child: Column(
                               children: [
