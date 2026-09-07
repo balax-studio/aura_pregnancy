@@ -16,11 +16,11 @@ class MoodSelectorWidget extends StatelessWidget {
   });
 
   static const List<Map<String, dynamic>> moods = [
-    {'rating': 1, 'icon': Icons.sentiment_very_dissatisfied_rounded, 'color': Color(0xFFE57373), 'key': 'mood_tired'},
-    {'rating': 2, 'icon': Icons.sentiment_neutral_rounded, 'color': Color(0xFFFFB74D), 'key': 'mood_neutral'},
-    {'rating': 3, 'icon': Icons.sentiment_satisfied_rounded, 'color': Color(0xFF81C784), 'key': 'mood_good'},
-    {'rating': 4, 'icon': Icons.sentiment_very_satisfied_rounded, 'color': Color(0xFF4FC3F7), 'key': 'mood_happy'},
-    {'rating': 5, 'icon': Icons.favorite_rounded, 'color': Color(0xFFF06292), 'key': 'mood_peaceful'},
+    {'rating': 1, 'icon': Icons.sentiment_very_dissatisfied_rounded, 'color': AppColors.moodTired, 'key': 'mood_tired'},
+    {'rating': 2, 'icon': Icons.sentiment_neutral_rounded, 'color': AppColors.moodNeutral, 'key': 'mood_neutral'},
+    {'rating': 3, 'icon': Icons.sentiment_satisfied_rounded, 'color': AppColors.moodGood, 'key': 'mood_good'},
+    {'rating': 4, 'icon': Icons.sentiment_very_satisfied_rounded, 'color': AppColors.moodHappy, 'key': 'mood_happy'},
+    {'rating': 5, 'icon': Icons.favorite_rounded, 'color': AppColors.moodPeaceful, 'key': 'mood_peaceful'},
   ];
 
   @override

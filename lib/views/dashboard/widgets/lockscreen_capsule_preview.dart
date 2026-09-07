@@ -66,7 +66,7 @@ class LockscreenCapsulePreview extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E24), // Dark Dynamic Island Mockup
+            color: AppColors.deepCinematicDark, // Dark Dynamic Island Mockup
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(

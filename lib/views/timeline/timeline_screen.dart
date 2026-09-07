@@ -179,7 +179,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
 
             // Sponsorlu Destekçi Native Ad Kartı
             const ClayNativeAdCard(
-              cardColor: Color(0xFFD6E4F0),
+              cardColor: AppColors.claySky,
               icon: Icons.health_and_safety_rounded,
             ),
             const SizedBox(height: 14),
@@ -201,7 +201,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
 
             // Tıbbi Sorumluluk Reddi Bannerı
             const MedicalDisclaimerBanner(),
-            const SizedBox(height: 30),
+            const SizedBox(height: 84),
           ],
         ),
       ),
@@ -342,12 +342,12 @@ class _TimelineScreenState extends State<TimelineScreen> {
           Container(
             width: 44,
             height: 44,
-            decoration: ClayTheme.concaveDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: 14,
+              borderRadius: BorderRadius.circular(14),
             ),
             child: const Center(
-              child: Icon(Icons.picture_as_pdf_rounded, color: Color(0xFF2E6135), size: 24),
+              child: Icon(Icons.picture_as_pdf_rounded, color: AppColors.clinicalGreen, size: 24),
             ),
           ),
           const SizedBox(width: 12),
@@ -360,7 +360,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                   style: GoogleFonts.outfit(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w900,
-                    color: const Color(0xFF2E6135),
+                    color: AppColors.clinicalGreen,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -369,7 +369,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10.5,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF4A6B50),
+                    color: AppColors.clinicalGreenLight,
                   ),
                 ),
               ],
@@ -385,14 +385,14 @@ class _TimelineScreenState extends State<TimelineScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.play_circle_fill_rounded, color: Color(0xFF2E6135), size: 16),
+                const Icon(Icons.play_circle_fill_rounded, color: AppColors.clinicalGreen, size: 16),
                 const SizedBox(width: 6),
                 Text(
                   'timeline_pdf_report_btn'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
-                    color: const Color(0xFF2E6135),
+                    color: AppColors.clinicalGreen,
                   ),
                 ),
               ],

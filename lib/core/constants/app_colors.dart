@@ -43,6 +43,68 @@ class AppColors {
   static const Color textSecondary = Color(0xFF635666);  // Sıcak Mürdüm Gri
   static const Color textMuted = Color(0xFF9E8F94);      // Soluk Gri
 
+  // Klinik & Tıbbi Yeşil (Medical Records & Clinical Summaries)
+  static const Color clinicalGreen = Color(0xFF2E6135);
+  static const Color clinicalGreenLight = Color(0xFF4A6B50);
+  static const Color clinicalGreenBg = Color(0xFFD4EBD6);
+
+  // Ruh Hali & Duygu Durum Dereceleri (Mood Ratings 1-5)
+  static const Color moodTired = Color(0xFFE57373);     // 1: Yorgun / Hassas
+  static const Color moodNeutral = Color(0xFFFFB74D);   // 2: Nötr / Sakin
+  static const Color moodGood = Color(0xFF81C784);      // 3: İyi / Dengeli
+  static const Color moodHappy = Color(0xFF4FC3F7);     // 4: Mutlu / Enerjik
+  static const Color moodPeaceful = Color(0xFFF06292);  // 5: Huzurlu / Minnettar
+
+  // Sıvı & Kafein Vurgu Tonları
+  static const Color waterBlueDark = Color(0xFF1E88E5);
+  static const Color waterBlueLight = Color(0xFF64B5F6);
+  static const Color caffeineAlertOrange = Color(0xFFFF7043);
+  static const Color caffeineWarningAmber = Color(0xFFFFB74D);
+
+  // Hatıra & Anı Vurgusu (Keepsake & Memory Cards)
+  static const Color keepsakePurple = Color(0xFF8E24AA);
+  static const Color keepsakePurpleBg = Color(0xFFFAF5FF);
+  static const Color keepsakePurpleBorder = Color(0xFFCE93D8);
+
+  // Ödül & Keşif Altın Tonları (Reward Ads & Chests)
+  static const Color rewardGold = Color(0xFFE0A96D);
+  static const Color rewardGoldDark = Color(0xFF8C5319);
+  static const Color rewardGoldLight = Color(0xFFF9E7D0);
+  static const Color rewardGoldBg = Color(0xFFC48B4B);
+
+  // Rahim & Fetus Derin Tonlar (Ambient Sound & Fetus Preview)
+  static const Color deepWombPlum = Color(0xFF1E0A12);
+  static const Color deepCinematicDark = Color(0xFF1E141D);
+  static const Color fetalHeartPink = Color(0xFFFF4081);
+
+  // Liste & Durum Renkleri
+  static const Color itemPackedGreenBg = Color(0xFFF2F9F2);
+  static const Color amberCaution = Color(0xFFE5A100);
+
+  // Tıbbi Ultrason & Sonografi Tonları (HD Live 4D & Doppler Telemetri)
+  static const Color ultrasoundMonitorBg = Color(0xFF0C1017);
+  static const Color ultrasoundBorder = Color(0xFF2A3649);
+  static const Color ultrasoundGlow = Color(0xFF0F2B48);
+  static const Color ultrasoundHudBg = Color(0xFF141B26);
+  static const Color ultrasoundBottomBarBg = Color(0xFF0A0E14);
+  static const Color ultrasoundCyan = Color(0xFF00E5FF);
+  static const Color ultrasoundCyanDim = Color(0xFF90CAF9);
+  static const Color ultrasoundTelemetryAmber = Color(0xFFFFD54F);
+  static const Color ultrasoundSepiaDark = Color(0xFF090706);
+  static const Color ultrasoundSepiaMid = Color(0xFF160F0C);
+  static const Color ultrasoundSepiaLight = Color(0xFF241712);
+  static const Color ultrasoundSkinWarm = Color(0xFFE0A878);
+  static const Color ultrasoundSkinGlow = Color(0xFFFFE0B2);
+  static const Color ultrasoundSkinBase = Color(0xFF33221C);
+  static const Color ultrasoundBoneHighlight = Color(0xFFFFF3E0);
+  static const Color ultrasoundBoneGlow = Color(0xFFFFE8D6);
+  static const Color ultrasoundAcousticWhite = Color(0xFFFFF8F0);
+  static const Color ultrasoundAnatomyTan = Color(0xFFC68B59);
+  static const Color ultrasoundAnatomyBrown = Color(0xFF8D5B36);
+  static const Color ultrasoundAnatomyDeep = Color(0xFF7A4A28);
+  static const Color dopplerArterialRed = Color(0xFFFF1744);
+  static const Color dopplerVenousBlue = Color(0xFF40C4FF);
+
   // Claymorphic Gölge & Işık Renkleri (Shadow Recipe Helpers)
   static const Color clayHighlightTop = Color(0xFFFFFFFF); // Üst Işık
   static const Color clayShadowDark = Color(0x28000000);   // Alt İç Gölge

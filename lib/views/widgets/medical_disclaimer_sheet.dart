@@ -59,9 +59,9 @@ class MedicalDisclaimerSheet extends StatelessWidget {
               Container(
                 width: 42,
                 height: 42,
-                decoration: ClayTheme.clayDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.clayMint,
-                  borderRadius: 14,
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Center(
                   child: Icon(Icons.verified_user_rounded, color: AppColors.successGreen, size: 22),

@@ -73,7 +73,7 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFFDF7F4),
+        color: AppColors.background,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -104,12 +104,12 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
                     Container(
                       width: 32,
                       height: 32,
-                      decoration: ClayTheme.clayDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: 10,
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Center(
-                        child: Icon(Icons.build_rounded, color: Color(0xFFE07A5F), size: 18),
+                        child: Icon(Icons.build_rounded, color: AppColors.secondaryPeach, size: 18),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -118,7 +118,7 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
                       style: GoogleFonts.nunito(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
-                        color: const Color(0xFF2D232E),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ],
@@ -126,13 +126,13 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE07A5F).withValues(alpha: 0.15),
+                    color: AppColors.secondaryPeach.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     'DEBUG MODE',
                     style: GoogleFonts.jetBrainsMono(
-                      color: const Color(0xFFE07A5F),
+                      color: AppColors.secondaryPeach,
                       fontWeight: FontWeight.w800,
                       fontSize: 10,
                     ),
@@ -143,7 +143,7 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
             const SizedBox(height: 4),
             Text(
               'debug_subtitle'.tr(),
-              style: GoogleFonts.plusJakartaSans(fontSize: 11.5, color: const Color(0xFF7A6E78), fontWeight: FontWeight.w600),
+              style: GoogleFonts.plusJakartaSans(fontSize: 11.5, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
 
@@ -172,19 +172,19 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
 
             // 1. BUTON: 40 Haftalık Test Verisi Doldur
             ClayButton(
-              color: const Color(0xFFD4EBD6), // Nane Yeşili
+              color: AppColors.clinicalGreenBg, // Nane Yeşili
               onPressed: _isLoading ? null : _seedData,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.auto_awesome_rounded, color: Color(0xFF2E6135), size: 18),
+                  const Icon(Icons.auto_awesome_rounded, color: AppColors.clinicalGreen, size: 18),
                   const SizedBox(width: 8),
                   Text(
                     _isLoading ? 'debug_loading'.tr() : 'debug_seed_btn'.tr(),
                     style: GoogleFonts.nunito(
                       fontSize: 14,
                       fontWeight: FontWeight.w900,
-                      color: const Color(0xFF2E6135),
+                      color: AppColors.clinicalGreen,
                     ),
                   ),
                 ],
@@ -235,7 +235,7 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
                     children: [
                       Text(
                         'debug_change_week'.tr(args: [_sliderWeek.toInt().toString()]),
-                        style: GoogleFonts.nunito(fontWeight: FontWeight.w800, fontSize: 13, color: const Color(0xFF2D232E)),
+                        style: GoogleFonts.nunito(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.textPrimary),
                       ),
                       Text(
                         _sliderWeek <= 12
@@ -253,7 +253,7 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
                     max: 40.0,
                     divisions: 39,
                     activeColor: AppColors.primaryPink,
-                    inactiveColor: const Color(0xFFFDE8ED),
+                    inactiveColor: AppColors.clayRose,
                     onChanged: (val) {
                       setState(() => _sliderWeek = val);
                     },
@@ -270,7 +270,7 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
 
             // 4. BUTON: Veritabanını Sıfırla
             ClayButton(
-              color: const Color(0xFFFFEBEE),
+              color: AppColors.medicalAlertBg,
               onPressed: _isLoading ? null : _resetData,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -301,13 +301,13 @@ class _DebugPanelBottomSheetState extends State<DebugPanelBottomSheet> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 11, color: const Color(0xFF7A6E78)),
+            Icon(icon, size: 11, color: AppColors.textSecondary),
             const SizedBox(width: 3),
-            Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w700, color: const Color(0xFF7A6E78))),
+            Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
           ],
         ),
         const SizedBox(height: 2),
-        Text(value, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w900, color: const Color(0xFF2D232E))),
+        Text(value, style: GoogleFonts.outfit(fontSize: 15, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
       ],
     );
   }

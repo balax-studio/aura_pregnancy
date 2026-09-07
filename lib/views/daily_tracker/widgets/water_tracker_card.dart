@@ -147,14 +147,14 @@ class WaterTrackerCard extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
+                        colors: [AppColors.waterBlueLight, AppColors.waterBlueDark],
                       ),
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
+                      boxShadow: [
                         BoxShadow(
-                          color: Color(0x331E88E5),
+                          color: AppColors.waterBlueDark.withValues(alpha: 0.2),
                           blurRadius: 6,
-                          offset: Offset(0, 2),
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),

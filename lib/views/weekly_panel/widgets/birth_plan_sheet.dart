@@ -8,19 +8,16 @@ import '../../../models/profile_model.dart';
 import '../../../services/database_helper.dart';
 import '../../../services/birth_plan_pdf_service.dart';
 
-/// Aura Pregnancy - Kişisel Doğum Tercihleri ve Planı Modal Sayfası
+import '../screens/birth_plan_screen.dart';
+
+/// Aura Pregnancy - Kişisel Doğum Tercihleri ve Planı
 class BirthPlanSheet extends StatefulWidget {
   final ProfileModel? profile;
 
   const BirthPlanSheet({super.key, this.profile});
 
   static Future<void> show(BuildContext context, {ProfileModel? profile}) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => BirthPlanSheet(profile: profile),
-    );
+    return BirthPlanScreen.open(context, profile: profile);
   }
 
   @override

@@ -33,11 +33,11 @@ class JournalEntryCard extends StatelessWidget {
 
   Color _getMoodColor(int mood) {
     switch (mood) {
-      case 1: return const Color(0xFFE57373);
-      case 2: return const Color(0xFFFFB74D);
-      case 3: return const Color(0xFF81C784);
-      case 4: return const Color(0xFF4FC3F7);
-      case 5: return const Color(0xFFF06292);
+      case 1: return AppColors.moodTired;
+      case 2: return AppColors.moodNeutral;
+      case 3: return AppColors.moodGood;
+      case 4: return AppColors.moodHappy;
+      case 5: return AppColors.moodPeaceful;
       default: return AppColors.primaryPink;
     }
   }

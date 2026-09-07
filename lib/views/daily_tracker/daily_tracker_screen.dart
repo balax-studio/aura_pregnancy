@@ -13,8 +13,8 @@ import 'widgets/caffeine_tracker_card.dart';
 import 'widgets/walking_tracker_card.dart';
 import 'widgets/trimester_nutrition_card.dart';
 import 'widgets/weight_tracker_card.dart';
-import 'widgets/safety_radar_sheet.dart';
-import 'widgets/doctor_vault_sheet.dart';
+import 'screens/safety_radar_screen.dart';
+import 'screens/doctor_vault_screen.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 import '../widgets/emergency_beacon_button.dart';
 import '../../services/database_helper.dart';
@@ -242,7 +242,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     child: InkWell(
                       onTap: () {
                         HapticFeedback.selectionClick();
-                        SafetyRadarSheet.show(
+                        SafetyRadarScreen.open(
                           context,
                           partnerName: _controller.profile?.partnerName,
                           babyName: _controller.profile?.babyName,
@@ -282,7 +282,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     child: InkWell(
                       onTap: () {
                         HapticFeedback.selectionClick();
-                        DoctorVaultSheet.show(
+                        DoctorVaultScreen.open(
                           context,
                           currentWeek: _controller.profile?.currentWeek ?? 1,
                         );

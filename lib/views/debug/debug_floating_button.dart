@@ -26,7 +26,7 @@ class DebugFloatingButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
-            color: const Color(0xFF2D232E), // Koyu şık kontrast
+            color: AppColors.textPrimary, // Koyu şık kontrast
             borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
             boxShadow: [
               BoxShadow(

@@ -11,8 +11,8 @@ import 'widgets/baby_growth_card.dart';
 import 'widgets/medical_tests_checklist_card.dart';
 import 'widgets/ad_reward_dialog.dart';
 import 'widgets/baby_zodiac_card.dart';
-import 'widgets/hospital_bag_sheet.dart';
-import 'widgets/birth_plan_sheet.dart';
+import 'screens/hospital_bag_screen.dart';
+import 'screens/birth_plan_screen.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 import '../widgets/clay_native_ad_card.dart';
 import '../widgets/emergency_beacon_button.dart';
@@ -304,7 +304,7 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
                           child: InkWell(
                             onTap: () {
                               HapticFeedback.selectionClick();
-                              HospitalBagSheet.show(context);
+                              HospitalBagScreen.open(context);
                             },
                             borderRadius: BorderRadius.circular(20),
                             child: ClayCard(
@@ -343,7 +343,7 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
                           child: InkWell(
                             onTap: () {
                               HapticFeedback.selectionClick();
-                              BirthPlanSheet.show(context, profile: _controller.profile);
+                              BirthPlanScreen.open(context, profile: _controller.profile);
                             },
                             borderRadius: BorderRadius.circular(20),
                             child: ClayCard(

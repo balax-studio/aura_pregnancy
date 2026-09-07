@@ -5,6 +5,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/profile_model.dart';
 
+import '../screens/partner_share_screen.dart';
+
 /// Aura Pregnancy - Romantik Eş / Partner Paylaşım Kapsülü
 class PartnerShareModal extends StatefulWidget {
   final ProfileModel? profile;
@@ -12,12 +14,7 @@ class PartnerShareModal extends StatefulWidget {
   const PartnerShareModal({super.key, this.profile});
 
   static Future<void> show(BuildContext context, {ProfileModel? profile}) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => PartnerShareModal(profile: profile),
-    );
+    return PartnerShareScreen.open(context, profile: profile);
   }
 
   @override

@@ -213,10 +213,10 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFFFFD4C4).withValues(alpha: 0.65), // Sıcak pudra şeftali
-                  const Color(0xFFFBE0DC).withValues(alpha: 0.45), // Narin gül
-                  const Color(0xFFEADBFA).withValues(alpha: 0.50), // Bebek leylağı
-                  const Color(0xFFD2EFF7).withValues(alpha: 0.50), // Masalsı gökyüzü mavisi
+                  AppColors.clayPeach.withValues(alpha: 0.65), // Sıcak pudra şeftali
+                  AppColors.clayRose.withValues(alpha: 0.45), // Narin gül
+                  AppColors.clayLavender.withValues(alpha: 0.50), // Bebek leylağı
+                  AppColors.claySky.withValues(alpha: 0.50), // Masalsı gökyüzü mavisi
                 ],
                 stops: const [0.0, 0.35, 0.70, 1.0],
               ),
@@ -232,7 +232,7 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
                 radius: 0.85,
                 colors: [
                   Colors.white.withValues(alpha: 0.30),
-                  const Color(0xFFFFF4F0).withValues(alpha: 0.15),
+                  AppColors.clayPeach.withValues(alpha: 0.15),
                   Colors.transparent,
                 ],
                 stops: const [0.0, 0.50, 1.0],
@@ -277,9 +277,9 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: ClayTheme.clayDecoration(
-                      color: const Color(0xFFFEE6E0),
-                      borderRadius: 14,
+                    decoration: BoxDecoration(
+                      color: AppColors.clayPeach,
+                      borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Icon(Icons.palette_rounded, color: AppColors.primaryPink, size: 22),
                   ),
@@ -319,7 +319,7 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF7F5),
+                  color: AppColors.clayCardSurface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColors.primaryPink.withValues(alpha: 0.15)),
                 ),
@@ -356,7 +356,7 @@ class _WatercolorPortraitDialogState extends State<WatercolorPortraitDialog> {
                       decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: const Color(0xFFEADFD8), width: 6),
+                      border: Border.all(color: AppColors.backgroundSubtle, width: 6),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.10),
@@ -558,15 +558,15 @@ class _WatercolorTexturePainter extends CustomPainter {
   const _WatercolorTexturePainter();
 
   // Doğal suluboya sıçratmaları için sabit sanatsal koordinat ve renkler
-  static const List<_SplatterDot> _splatters = [
-    _SplatterDot(Offset(0.08, 0.12), 2.8, Color(0x55E5989B)), // Narin gül
-    _SplatterDot(Offset(0.12, 0.16), 1.6, Color(0x44B5838D)),
-    _SplatterDot(Offset(0.88, 0.14), 2.6, Color(0x55C5BAE8)), // Pastel lavanta
-    _SplatterDot(Offset(0.84, 0.20), 1.8, Color(0x449DBBE2)), // Bebek mavisi
-    _SplatterDot(Offset(0.10, 0.82), 2.4, Color(0x44E0A899)), // Şeftali
-    _SplatterDot(Offset(0.15, 0.88), 1.5, Color(0x55D4A373)), // Ilık kehribar
-    _SplatterDot(Offset(0.86, 0.84), 3.0, Color(0x44E29578)), // Mercan
-    _SplatterDot(Offset(0.80, 0.89), 1.9, Color(0x4483C5BE)), // Nane dokunuşu
+  static final List<_SplatterDot> _splatters = [
+    _SplatterDot(const Offset(0.08, 0.12), 2.8, AppColors.primaryPink.withValues(alpha: 0.35)), // Narin gül
+    _SplatterDot(const Offset(0.12, 0.16), 1.6, AppColors.primaryDark.withValues(alpha: 0.25)),
+    _SplatterDot(const Offset(0.88, 0.14), 2.6, AppColors.lavenderPurple.withValues(alpha: 0.35)), // Pastel lavanta
+    _SplatterDot(const Offset(0.84, 0.20), 1.8, AppColors.waterBlue.withValues(alpha: 0.30)), // Bebek mavisi
+    _SplatterDot(const Offset(0.10, 0.82), 2.4, AppColors.secondaryPeach.withValues(alpha: 0.30)), // Şeftali
+    _SplatterDot(const Offset(0.15, 0.88), 1.5, AppColors.accentGold.withValues(alpha: 0.35)), // Ilık kehribar
+    _SplatterDot(const Offset(0.86, 0.84), 3.0, AppColors.secondaryPeach.withValues(alpha: 0.30)), // Mercan
+    _SplatterDot(const Offset(0.80, 0.89), 1.9, AppColors.clinicalGreenLight.withValues(alpha: 0.30)), // Nane dokunuşu
   ];
 
   @override
@@ -580,9 +580,9 @@ class _WatercolorTexturePainter extends CustomPainter {
         radius: 0.95,
         colors: [
           Colors.transparent,
-          const Color(0xFFFBE4DC).withValues(alpha: 0.25),
-          const Color(0xFFF0DCD3).withValues(alpha: 0.50),
-          const Color(0xFFE8D0C5).withValues(alpha: 0.70),
+          AppColors.clayPeach.withValues(alpha: 0.25),
+          AppColors.clayRose.withValues(alpha: 0.50),
+          AppColors.backgroundSubtle.withValues(alpha: 0.70),
         ],
         stops: const [0.60, 0.80, 0.92, 1.0],
       ).createShader(rect);
@@ -590,7 +590,7 @@ class _WatercolorTexturePainter extends CustomPainter {
 
     // 2. 300g Cold-Pressed Suluboya Kağıdı Dokusu (Subtle Paper Grain)
     final grainPaint = Paint()
-      ..color = const Color(0xFF7A5848).withValues(alpha: 0.035)
+      ..color = AppColors.textPrimary.withValues(alpha: 0.035)
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 

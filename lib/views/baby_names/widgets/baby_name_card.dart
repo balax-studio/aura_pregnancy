@@ -193,14 +193,14 @@ class _BabyNameCardState extends State<BabyNameCard> {
                   width: 44,
                   height: 44,
                   decoration: ClayTheme.clayDecoration(
-                    color: _favState ? const Color(0xFFFFEBEE) : Colors.white,
+                    color: _favState ? AppColors.clayRose : Colors.white,
                     borderRadius: 14,
                     isPressed: _favState,
                   ),
                   child: Center(
                     child: Icon(
                       _favState ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                      color: _favState ? AppColors.primaryPink : const Color(0xFF9E8F97),
+                      color: _favState ? AppColors.primaryPink : AppColors.textMuted,
                       size: 22,
                     ),
                   ),
@@ -285,7 +285,7 @@ class _BabyNameCardState extends State<BabyNameCard> {
                       fontSize: 11,
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF7A6E78),
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ),

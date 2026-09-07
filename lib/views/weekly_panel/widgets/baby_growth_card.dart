@@ -236,9 +236,9 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
                   Container(
                     width: 32,
                     height: 32,
-                    decoration: ClayTheme.clayDecoration(
+                    decoration: BoxDecoration(
                       color: AppColors.clayRose,
-                      borderRadius: 10,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Center(
                       child: Icon(Icons.child_care_rounded, color: AppColors.primaryPink, size: 18),
@@ -282,9 +282,9 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
                   Container(
                     width: 32,
                     height: 32,
-                    decoration: ClayTheme.clayDecoration(
+                    decoration: BoxDecoration(
                       color: AppColors.clayRose,
-                      borderRadius: 10,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Center(
                       child: Icon(Icons.spa_rounded, color: AppColors.lavenderPurple, size: 18),

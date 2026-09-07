@@ -6,17 +6,14 @@ import '../../../core/theme/clay_theme.dart';
 import '../../../models/time_capsule_model.dart';
 import '../../../services/database_helper.dart';
 
+import '../screens/time_capsule_screen.dart';
+
 /// Aura Pregnancy - 18. Yaş Dijital Zaman Kapsülü & Bebeğime Mektuplar
 class TimeCapsuleSheet extends StatefulWidget {
   const TimeCapsuleSheet({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const TimeCapsuleSheet(),
-    );
+    return TimeCapsuleScreen.open(context);
   }
 
   @override

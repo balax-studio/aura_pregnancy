@@ -202,12 +202,12 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E0A12), // Derin Rahim İçi Arka Planı
+        color: AppColors.deepWombPlum, // Derin Rahim İçi Arka Planı
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: const Color(0xFFE899AE).withValues(alpha: 0.4), width: 2),
+        border: Border.all(color: AppColors.primaryPink.withValues(alpha: 0.4), width: 2),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFD85A7F).withValues(alpha: 0.28),
+            color: AppColors.primaryPink.withValues(alpha: 0.28),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -244,12 +244,12 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
                         errorBuilder: (ctx, err, stack) {
                           // Fallback
                           return Container(
-                            color: const Color(0xFF2C1019),
+                            color: AppColors.deepWombPlum,
                             child: Center(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.favorite_rounded, color: Color(0xFFFF4081), size: 48),
+                                  const Icon(Icons.favorite_rounded, color: AppColors.fetalHeartPink, size: 48),
                                   const SizedBox(height: 8),
                                   Text(
                                     stageTitle,
@@ -274,8 +274,8 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
                     radius: 0.88,
                     colors: [
                       Colors.transparent,
-                      const Color(0xFF5A0E23).withValues(alpha: 0.2),
-                      const Color(0xFF1E0A12).withValues(alpha: 0.7),
+                      AppColors.primaryDark.withValues(alpha: 0.2),
+                      AppColors.deepWombPlum.withValues(alpha: 0.7),
                     ],
                     stops: const [0.55, 0.8, 1.0],
                   ),
@@ -293,10 +293,10 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.72),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFFF4081).withValues(alpha: 0.8), width: 1.2),
+                      border: Border.all(color: AppColors.fetalHeartPink.withValues(alpha: 0.8), width: 1.2),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFFF4081).withValues(alpha: 0.35),
+                          color: AppColors.fetalHeartPink.withValues(alpha: 0.35),
                           blurRadius: 10,
                         ),
                       ],
@@ -310,7 +310,7 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
                             final scale = 0.92 + (_heartbeatController.value * 0.16);
                             return Transform.scale(
                               scale: scale,
-                              child: const Icon(Icons.favorite_rounded, color: Color(0xFFFF4081), size: 14),
+                              child: const Icon(Icons.favorite_rounded, color: AppColors.fetalHeartPink, size: 14),
                             );
                           },
                         ),

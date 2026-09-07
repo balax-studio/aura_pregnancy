@@ -124,8 +124,8 @@ class CaffeineTrackerCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: isOverLimit
-                        ? const [Color(0xFFFF5252), Color(0xFFD32F2F)]
-                        : const [Color(0xFFFFB74D), Color(0xFFFF7043)],
+                        ? const [AppColors.moodTired, AppColors.medicalAlertRed]
+                        : const [AppColors.caffeineWarningAmber, AppColors.caffeineAlertOrange],
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),

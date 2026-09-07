@@ -14,8 +14,8 @@ import '../../models/daily_log_model.dart';
 import '../../utils/date_utils.dart';
 import 'widgets/profile_edit_sheet.dart';
 import 'widgets/interactive_3d_fetus_widget.dart';
-import 'widgets/womb_ambience_modal.dart';
-import 'widgets/partner_share_modal.dart';
+import 'screens/womb_ambience_screen.dart';
+import 'screens/partner_share_screen.dart';
 import 'widgets/lockscreen_capsule_preview.dart';
 import '../postpartum/postpartum_bridge_screen.dart';
 import '../../core/widgets/fruit_3d_widget.dart';
@@ -393,7 +393,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             InkWell(
                               onTap: () {
                                 HapticFeedback.selectionClick();
-                                WombAmbienceModal.show(context);
+                                WombAmbienceScreen.open(context);
                               },
                               borderRadius: BorderRadius.circular(16),
                               child: Container(
@@ -771,7 +771,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   GestureDetector(
                                     onTap: () {
                                       HapticFeedback.selectionClick();
-                                      PartnerShareModal.show(context, profile: _profile);
+                                      PartnerShareScreen.open(context, profile: _profile);
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

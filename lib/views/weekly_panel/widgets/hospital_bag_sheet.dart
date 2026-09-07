@@ -6,17 +6,14 @@ import '../../../core/theme/clay_theme.dart';
 import '../../../models/hospital_bag_item.dart';
 import '../../../services/database_helper.dart';
 
-/// Aura Pregnancy - Akıllı Doğum Çantası & Hastane Hazırlık Listesi Modal Sheet
+import '../screens/hospital_bag_screen.dart';
+
+/// Aura Pregnancy - Akıllı Doğum Çantası & Hastane Hazırlık Listesi
 class HospitalBagSheet extends StatefulWidget {
   const HospitalBagSheet({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const HospitalBagSheet(),
-    );
+    return HospitalBagScreen.open(context);
   }
 
   @override

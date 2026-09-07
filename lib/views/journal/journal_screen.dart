@@ -8,7 +8,7 @@ import 'widgets/journal_entry_card.dart';
 import 'widgets/video_renderer_dialog.dart';
 import 'widgets/watercolor_portrait_dialog.dart';
 import 'widgets/keepsake_card_dialog.dart';
-import 'widgets/time_capsule_sheet.dart';
+import 'screens/time_capsule_screen.dart';
 import '../widgets/emergency_beacon_button.dart';
 import 'new_entry_screen.dart';
 
@@ -314,7 +314,7 @@ class _JournalScreenState extends State<JournalScreen> {
                         SizedBox(
                           width: 190,
                           child: GestureDetector(
-                            onTap: () => TimeCapsuleSheet.show(context),
+                            onTap: () => TimeCapsuleScreen.open(context),
                             child: ClayCard(
                               color: AppColors.clayMint,
                               padding: const EdgeInsets.all(14),

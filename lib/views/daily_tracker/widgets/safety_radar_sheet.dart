@@ -7,7 +7,9 @@ import '../../../core/theme/clay_theme.dart';
 import '../../../models/safety_item_model.dart';
 import '../../../services/database_helper.dart';
 
-/// Aura Pregnancy - "Yiyebilir Miyim? / Sürebilir Miyim?" Güvenlik Radarı Modal Sheet
+import '../screens/safety_radar_screen.dart';
+
+/// Aura Pregnancy - "Yiyebilir Miyim? / Sürebilir Miyim?" Güvenlik Radarı
 class SafetyRadarSheet extends StatefulWidget {
   final String? partnerName;
   final String? babyName;
@@ -15,12 +17,7 @@ class SafetyRadarSheet extends StatefulWidget {
   const SafetyRadarSheet({super.key, this.partnerName, this.babyName});
 
   static Future<void> show(BuildContext context, {String? partnerName, String? babyName}) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => SafetyRadarSheet(partnerName: partnerName, babyName: babyName),
-    );
+    return SafetyRadarScreen.open(context, partnerName: partnerName, babyName: babyName);
   }
 
   @override

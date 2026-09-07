@@ -6,19 +6,16 @@ import '../../../core/theme/clay_theme.dart';
 import '../../../models/doctor_question_model.dart';
 import '../../../services/database_helper.dart';
 
-/// Aura Pregnancy - Doktora Sorulacak Sorular Kasası & Muayene Notları Modal Sheet
+import '../screens/doctor_vault_screen.dart';
+
+/// Aura Pregnancy - Doktora Sorulacak Sorular Kasası & Muayene Notları
 class DoctorVaultSheet extends StatefulWidget {
   final int currentWeek;
 
   const DoctorVaultSheet({super.key, this.currentWeek = 1});
 
   static Future<void> show(BuildContext context, {int currentWeek = 1}) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => DoctorVaultSheet(currentWeek: currentWeek),
-    );
+    return DoctorVaultScreen.open(context, currentWeek: currentWeek);
   }
 
   @override

@@ -175,7 +175,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                       style: GoogleFonts.quicksand(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF7A6E78),
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -221,7 +221,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                   child: Container(
                     height: 4,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8D7DC).withValues(alpha: 0.7),
+                      color: AppColors.backgroundSubtle,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -251,13 +251,13 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFFC48B4B).withValues(alpha: 0.24),
+                                      color: AppColors.rewardGoldBg.withValues(alpha: 0.24),
                                       offset: const Offset(0, 8),
                                       blurRadius: 16,
                                     ),
                                   ],
                                   border: Border.all(
-                                    color: const Color(0xFFE0A96D),
+                                    color: AppColors.rewardGold,
                                     width: 1.5,
                                   ),
                                   gradient: LinearGradient(
@@ -265,8 +265,8 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                                     end: Alignment.bottomRight,
                                     colors: [
                                       Colors.white.withValues(alpha: 0.80),
-                                      const Color(0xFFF9E7D0),
-                                      const Color(0xFFE8CAA4),
+                                      AppColors.rewardGoldLight,
+                                      AppColors.clayPeach,
                                     ],
                                   ),
                                 ),
@@ -274,7 +274,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                                   child: Icon(
                                     Icons.help_outline_rounded,
                                     size: 28,
-                                    color: Color(0xFF8C5319),
+                                    color: AppColors.rewardGoldDark,
                                   ),
                                 ),
                               ),
@@ -284,7 +284,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                                 style: GoogleFonts.nunito(
                                   fontSize: 10.5,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF8C5319),
+                                  color: AppColors.rewardGoldDark,
                                 ),
                               ),
                             ],
@@ -370,7 +370,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                                   style: GoogleFonts.nunito(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w900,
-                                    color: const Color(0xFF2D232E),
+                                    color: AppColors.textPrimary,
                                   ),
                                 ),
                                 Text(
@@ -380,7 +380,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                                   style: GoogleFonts.quicksand(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
-                                    color: const Color(0xFF7A6E78),
+                                    color: AppColors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -392,16 +392,16 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: ClayTheme.concaveDecoration(
-                        color: const Color(0xFFFDF7F4),
-                        borderRadius: 14,
+                      decoration: BoxDecoration(
+                        color: AppColors.background,
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: Text(
                         activeStage.sizeInfo,
                         style: GoogleFonts.nunito(
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF2D232E),
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ),
@@ -414,7 +414,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                   style: GoogleFonts.quicksand(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF5C4F53),
+                    color: AppColors.textPrimary,
                     height: 1.45,
                   ),
                 ),

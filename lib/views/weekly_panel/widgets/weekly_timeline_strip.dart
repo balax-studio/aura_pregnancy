@@ -54,7 +54,7 @@ class WeeklyTimelineStrip extends StatelessWidget {
                       ? AppColors.clayRose
                       : (isCurrent
                           ? AppColors.clayMint
-                          : (isFuture && !isUnlocked ? const Color(0xFFF3ECEE) : AppColors.clayCardSurface)),
+                          : (isFuture && !isUnlocked ? AppColors.backgroundSubtle : AppColors.clayCardSurface)),
                   borderRadius: 22,
                   isPressed: isSelected,
                 ),

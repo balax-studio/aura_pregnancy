@@ -141,7 +141,7 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
             Container(
               padding: const EdgeInsets.all(6),
               decoration: const BoxDecoration(
-                color: Color(0xFFD4EBD6),
+                color: AppColors.clinicalGreenBg,
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.check_circle_rounded, color: AppColors.successGreen, size: 24),
@@ -304,7 +304,7 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
         width: double.infinity,
         constraints: const BoxConstraints(maxWidth: 420, maxHeight: 680),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E141D), // Sinematik Koyu Arka Plan
+          color: AppColors.deepCinematicDark, // Sinematik Koyu Arka Plan
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
@@ -493,7 +493,7 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
                           // SOL: KAPAT BUTONU
                           Expanded(
                             child: ClayButton(
-                              color: const Color(0xFF33222B),
+                              color: AppColors.textPrimary,
                               height: 48,
                               borderRadius: 16,
                               onPressed: () => Navigator.pop(context),

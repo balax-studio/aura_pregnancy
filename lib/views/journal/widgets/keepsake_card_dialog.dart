@@ -221,9 +221,9 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: ClayTheme.clayDecoration(
-                      color: const Color(0xFFFEE6E0),
-                      borderRadius: 14,
+                    decoration: BoxDecoration(
+                      color: AppColors.clayPeach,
+                      borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Icon(Icons.card_giftcard_rounded, color: AppColors.primaryPink, size: 22),
                   ),
@@ -245,7 +245,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                           style: GoogleFonts.quicksand(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFF8E24AA),
+                            color: AppColors.keepsakePurple,
                           ),
                         ),
                       ],
@@ -263,14 +263,14 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFAF5FF),
+                  color: AppColors.keepsakePurpleBg,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFCE93D8).withValues(alpha: 0.3)),
+                  border: Border.all(color: AppColors.keepsakePurpleBorder.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.auto_awesome_rounded, color: Color(0xFF8E24AA), size: 18),
+                    const Icon(Icons.auto_awesome_rounded, color: AppColors.keepsakePurple, size: 18),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -296,9 +296,9 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                     width: 290,
                     padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFFDF9), // Krem kağıt rengi
+                      color: AppColors.backgroundGradientStart, // Krem kağıt rengi
                       borderRadius: BorderRadius.circular(26),
-                      border: Border.all(color: const Color(0xFFE8D7C8), width: 2.5),
+                      border: Border.all(color: AppColors.clayPeach, width: 2.5),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.08),
@@ -316,7 +316,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFDE8E4),
+                                color: AppColors.clayRose,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Row(
@@ -344,7 +344,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                               style: GoogleFonts.playfairDisplay(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w800,
-                                color: const Color(0xFF2D232E),
+                                color: AppColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -353,7 +353,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                               style: GoogleFonts.quicksand(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,
-                                color: const Color(0xFF8C7387),
+                                color: AppColors.textSecondary,
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -364,7 +364,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                               height: 140,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: Border.all(color: const Color(0xFFE5C8B4), width: 3),
+                                border: Border.all(color: AppColors.accentGold.withValues(alpha: 0.5), width: 3),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withValues(alpha: 0.12),
@@ -382,7 +382,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFDF7F4),
+                                color: AppColors.background,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
@@ -392,7 +392,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   fontStyle: FontStyle.italic,
-                                  color: const Color(0xFF6B4E5F),
+                                  color: AppColors.textPrimary,
                                 ),
                               ),
                             ),
@@ -440,14 +440,21 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                                 child: Center(
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                                    decoration: ClayTheme.clayDecoration(
+                                    decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: 18,
+                                      borderRadius: BorderRadius.circular(18),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.1),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
                                     ),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(Icons.lock_rounded, color: Color(0xFF8E24AA), size: 28),
+                                        const Icon(Icons.lock_rounded, color: AppColors.keepsakePurple, size: 28),
                                         const SizedBox(height: 6),
                                         Text(
                                           'keepsake_card_badge'.tr(),
@@ -463,7 +470,7 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
                                           style: GoogleFonts.quicksand(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w600,
-                                            color: const Color(0xFF8E24AA),
+                                            color: AppColors.keepsakePurple,
                                           ),
                                         ),
                                       ],

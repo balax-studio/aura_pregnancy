@@ -129,7 +129,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
             ),
           ],
         ),
-        backgroundColor: const Color(0xFF2E6135),
+        backgroundColor: AppColors.clinicalGreen,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
@@ -160,12 +160,12 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                       Container(
                         width: 48,
                         height: 48,
-                        decoration: ClayTheme.clayDecoration(
-                          color: const Color(0xFFD4EBD6),
-                          borderRadius: 16,
+                        decoration: BoxDecoration(
+                          color: AppColors.clinicalGreenBg,
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: const Center(
-                          child: Icon(Icons.medical_services_rounded, color: Color(0xFF2E6135), size: 26),
+                          child: Icon(Icons.medical_services_rounded, color: AppColors.clinicalGreen, size: 26),
                         ),
                       ),
                       const SizedBox(width: 14),
@@ -242,7 +242,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
 
                   // 1. Ana Eylem: Kadınlara Özel A4 PDF Raporu Oluştur & İndir
                   ClayButton(
-                    color: const Color(0xFFFEE6E0),
+                    color: AppColors.clayPeach,
                     height: 52,
                     borderRadius: 16,
                     onPressed: _isGeneratingPdf ? null : _generateAndSharePdf,
@@ -283,21 +283,21 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
 
                   // 2. İkincil Eylem: Özeti Panoya Kopyala
                   ClayButton(
-                    color: const Color(0xFFD4EBD6),
+                    color: AppColors.clinicalGreenBg,
                     height: 46,
                     borderRadius: 16,
                     onPressed: _copyToClipboard,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.copy_rounded, color: Color(0xFF2E6135), size: 18),
+                        const Icon(Icons.copy_rounded, color: AppColors.clinicalGreen, size: 18),
                         const SizedBox(width: 8),
                         Text(
                           'doctor_report_copy_btn'.tr(),
                           style: GoogleFonts.nunito(
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
-                            color: const Color(0xFF2E6135),
+                            color: AppColors.clinicalGreen,
                           ),
                         ),
                       ],

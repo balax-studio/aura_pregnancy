@@ -38,9 +38,9 @@ class PreAttConsentDialog extends StatelessWidget {
               child: Container(
                 width: 68,
                 height: 68,
-                decoration: ClayTheme.clayDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.clayRose,
-                  borderRadius: 24,
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: const Center(
                   child: Icon(

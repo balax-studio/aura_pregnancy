@@ -393,20 +393,20 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> with SingleTickerProv
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.smart_display_rounded, color: Color(0xFF2E6135), size: 20),
+              const Icon(Icons.smart_display_rounded, color: AppColors.clinicalGreen, size: 20),
               const SizedBox(width: 8),
               Text(
                 'names_refresh_ad_btn'.tr(),
                 style: GoogleFonts.nunito(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w900,
-                  color: const Color(0xFF2E6135),
+                  color: AppColors.clinicalGreen,
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 84),
       ],
     );
   }
@@ -422,9 +422,9 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> with SingleTickerProv
               Container(
                 width: 80,
                 height: 80,
-                decoration: ClayTheme.clayDecoration(
-                  color: const Color(0xFFFFEBEE),
-                  borderRadius: 40,
+                decoration: const BoxDecoration(
+                  color: AppColors.clayRose,
+                  shape: BoxShape.circle,
                 ),
                 child: const Center(
                   child: Icon(Icons.favorite_border_rounded, color: AppColors.primaryPink, size: 40),
@@ -477,7 +477,7 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> with SingleTickerProv
             onFavoriteToggle: _toggleFavorite,
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 84),
       ],
     );
   }
@@ -533,8 +533,11 @@ class _BabyNamesScreenState extends State<BabyNamesScreen> with SingleTickerProv
                 )
               : ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  itemCount: _allFilteredNames.length,
+                  itemCount: _allFilteredNames.length + 1,
                   itemBuilder: (ctx, i) {
+                    if (i == _allFilteredNames.length) {
+                      return const SizedBox(height: 84);
+                    }
                     final item = _allFilteredNames[i];
                     return BabyNameCard(
                       babyName: item,

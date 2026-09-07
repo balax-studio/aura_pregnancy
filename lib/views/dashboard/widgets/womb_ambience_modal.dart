@@ -5,17 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 
+import '../screens/womb_ambience_screen.dart';
+
 /// Aura Pregnancy - Rahim İçi Sakinleşme Çanı & Akustik Beyaz Gürültü Modalı
 class WombAmbienceModal extends StatefulWidget {
   const WombAmbienceModal({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const WombAmbienceModal(),
-    );
+    return WombAmbienceScreen.open(context);
   }
 
   @override
