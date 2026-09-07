@@ -15,10 +15,11 @@ class BoxShadow extends material.BoxShadow {
 
   @override
   BoxShadow scale(double factor) {
+    final scaledBlur = blurRadius * factor;
     return BoxShadow(
       color: color,
       offset: offset * factor,
-      blurRadius: blurRadius * factor,
+      blurRadius: scaledBlur < 0.0 ? 0.0 : scaledBlur,
       spreadRadius: spreadRadius * factor,
       blurStyle: blurStyle,
       inset: inset,

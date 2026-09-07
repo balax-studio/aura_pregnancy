@@ -68,6 +68,9 @@ class Fruit3DAssetManager {
 
   /// Belirtilen meyve anahtarı için 3D görsel dosya yolunu döndürür
   static String getAssetImagePath(String fruitKey) {
+    if (fruitKey == 'sweet_potato') {
+      return 'assets/images/fruit_carrot.jpg';
+    }
     return 'assets/images/fruit_$fruitKey.jpg';
   }
 }

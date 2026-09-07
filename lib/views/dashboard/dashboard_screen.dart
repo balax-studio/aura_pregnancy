@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/constants/weekly_medical_data.dart';
-import '../../core/constants/medical_specs.dart';
 import '../../services/database_helper.dart';
 import '../../services/medical_calculator.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
@@ -15,13 +14,10 @@ import '../../utils/date_utils.dart';
 import 'widgets/profile_edit_sheet.dart';
 import 'widgets/interactive_3d_fetus_widget.dart';
 import 'screens/womb_ambience_screen.dart';
-import 'screens/partner_share_screen.dart';
 import 'widgets/lockscreen_capsule_preview.dart';
-import '../postpartum/postpartum_bridge_screen.dart';
 import '../../core/widgets/fruit_3d_widget.dart';
 import '../../core/widgets/micro_animations.dart';
 import '../widgets/emergency_beacon_button.dart';
-import '../baby_names/baby_names_screen.dart';
 
 /// Aura Pregnancy - Awwwards x Claymorphic Sade, Ferah & Romantik Ana Sayfa (Dashboard)
 class DashboardScreen extends StatefulWidget {
@@ -174,11 +170,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final weeksRemaining = daysRemaining > 0
         ? ((daysRemaining + 6) ~/ 7).clamp(0, 40)
         : (40 - currentWeek).clamp(0, 40);
-    final weekData = WeeklyMedicalData.getInfoForWeek(currentWeek);
     final babyName = _profile?.babyDisplayName ?? 'Bebeğiniz';
     final momName = _profile?.momName ?? 'Anne Adayı';
-
-    final fruitName = weekData['fruit_name'] as String? ?? 'Gelişim';
 
     // Detaylı Yaş Hesaplama (Kaçıncı haftanın kaçıncı gününde)
     DateTime lmpDate;
@@ -188,12 +181,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       lmpDate = DateTime.now().subtract(Duration(days: (currentWeek - 1) * 7));
     }
     final detailedAge = MedicalCalculator.getDetailedPregnancyAge(lmpDate);
-    final weekNumber = detailedAge['weeks'] ?? currentWeek;
+    final weekNumber = (detailedAge['weeks'] ?? currentWeek).clamp(1, 40);
     final dayNumber = (detailedAge['days'] ?? 0) + 1; // 1-7. Gün
     final trimester = MedicalCalculator.getTrimester(weekNumber);
 
-    // Bu Haftanın Tıbbi Testi Var mı?
-    final medicalMilestone = PregnancyMedicalSpecs.medicalMilestones[weekNumber];
+    // Hafta verisi ve meyve adı gösterilen weekNumber ile %100 senkronize
+    final weekData = WeeklyMedicalData.getInfoForWeek(weekNumber);
+    final fruitName = weekData['fruit_name'] as String? ?? 'Gelişim';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -241,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 14),
             child: EmergencyBeaconButton(
-              onTap: () => widget.onNavigateTab(4), // Acil Durum ekranı
+              onTap: () => widget.onNavigateTab(5), // Acil Durum ekranı (Index 5)
             ),
           ),
         ],
@@ -409,7 +403,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     const Text('🎧', style: TextStyle(fontSize: 14)),
                                     const SizedBox(width: 6),
                                     Text(
-                                      'Sakinleşme Çanı',
+                                      'dashboard_womb_bell'.tr(),
                                       style: GoogleFonts.outfit(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w700,
@@ -441,7 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     const Text('📱', style: TextStyle(fontSize: 14)),
                                     const SizedBox(width: 6),
                                     Text(
-                                      'Kilit Ekranı',
+                                      'dashboard_lock_screen'.tr(),
                                       style: GoogleFonts.outfit(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w700,
@@ -486,7 +480,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Bugünün Nabzı',
+                                  'dashboard_daily_pulse'.tr(),
                                   style: GoogleFonts.outfit(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w800,
@@ -539,7 +533,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Su',
+                                                'dashboard_pulse_water'.tr(),
                                                 style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                               ),
                                               Text(
@@ -587,11 +581,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Vitamin',
+                                                'dashboard_pulse_vitamin'.tr(),
                                                 style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                               ),
                                               Text(
-                                                _medsTotal > 0 ? '$_medsTaken/$_medsTotal' : 'Ekle',
+                                                _medsTotal > 0 ? '$_medsTaken/$_medsTotal' : 'dashboard_pulse_add'.tr(),
                                                 style: GoogleFonts.outfit(
                                                   fontSize: 11.5,
                                                   fontWeight: FontWeight.w800,
@@ -645,7 +639,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Yürüyüş',
+                                                'dashboard_pulse_steps'.tr(),
                                                 style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                               ),
                                               Text(
@@ -670,291 +664,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 3. BENTO GRID: HIZLI KEŞİF VE ARAÇLAR (2x2)
-                StaggeredSlideFade(
-                  index: 2,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Sol Sütun
-                      Expanded(
-                        child: Column(
-                          children: [
-                            // Bento 1: Tıbbi Test veya Haftalık Rehber
-                            ClayCard(
-                              isGlazed: true,
-                              color: medicalMilestone != null ? AppColors.clayPeach : AppColors.clayCream,
-                              padding: const EdgeInsets.all(14),
-                              onTap: () => widget.onNavigateTab(1), // Haftalık Rehbere
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(7),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.90),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: Icon(
-                                          medicalMilestone != null ? Icons.medical_services_rounded : Icons.calendar_today_rounded,
-                                          color: AppColors.secondaryPeach,
-                                          size: 18,
-                                        ),
-                                      ),
-                                      const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.textSecondary),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    medicalMilestone != null ? 'Tıbbi Kontrol' : 'Haftalık Rehber',
-                                    style: GoogleFonts.plusJakartaSans(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.textSecondary),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    medicalMilestone != null ? (medicalMilestone['test'] ?? '') : '$weekNumber. Hafta Gelişimi',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.primaryDark,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            // Bento 3: Günün Romantik Sözü / Notu
-                            ClayCard(
-                              isGlazed: true,
-                              color: AppColors.clayRose,
-                              padding: const EdgeInsets.all(14),
-                              onTap: () => widget.onNavigateTab(3), // Anı Günlüğü
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(7),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.90),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: const Icon(Icons.auto_awesome_rounded, color: AppColors.primaryPink, size: 18),
-                                      ),
-                                      const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.primaryPink),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'dashboard_today_title'.tr(),
-                                    style: GoogleFonts.plusJakartaSans(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.primaryPink),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    weekData['summary'] as String? ?? 'Bebeğiniz her geçen gün sevginizle büyüyor.',
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 11.5,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
-                                      height: 1.35,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  GestureDetector(
-                                    onTap: () {
-                                      HapticFeedback.selectionClick();
-                                      PartnerShareScreen.open(context, profile: _profile);
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.85),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Text('💌 ', style: TextStyle(fontSize: 12)),
-                                          Text(
-                                            'Eşinle Paylaş',
-                                            style: GoogleFonts.outfit(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.primaryPink,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Sağ Sütun
-                      Expanded(
-                        child: Column(
-                          children: [
-                            // Bento 2: Bebek İsimleri Keşfi
-                            ClayCard(
-                              isGlazed: true,
-                              color: AppColors.clayMint,
-                              padding: const EdgeInsets.all(14),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const BabyNamesScreen()),
-                                );
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(7),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.90),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: const Icon(Icons.stars_rounded, color: AppColors.successGreen, size: 18),
-                                      ),
-                                      const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.successGreen),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'dashboard_baby_names_title'.tr(),
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 13.5,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.primaryDark,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    'Binlerce anlamlı isim',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            // Bento 4: Anı Günlüğü ve Stüdyo Hızlı Geçiş
-                            ClayCard(
-                              isGlazed: true,
-                              color: AppColors.clayLavender,
-                              padding: const EdgeInsets.all(14),
-                              onTap: () => widget.onNavigateTab(3), // Anı Günlüğü
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(7),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.90),
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: const Icon(Icons.palette_rounded, color: AppColors.lavenderPurple, size: 18),
-                                      ),
-                                      const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.lavenderPurple),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Aura Stüdyo',
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 13.5,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.primaryDark,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    'Suluboya & Hatıra Kartı',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 14),
-
-                // Aura 4. Trimester: Altın 40 Gün Lohusalık Köprüsü
-                InkWell(
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    PostpartumBridgeScreen.show(context, profile: _profile);
-                  },
-                  borderRadius: BorderRadius.circular(22),
-                  child: ClayCard(
-                    color: AppColors.clayPeach,
-                    borderRadius: 22,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: const Text('🕊️', style: TextStyle(fontSize: 22)),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Aura 4. Trimester: Altın 40 Gün',
-                                style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
-                              ),
-                              Text(
-                                'Bebeğim Doğdu! Anne lohusa iyileşme moduna geç.',
-                                style: GoogleFonts.plusJakartaSans(fontSize: 11, color: AppColors.textSecondary),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: AppColors.primaryPink),
-                      ],
-                    ),
-                  ),
-                ),
-
                 const SizedBox(height: 16),
                 const StaggeredSlideFade(
-                  index: 3,
+                  index: 2,
                   child: MedicalDisclaimerBanner(),
                 ),
                 const SizedBox(height: 84),

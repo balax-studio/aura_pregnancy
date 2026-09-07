@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/birth_plan_model.dart';
@@ -73,7 +74,7 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('PDF oluşturma hatası: $e'),
+            content: Text('PDF error: $e'),
             backgroundColor: AppColors.medicalAlertRed,
           ),
         );
@@ -104,67 +105,67 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
                         children: [
                           _buildIntroCard(),
                           const SizedBox(height: 16),
-                          _buildSectionTitle('ORTAM VE DOĞUM ATMOSFERİ', '🌿'),
+                          _buildSectionTitle('birth_plan_section_env'.tr(), '🌿'),
                           _buildPreferenceTile(
-                            title: 'Loş Işık ve Sessiz Ortam',
-                            subtitle: 'Oksitosin salgısını artıran loş, huzurlu doğum odası',
+                            title: 'birth_plan_pref_dim_lights'.tr(),
+                            subtitle: 'birth_plan_pref_dim_lights_sub'.tr(),
                             value: _plan.dimLights,
                             color: AppColors.clayLavender,
                             onChanged: (v) => _updatePlan(_plan.copyWith(dimLights: v)),
                           ),
                           _buildPreferenceTile(
-                            title: 'Rahatlatıcı Ortam Müziği',
-                            subtitle: 'Kişisel doğum müzik listemin arka planda çalınması',
+                            title: 'birth_plan_pref_music'.tr(),
+                            subtitle: 'birth_plan_pref_music_sub'.tr(),
                             value: _plan.ambientMusic,
                             color: AppColors.claySky,
                             onChanged: (v) => _updatePlan(_plan.copyWith(ambientMusic: v)),
                           ),
                           _buildPreferenceTile(
-                            title: 'Aromaterapi & Uçucu Yağlar',
-                            subtitle: 'Lavanta, adaçayı gibi gevşetici kokuların kullanımı',
+                            title: 'birth_plan_pref_aroma'.tr(),
+                            subtitle: 'birth_plan_pref_aroma_sub'.tr(),
                             value: _plan.aromatherapy,
                             color: AppColors.clayMint,
                             onChanged: (v) => _updatePlan(_plan.copyWith(aromatherapy: v)),
                           ),
                           _buildPreferenceTile(
-                            title: 'Pilates Topu & Aktif Hareket',
-                            subtitle: 'Doğum dalgaları sırasında pilates topu ile rahatlama',
+                            title: 'birth_plan_pref_ball'.tr(),
+                            subtitle: 'birth_plan_pref_ball_sub'.tr(),
                             value: _plan.birthingBall,
                             color: AppColors.clayPeach,
                             onChanged: (v) => _updatePlan(_plan.copyWith(birthingBall: v)),
                           ),
                           const SizedBox(height: 18),
-                          _buildSectionTitle('BEBEĞİN İLK DAKİKALARI & TIBBİ YAKLAŞIM', '👶'),
+                          _buildSectionTitle('birth_plan_section_baby'.tr(), '👶'),
                           _buildPreferenceTile(
-                            title: 'Kordonun Geç Kesilmesi',
-                            subtitle: 'Plasentadaki kanın bebeğe tam geçişi için 1-3 dakika bekleme',
+                            title: 'birth_plan_pref_cord'.tr(),
+                            subtitle: 'birth_plan_pref_cord_sub'.tr(),
                             value: _plan.delayedCordClamping,
                             color: AppColors.clayRose,
                             onChanged: (v) => _updatePlan(_plan.copyWith(delayedCordClamping: v)),
                           ),
                           _buildPreferenceTile(
-                            title: 'Kordonu Eşimin Kesmesi',
-                            subtitle: 'Doğum anında göbek kordonunun partnerim tarafından kesilmesi',
+                            title: 'birth_plan_pref_partner_cord'.tr(),
+                            subtitle: 'birth_plan_pref_partner_cord_sub'.tr(),
                             value: _plan.partnerCutsCord,
                             color: AppColors.claySky,
                             onChanged: (v) => _updatePlan(_plan.copyWith(partnerCutsCord: v)),
                           ),
                           _buildPreferenceTile(
-                            title: 'Anında Ten Tene Temas (Altın Saat)',
-                            subtitle: 'Bebek doğar doğmaz göğsüme yatırılarak ilk bağın kurulması',
+                            title: 'birth_plan_pref_skin'.tr(),
+                            subtitle: 'birth_plan_pref_skin_sub'.tr(),
                             value: _plan.immediateSkinToSkin,
                             color: AppColors.clayPeach,
                             onChanged: (v) => _updatePlan(_plan.copyWith(immediateSkinToSkin: v)),
                           ),
                           _buildPreferenceTile(
-                            title: 'İlk 24 Saat Yıkamanın Ertelenmesi',
-                            subtitle: 'Verniks tabakasının cildi koruması için banyonun geciktirilmesi',
+                            title: 'birth_plan_pref_bath'.tr(),
+                            subtitle: 'birth_plan_pref_bath_sub'.tr(),
                             value: _plan.delayNewbornBath24h,
                             color: AppColors.clayMint,
                             onChanged: (v) => _updatePlan(_plan.copyWith(delayNewbornBath24h: v)),
                           ),
                           const SizedBox(height: 18),
-                          _buildSectionTitle('ÖZEL DİLEKLER VE HEKİM NOTLARI', '✍️'),
+                          _buildSectionTitle('birth_plan_section_notes'.tr(), '✍️'),
                           ClayCard(
                             color: Colors.white,
                             borderRadius: 20,
@@ -173,7 +174,7 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Hekiminize veya Ebe Ekibinize Özel İstekleriniz:',
+                                  'birth_plan_notes_label'.tr(),
                                   style: GoogleFonts.outfit(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
@@ -189,7 +190,7 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
                                     DatabaseHelper.instance.saveBirthPlan(_plan);
                                   },
                                   decoration: InputDecoration(
-                                    hintText: 'Örn: Doğum salonunda yalnızca eşim bulunsun, epizyotomi sadece tıbbi zorunlulukta uygulansın...',
+                                    hintText: 'birth_plan_notes_hint'.tr(),
                                     hintStyle: GoogleFonts.plusJakartaSans(
                                       fontSize: 12,
                                       color: AppColors.textMuted,
@@ -252,7 +253,7 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Doğum Planı',
+                  'birth_plan_appbar_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -260,7 +261,7 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
                   ),
                 ),
                 Text(
-                  'Altın Mühürlü Hekim & Ebe Rehberi',
+                  'birth_plan_appbar_sub'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -296,7 +297,7 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Huzurlu ve Bilinçli Doğum Tercihleri',
+                  'birth_plan_intro_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
@@ -305,7 +306,7 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Bu tercihler doğumhanede hekiminiz ve ebeniz ile ortak bir dilde buluşmanızı sağlar. Dilediğiniz zaman PDF olarak çıktı alıp doktorunuza sunabilirsiniz.',
+                  'birth_plan_intro_desc'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     color: AppColors.textSecondary,
@@ -414,9 +415,9 @@ class _BirthPlanScreenState extends State<BirthPlanScreen> {
                   const Text('📜', style: TextStyle(fontSize: 18)),
                   const SizedBox(width: 10),
                   Text(
-                    'Altın Mühürlü PDF Oluştur & Paylaş',
+                    'birth_plan_export_pdf_btn'.tr(),
                     style: GoogleFonts.outfit(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
                     ),

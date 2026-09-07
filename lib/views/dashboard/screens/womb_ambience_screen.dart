@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
@@ -32,23 +33,23 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
 
   final List<Map<String, String>> _tracks = const [
     {
-      'title': 'Anne Nabzı (60 BPM)',
-      'subtitle': 'Rahim içi ritmik kalp atışı ve huzur',
+      'titleKey': 'womb_track_1_title',
+      'subtitleKey': 'womb_track_1_desc',
       'emoji': '💗',
     },
     {
-      'title': 'Amniyotik Sıvı Dalgaları',
-      'subtitle': 'Suyun rahatlatıcı derin uğultusu',
+      'titleKey': 'womb_track_2_title',
+      'subtitleKey': 'womb_track_2_desc',
       'emoji': '🌊',
     },
     {
-      'title': 'Pembe Gürültü & Ilık Yağmur',
-      'subtitle': 'Hamilelik uykusuzluğunu gideren tını',
+      'titleKey': 'womb_track_3_title',
+      'subtitleKey': 'womb_track_3_desc',
       'emoji': '🌧️',
     },
     {
-      'title': 'Sakinleştirici Ninni Kutusu',
-      'subtitle': 'Yenidoğan ve kolik yatıştırıcı melodi',
+      'titleKey': 'womb_track_4_title',
+      'subtitleKey': 'womb_track_4_desc',
       'emoji': '🧸',
     },
   ];
@@ -101,7 +102,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
   }
 
   String get _formattedTimeLeft {
-    if (_timerMinutes == 0) return 'Sürekli Çalma';
+    if (_timerMinutes == 0) return 'womb_timer_continuous'.tr();
     final m = (_secondsLeft ~/ 60).toString().padLeft(2, '0');
     final s = (_secondsLeft % 60).toString().padLeft(2, '0');
     return '$m:$s';
@@ -151,7 +152,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                     ),
                     const SizedBox(height: 18),
                     Text(
-                      activeTrack['title']!,
+                      activeTrack['titleKey']!.tr(),
                       style: GoogleFonts.outfit(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
@@ -160,7 +161,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      activeTrack['subtitle']!,
+                      activeTrack['subtitleKey']!.tr(),
                       textAlign: TextAlign.center,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 13,
@@ -192,7 +193,13 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            _isPlaying ? 'Kalan Süre: $_formattedTimeLeft' : 'Uyku Zamanlayıcı: ${_timerMinutes == 0 ? "Sürekli" : "$_timerMinutes dk"}',
+                            _isPlaying
+                                ? 'womb_timer_remaining'.tr(args: [_formattedTimeLeft])
+                                : 'womb_timer_sleep'.tr(args: [
+                                    _timerMinutes == 0
+                                        ? 'womb_timer_continuous'.tr()
+                                        : 'womb_timer_min'.tr(args: ['$_timerMinutes'])
+                                  ]),
                             style: GoogleFonts.outfit(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
@@ -324,7 +331,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Rahim İçi Sesler',
+                  'womb_ambience_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -332,7 +339,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                   ),
                 ),
                 Text(
-                  'Akustik Sakinleşme & Beyaz Gürültü',
+                  'womb_ambience_subtitle'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -442,7 +449,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      track['title']!,
+                      track['titleKey']!.tr(),
                       style: GoogleFonts.outfit(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -451,7 +458,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      track['subtitle']!,
+                      track['subtitleKey']!.tr(),
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
                         color: AppColors.textSecondary,

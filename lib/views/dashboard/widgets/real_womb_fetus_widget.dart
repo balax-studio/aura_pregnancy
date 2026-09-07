@@ -202,19 +202,19 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.deepWombPlum, // Derin Rahim İçi Arka Planı
+        color: const Color(0xFF231826),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: AppColors.primaryPink.withValues(alpha: 0.4), width: 2),
+        border: Border.all(color: AppColors.primaryPink.withValues(alpha: 0.35), width: 2),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primaryPink.withValues(alpha: 0.28),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+            color: AppColors.primaryPink.withValues(alpha: 0.18),
+            blurRadius: 18,
+            offset: const Offset(0, 6),
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.55),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -266,18 +266,13 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
                 },
               ),
 
-              // 2. Rahim İçi Sıcak Işık ve Derinlik Maskesi
+              // 2. Hafif Ferah Işık Filtresi (Karartma kaldırıldı)
               Container(
                 decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.center,
-                    radius: 0.88,
-                    colors: [
-                      Colors.transparent,
-                      AppColors.primaryDark.withValues(alpha: 0.2),
-                      AppColors.deepWombPlum.withValues(alpha: 0.7),
-                    ],
-                    stops: const [0.55, 0.8, 1.0],
+                  borderRadius: BorderRadius.circular(26),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    width: 1.5,
                   ),
                 ),
               ),

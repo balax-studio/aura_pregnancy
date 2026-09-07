@@ -10,15 +10,11 @@ import 'widgets/pregnancy_journey_tracker.dart';
 import 'widgets/baby_growth_card.dart';
 import 'widgets/medical_tests_checklist_card.dart';
 import 'widgets/ad_reward_dialog.dart';
-import 'widgets/baby_zodiac_card.dart';
-import 'screens/hospital_bag_screen.dart';
-import 'screens/birth_plan_screen.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 import '../widgets/clay_native_ad_card.dart';
 import '../widgets/emergency_beacon_button.dart';
 import '../timeline/timeline_screen.dart';
 import '../../core/widgets/micro_animations.dart';
-import '../../core/theme/clay_theme.dart';
 
 /// Hafta Hafta Tıbbi Bilgilendirme ve Test Takvimi Ekranı
 class WeeklyPanelScreen extends StatefulWidget {
@@ -285,104 +281,9 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen> {
                     ),
                     const SizedBox(height: 14),
 
-                    // Bebek Burç, Mizaç ve Anne-Bebek Uyum Kapsülü
-                    StaggeredSlideFade(
-                      index: 3,
-                      child: BabyZodiacCard(
-                        dueDate: _controller.profile?.dueDate,
-                        momName: _controller.profile?.momName,
-                        babyName: _controller.profile?.babyName,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-
-                    // Hızlı Araçlar: Doğum Çantası & Kişisel Doğum Planı
-                    Row(
-                      children: [
-                        // Doğum Çantası
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              HospitalBagScreen.open(context);
-                            },
-                            borderRadius: BorderRadius.circular(20),
-                            child: ClayCard(
-                              color: AppColors.clayPeach,
-                              borderRadius: 20,
-                              padding: const EdgeInsets.all(14),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('🎒', style: TextStyle(fontSize: 24)),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Doğum Çantası',
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w800,
-                                      color: AppColors.primaryDark,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    '28+ Hafta Listesi',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 11,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Doğum Planı PDF
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              BirthPlanScreen.open(context, profile: _controller.profile);
-                            },
-                            borderRadius: BorderRadius.circular(20),
-                            child: ClayCard(
-                              color: AppColors.clayLavender,
-                              borderRadius: 20,
-                              padding: const EdgeInsets.all(14),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('📜', style: TextStyle(fontSize: 24)),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Doğum Planı',
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w800,
-                                      color: AppColors.primaryDark,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Altın Mühürlü PDF',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 11,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-
                     // Kil Temalı Yerel Gelişmiş Reklam Kartı (Sponsorlu Destekçi)
                     const StaggeredSlideFade(
-                      index: 4,
+                      index: 3,
                       child: ClayNativeAdCard(
                         cardColor: AppColors.clayRose,
                         icon: Icons.spa_rounded,

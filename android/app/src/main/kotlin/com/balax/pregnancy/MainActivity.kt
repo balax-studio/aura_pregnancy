@@ -8,6 +8,7 @@ import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import android.media.MediaMuxer
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -17,6 +18,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 
 class MainActivity : FlutterActivity() {
@@ -61,17 +63,18 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 "generateAndSaveVideo" -> {
-                    val slides = call.argument<List<ByteArray>>("slides")
+                    val slidePaths = call.argument<List<String>>("slidePaths")
                     val fileNamePrefix = call.argument<String>("fileNamePrefix") ?: "Aura_Gebelik_Yolculugu"
+                    val secondsPerSlide = call.argument<Double>("secondsPerSlide") ?: 2.0
 
-                    if (slides.isNullOrEmpty()) {
-                        result.error("INVALID_ARGUMENT", "Slides cannot be empty", null)
+                    if (slidePaths.isNullOrEmpty()) {
+                        result.error("INVALID_ARGUMENT", "Slide paths cannot be empty", null)
                         return@setMethodCallHandler
                     }
 
                     Thread {
                         try {
-                            val savedPath = encodeAndSaveVideo(slides, fileNamePrefix)
+                            val savedPath = encodeAndSaveVideoFromPaths(slidePaths, fileNamePrefix, secondsPerSlide)
                             runOnUiThread {
                                 result.success(savedPath)
                             }
@@ -97,102 +100,192 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    /**
+     * Görseli hem Galeriye (Pictures/Aura Pregnancy) hem de İndirilenler klasörüne (Download/Aura Pregnancy) kaydeder.
+     * MediaScannerConnection ile anında sistem galerisine tanıtır.
+     */
     private fun saveImageToMediaStore(imageBytes: ByteArray, prefix: String): Boolean {
         val fileName = "${prefix}_${System.currentTimeMillis()}.png"
+        var savedAny = false
 
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/Aura Pregnancy")
-                put(MediaStore.Images.Media.IS_PENDING, 1)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // 1. Galeri / Pictures / Aura Pregnancy
+            try {
+                val picturesValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/Aura Pregnancy")
+                    put(MediaStore.Images.Media.IS_PENDING, 1)
+                }
+
+                val picturesUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, picturesValues)
+                if (picturesUri != null) {
+                    contentResolver.openOutputStream(picturesUri)?.use { out ->
+                        out.write(imageBytes)
+                        out.flush()
+                    }
+                    picturesValues.clear()
+                    picturesValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+                    contentResolver.update(picturesUri, picturesValues, null, null)
+                    savedAny = true
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
-            val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-                ?: return false
-
-            contentResolver.openOutputStream(uri)?.use { outputStream ->
-                outputStream.write(imageBytes)
-                outputStream.flush()
+            // 2. İndirilenler / Download / Aura Pregnancy
+            try {
+                val downloadValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/Aura Pregnancy")
+                }
+                val downloadUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, downloadValues)
+                if (downloadUri != null) {
+                    contentResolver.openOutputStream(downloadUri)?.use { out ->
+                        out.write(imageBytes)
+                        out.flush()
+                    }
+                    savedAny = true
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            contentValues.clear()
-            contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
-            contentResolver.update(uri, contentValues, null, null)
-            true
         } else {
-            val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-            val auraDir = File(picturesDir, "Aura Pregnancy")
-            if (!auraDir.exists()) {
-                auraDir.mkdirs()
+            // Android 9 ve altı
+            try {
+                val picturesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Aura Pregnancy")
+                if (!picturesDir.exists()) picturesDir.mkdirs()
+                val imageFile = File(picturesDir, fileName)
+                FileOutputStream(imageFile).use { out ->
+                    out.write(imageBytes)
+                    out.flush()
+                }
+                val values = ContentValues().apply {
+                    put(MediaStore.Images.Media.DATA, imageFile.absolutePath)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+                }
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                MediaScannerConnection.scanFile(this, arrayOf(imageFile.absolutePath), arrayOf("image/png"), null)
+                savedAny = true
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            val imageFile = File(auraDir, fileName)
-            FileOutputStream(imageFile).use { outputStream ->
-                outputStream.write(imageBytes)
-                outputStream.flush()
+
+            try {
+                val downloadDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Aura Pregnancy")
+                if (!downloadDir.exists()) downloadDir.mkdirs()
+                val downloadFile = File(downloadDir, fileName)
+                FileOutputStream(downloadFile).use { out ->
+                    out.write(imageBytes)
+                    out.flush()
+                }
+                MediaScannerConnection.scanFile(this, arrayOf(downloadFile.absolutePath), arrayOf("image/png"), null)
+                savedAny = true
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            val contentValues = ContentValues().apply {
-                put(MediaStore.Images.Media.DATA, imageFile.absolutePath)
-                put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-            }
-            contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            true
         }
+
+        return savedAny
     }
 
+    /**
+     * Videoyu hem Galeri (Movies/Aura Pregnancy) hem de İndirilenler (Download/Aura Pregnancy) klasörüne kaydeder.
+     */
     private fun saveVideoToMediaStore(videoBytes: ByteArray, prefix: String): String {
         val fileName = "${prefix}_${System.currentTimeMillis()}.mp4"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_MOVIES}/Aura Pregnancy")
-                put(MediaStore.Video.Media.IS_PENDING, 1)
+            var primaryUri: Uri? = null
+
+            // 1. Galeri (Movies / Aura Pregnancy)
+            try {
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_MOVIES}/Aura Pregnancy")
+                    put(MediaStore.Video.Media.IS_PENDING, 1)
+                }
+
+                val uri = contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
+                if (uri != null) {
+                    contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        outputStream.write(videoBytes)
+                        outputStream.flush()
+                    }
+
+                    contentValues.clear()
+                    contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+                    contentResolver.update(uri, contentValues, null, null)
+
+                    primaryUri = uri
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
-            val uri = contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
-                ?: return "İndirilenler / $fileName"
-
-            contentResolver.openOutputStream(uri)?.use { outputStream ->
-                outputStream.write(videoBytes)
-                outputStream.flush()
+            // 2. İndirilenler (Download / Aura Pregnancy)
+            try {
+                val downloadValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/Aura Pregnancy")
+                }
+                val downloadUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, downloadValues)
+                if (downloadUri != null) {
+                    contentResolver.openOutputStream(downloadUri)?.use { outputStream ->
+                        outputStream.write(videoBytes)
+                        outputStream.flush()
+                    }
+                    if (primaryUri == null) primaryUri = downloadUri
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
-            contentValues.clear()
-            contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
-            contentResolver.update(uri, contentValues, null, null)
-
-            lastSavedVideoUri = uri
-            return "Galeri (Videolar) / $fileName"
+            lastSavedVideoUri = primaryUri
+            return "Galeri & İndirilenler / Aura Pregnancy / $fileName"
         } else {
-            val moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
-            val auraDir = File(moviesDir, "Aura Pregnancy")
-            if (!auraDir.exists()) {
-                auraDir.mkdirs()
-            }
-            val videoFile = File(auraDir, fileName)
+            // Android 9 ve altı
+            val moviesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "Aura Pregnancy")
+            if (!moviesDir.exists()) moviesDir.mkdirs()
+            val videoFile = File(moviesDir, fileName)
             FileOutputStream(videoFile).use { outputStream ->
                 outputStream.write(videoBytes)
                 outputStream.flush()
             }
+
+            val downloadDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Aura Pregnancy")
+            if (!downloadDir.exists()) downloadDir.mkdirs()
+            val downloadFile = File(downloadDir, fileName)
+            FileOutputStream(downloadFile).use { outputStream ->
+                outputStream.write(videoBytes)
+                outputStream.flush()
+            }
+
             val contentValues = ContentValues().apply {
                 put(MediaStore.Video.Media.DATA, videoFile.absolutePath)
                 put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
             }
             val uri = contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
             lastSavedVideoUri = uri ?: Uri.fromFile(videoFile)
-            return "Galeri / $fileName"
+
+            MediaScannerConnection.scanFile(this, arrayOf(videoFile.absolutePath, downloadFile.absolutePath), arrayOf("video/mp4"), null)
+
+            return "Galeri & İndirilenler / Aura Pregnancy / $fileName"
         }
     }
 
-    private fun encodeAndSaveVideo(slides: List<ByteArray>, prefix: String): String {
+    /**
+     * Geçici diskteki PNG slayt dosyalarından donanım H.264 AVC ile yüksek performanslı, düşük MB video üretir.
+     */
+    private fun encodeAndSaveVideoFromPaths(slidePaths: List<String>, prefix: String, secondsPerSlide: Double): String {
         val width = 720
         val height = 1280
         val fps = 25
-        val secondsPerSlide = 3
-        val framesPerSlide = fps * secondsPerSlide
-        val bitRate = 2_000_000
+        val framesPerSlide = (fps * secondsPerSlide).toInt().coerceAtLeast(fps)
+        val bitRate = 1_200_000 // 1.2 Mbps (Hafif dosya boyutu, yüksek netlik)
 
         val tempFile = File(cacheDir, "${prefix}_${System.currentTimeMillis()}.mp4")
         val mimeType = "video/avc"
@@ -215,12 +308,14 @@ class MainActivity : FlutterActivity() {
 
         val yuvBuffer = ByteArray(width * height * 3 / 2)
         val argbBuffer = IntArray(width * height)
-
         var frameIndex = 0
 
         try {
-            for (slideBytes in slides) {
-                val originalBmp = BitmapFactory.decodeByteArray(slideBytes, 0, slideBytes.size) ?: continue
+            for (path in slidePaths) {
+                val file = File(path)
+                if (!file.exists() || file.length() == 0L) continue
+
+                val originalBmp = BitmapFactory.decodeFile(file.absolutePath) ?: continue
                 val scaledBmp = Bitmap.createScaledBitmap(originalBmp, width, height, true)
                 scaledBmp.getPixels(argbBuffer, 0, width, 0, 0, width, height)
                 rgbToYuv420SemiPlanar(argbBuffer, width, height, yuvBuffer)
@@ -305,7 +400,7 @@ class MainActivity : FlutterActivity() {
         }
 
         if (!tempFile.exists() || tempFile.length() == 0L) {
-            return "Galeri / $prefix.mp4"
+            throw IllegalStateException("Video dosyası üretilemedi.")
         }
 
         val videoBytes = tempFile.readBytes()

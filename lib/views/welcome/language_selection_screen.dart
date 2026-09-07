@@ -35,12 +35,13 @@ class LanguageSelectionScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: AmbientBackground(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                 Container(
                   width: 88,
                   height: 88,
@@ -85,6 +86,7 @@ class LanguageSelectionScreen extends StatelessWidget {
                   color: AppColors.clayMint,
                 ),
               ],
+              ),
             ),
           ),
         ),

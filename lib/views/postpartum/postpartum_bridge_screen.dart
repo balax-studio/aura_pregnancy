@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../models/profile_model.dart';
@@ -28,17 +29,20 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
   bool _ironTaken = true;
   int _selectedMoodIndex = 2; // 0: Zorlanıyorum, 1: Hassasım, 2: Huzurluyum, 3: Harikayım
 
-  final List<String> _moods = [
-    'Zorlanıyorum 🌧️',
-    'Hassasım (Baby Blues) 🥺',
-    'Huzurluyum 🌸',
-    'Çok İyiyim ☀️',
+  List<String> get _moodKeys => [
+    'postpartum_mood_0',
+    'postpartum_mood_1',
+    'postpartum_mood_2',
+    'postpartum_mood_3',
   ];
+
+  static const List<String> _moodEmojis = ['🌧️', '🥺', '🌸', '☀️'];
 
   @override
   Widget build(BuildContext context) {
-    final momName = widget.profile?.momName ?? 'Sevgili Anne';
-    final babyName = widget.profile?.babyDisplayName ?? 'Bebeğiniz';
+    final isEn = context.locale.languageCode == 'en';
+    final momName = widget.profile?.momName ?? (isEn ? 'Dear Mom' : 'Sevgili Anne');
+    final babyName = widget.profile?.babyDisplayName ?? (isEn ? 'Your Baby' : 'Bebeğiniz');
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -51,7 +55,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Aura 4. Trimester: Altın 40 Gün',
+          'postpartum_appbar_title'.tr(),
           style: GoogleFonts.outfit(
             fontSize: 17,
             fontWeight: FontWeight.w800,
@@ -82,7 +86,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Tebrikler $momName!',
+                                'postpartum_congrats_title'.tr(args: [momName]),
                                 style: GoogleFonts.outfit(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w800,
@@ -90,7 +94,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                                 ),
                               ),
                               Text(
-                                '$babyName dünyaya geldi. Şimdi sıra senin şefkatle iyileşmende.',
+                                'postpartum_congrats_sub'.tr(args: [babyName]),
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 12,
                                   color: AppColors.textSecondary,
@@ -109,7 +113,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
-                        '💡 "İlk 40 günde ağlamaklı hissetmen (Baby Blues) tamamen hormonların sıfırlanmasından kaynaklanıyor. Bu çok doğal, geçici ve sen muazzam bir annesin."',
+                        'postpartum_quote'.tr(),
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -125,7 +129,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
 
               // Günlük Lohusa Duygu Durumu Check-in
               Text(
-                'Bugün Kendini Nasıl Hissediyorsun?',
+                'postpartum_mood_question'.tr(),
                 style: GoogleFonts.outfit(
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
@@ -134,7 +138,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
               ),
               const SizedBox(height: 10),
               Row(
-                children: List.generate(_moods.length, (index) {
+                children: List.generate(_moodKeys.length, (index) {
                   final isSelected = _selectedMoodIndex == index;
                   return Expanded(
                     child: GestureDetector(
@@ -155,7 +159,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            _moods[index].split(' ')[1],
+                            _moodEmojis[index],
                             style: const TextStyle(fontSize: 20),
                           ),
                         ),
@@ -179,7 +183,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                         const Text('💧', style: TextStyle(fontSize: 20)),
                         const SizedBox(width: 8),
                         Text(
-                          'Süt Üretimi & Hidrasyon',
+                          'postpartum_hydration_title'.tr(),
                           style: GoogleFonts.outfit(
                             fontSize: 14.5,
                             fontWeight: FontWeight.w700,
@@ -188,7 +192,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                         ),
                         const Spacer(),
                         Text(
-                          '$_waterGlasses Bardak (2.5L)',
+                          'postpartum_hydration_glasses'.tr(args: [_waterGlasses.toString()]),
                           style: GoogleFonts.outfit(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
@@ -211,7 +215,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                           },
                         ),
                         Text(
-                          '$_waterGlasses / 10 Bardak',
+                          'postpartum_hydration_counter'.tr(args: [_waterGlasses.toString()]),
                           style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                         IconButton(
@@ -242,7 +246,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Günlük Demir & Multivitamin Takviyesi',
+                                  'postpartum_iron_title'.tr(),
                                   style: GoogleFonts.outfit(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
@@ -250,7 +254,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'Lohusalık toparlanması ve kan yapımı için kritik',
+                                  'postpartum_iron_sub'.tr(),
                                   style: GoogleFonts.plusJakartaSans(
                                     fontSize: 11,
                                     color: AppColors.textSecondary,
@@ -280,7 +284,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                         const Text('🤱', style: TextStyle(fontSize: 20)),
                         const SizedBox(width: 8),
                         Text(
-                          'Göğüs Ucu Rahatlatma İpuçları',
+                          'postpartum_nipple_title'.tr(),
                           style: GoogleFonts.outfit(
                             fontSize: 14.5,
                             fontWeight: FontWeight.w800,
@@ -291,7 +295,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '• Her emzirme sonrası bir damla anne sütünü göğüs ucuna sürerek doğal iyileşmeyi başlatın.\n• Saf Lanolin kremini emzirmeden hemen sonra uygulayabilirsiniz (temizlemeye gerek yoktur).\n• Bebeğin sadece meme ucunu değil, areolanın (kahverengi alan) çoğunu kavramasını sağlayın.',
+                      'postpartum_nipple_desc'.tr(),
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         color: AppColors.textPrimary,
@@ -316,7 +320,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                         const Text('🧘‍♀️', style: TextStyle(fontSize: 20)),
                         const SizedBox(width: 8),
                         Text(
-                          'Pelvik Taban & Nazik İyileşme',
+                          'postpartum_pelvic_title'.tr(),
                           style: GoogleFonts.outfit(
                             fontSize: 14.5,
                             fontWeight: FontWeight.w800,
@@ -327,7 +331,7 @@ class _PostpartumBridgeScreenState extends State<PostpartumBridgeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '• İlk 2 hafta ağır kaldırmaktan ve ani çömelmelerden kaçının.\n• Yatarak günde 3 set 5 kez hafif Kegel kasması kan dolaşımını hızlandırır.\n• Loşi (doğum sonrası akıntı) rengi kırmızıdan sarı-beyaza doğru dönecektir, aşırı pıhtılı kanamalarda hemen hekiminizi arayın.',
+                      'postpartum_pelvic_desc'.tr(),
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         color: AppColors.textPrimary,

@@ -33,7 +33,7 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
     super.initState();
     _zoomController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(milliseconds: 2500),
     )..repeat(reverse: true);
 
     _loadFrames();
@@ -54,7 +54,7 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
     _playbackTimer?.cancel();
     if (!_isPlaying || _frames.isEmpty) return;
 
-    _playbackTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+    _playbackTimer = Timer.periodic(const Duration(milliseconds: 2500), (timer) {
       if (!mounted) return;
       if (_currentFrameIndex < _frames.length - 1) {
         setState(() {
@@ -127,7 +127,59 @@ class _TimelapseVideoDialogState extends State<TimelapseVideoDialog> with Single
       _isDownloading = false;
     });
 
-    _showDownloadSuccessDialog(savedLocation ?? 'İndirilenler / Aura_Gebelik_Yolculugu.mp4');
+    if (savedLocation != null) {
+      _showDownloadSuccessDialog(savedLocation);
+    } else {
+      _showDownloadErrorDialog();
+    }
+  }
+
+  void _showDownloadErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: AppColors.background,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: const BoxDecoration(
+                color: Color(0xFFFDE8E8),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.error_outline_rounded, color: AppColors.medicalAlertRed, size: 24),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Kayıt Yapılamadı',
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 17, color: AppColors.primaryDark),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'Video cihazınıza kaydedilirken bir sorun oluştu. Lütfen cihazınızda depolama alanı olduğunu ve gerekli medya izinlerinin verildiğini kontrol ediniz.',
+          style: GoogleFonts.plusJakartaSans(fontSize: 13, height: 1.45, color: AppColors.textPrimary),
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        actions: [
+          ClayButton(
+            color: AppColors.clayCardSurface,
+            height: 44,
+            borderRadius: 14,
+            onPressed: () => Navigator.pop(ctx),
+            child: Center(
+              child: Text(
+                'common_close'.tr(),
+                style: GoogleFonts.outfit(color: AppColors.primaryDark, fontWeight: FontWeight.w800, fontSize: 13),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showDownloadSuccessDialog(String location) {

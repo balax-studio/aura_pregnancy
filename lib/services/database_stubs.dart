@@ -11,6 +11,18 @@ class Database {
   Future<int> rawUpdate(String sql, [List<Object?>? arguments]) async => 0;
   Future<List<Map<String, dynamic>>> rawQuery(String sql, [List<Object?>? arguments]) async => [];
   Future<void> execute(String sql, [List<Object?>? arguments]) async {}
+  Batch batch() => Batch();
+}
+
+class Batch {
+  void insert(String table, Map<String, dynamic> values, {String? nullColumnHack, ConflictAlgorithm? conflictAlgorithm}) {}
+  void update(String table, Map<String, dynamic> values, {String? where, List<Object?>? whereArgs, ConflictAlgorithm? conflictAlgorithm}) {}
+  void delete(String table, {String? where, List<Object?>? whereArgs}) {}
+  void execute(String sql, [List<Object?>? arguments]) {}
+  void rawInsert(String sql, [List<Object?>? arguments]) {}
+  void rawUpdate(String sql, [List<Object?>? arguments]) {}
+  void rawDelete(String sql, [List<Object?>? arguments]) {}
+  Future<List<dynamic>> commit({bool? exclusive, bool? noResult, bool? continueOnError}) async => [];
 }
 
 enum ConflictAlgorithm { rollback, abort, fail, ignore, replace }

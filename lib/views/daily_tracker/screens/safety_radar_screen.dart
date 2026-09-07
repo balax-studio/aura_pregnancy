@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/safety_radar_data.dart';
 import '../../../models/safety_item_model.dart';
@@ -59,15 +60,18 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
 
   void _shareCravingWithPartner(SafetyItem item) {
     HapticFeedback.mediumImpact();
-    final partner = widget.partnerName ?? 'Babası';
-    final baby = widget.babyName ?? 'Minik misafirimiz';
-    final message = 'Babası ($partner) selam! 🍓 $baby ile canımız fena halde "${item.title}" çekiyor! Güvenlik Radarı baktık; ${item.summary} 😋 Bize getirebilir misin?';
+    final isEn = context.locale.languageCode == 'en';
+    final partner = widget.partnerName ?? (isEn ? 'Dad' : 'Babası');
+    final baby = widget.babyName ?? (isEn ? 'Our little one' : 'Minik misafirimiz');
+    final itemTitle = item.localizedTitle(context.locale.languageCode);
+    final itemSummary = item.localizedSummary(context.locale.languageCode);
+    final message = 'safety_craving_share_template'.tr(args: [partner, baby, itemTitle, itemSummary]);
 
     Clipboard.setData(ClipboardData(text: message));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          'Mesaj panoya kopyalandı! WhatsApp\'a yapıştırabilirsiniz: "$message"',
+          'safety_card_partner_toast'.tr(args: [message]),
           style: GoogleFonts.plusJakartaSans(fontSize: 12),
         ),
         backgroundColor: AppColors.primaryPink,
@@ -106,7 +110,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                           const Text('🔎', style: TextStyle(fontSize: 44)),
                           const SizedBox(height: 12),
                           Text(
-                            'Aradığınız öğe bulunamadı.',
+                            'safety_empty_title'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -115,7 +119,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Şüpheli her durumda hekiminize danışınız.',
+                            'safety_empty_sub'.tr(),
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 13,
                               color: AppColors.textMuted,
@@ -178,7 +182,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Güvenlik Radarı',
+                  'safety_radar_appbar_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -186,7 +190,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                   ),
                 ),
                 Text(
-                  'Yiyebilir Miyim? / Sürebilir Miyim?',
+                  'safety_radar_appbar_sub'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -213,7 +217,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
       controller: _searchController,
       onChanged: (val) => setState(() => _query = val),
       decoration: InputDecoration(
-        hintText: 'Örn: Çiğ köfte, ton balığı, retinol, adaçayı...',
+        hintText: 'safety_radar_search_hint'.tr(),
         hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
         prefixIcon: const Icon(Icons.search_rounded, color: AppColors.primaryPink),
         suffixIcon: _query.isNotEmpty
@@ -242,30 +246,30 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
-          _buildFilterChip('Tümü', _selectedCategory == null && _selectedLevel == null, () {
+          _buildFilterChip('safety_filter_all'.tr(), _selectedCategory == null && _selectedLevel == null, () {
             setState(() {
               _selectedCategory = null;
               _selectedLevel = null;
             });
           }),
           const SizedBox(width: 8),
-          _buildFilterChip('🍽️ Besinler', _selectedCategory == SafetyCategory.food, () {
+          _buildFilterChip('🍽️ ${'safety_filter_food'.tr()}', _selectedCategory == SafetyCategory.food, () {
             setState(() => _selectedCategory = _selectedCategory == SafetyCategory.food ? null : SafetyCategory.food);
           }),
           const SizedBox(width: 8),
-          _buildFilterChip('🧴 Cilt Bakımı', _selectedCategory == SafetyCategory.skincare, () {
+          _buildFilterChip('🧴 ${'safety_filter_skincare'.tr()}', _selectedCategory == SafetyCategory.skincare, () {
             setState(() => _selectedCategory = _selectedCategory == SafetyCategory.skincare ? null : SafetyCategory.skincare);
           }),
           const SizedBox(width: 8),
-          _buildFilterChip('🌿 Bitki Çayları', _selectedCategory == SafetyCategory.herb, () {
+          _buildFilterChip('🌿 ${'safety_filter_herb'.tr()}', _selectedCategory == SafetyCategory.herb, () {
             setState(() => _selectedCategory = _selectedCategory == SafetyCategory.herb ? null : SafetyCategory.herb);
           }),
           const SizedBox(width: 8),
-          _buildFilterChip('🟢 Güvenli', _selectedLevel == SafetyLevel.safe, () {
+          _buildFilterChip('safety_level_safe_badge'.tr(), _selectedLevel == SafetyLevel.safe, () {
             setState(() => _selectedLevel = _selectedLevel == SafetyLevel.safe ? null : SafetyLevel.safe);
           }),
           const SizedBox(width: 8),
-          _buildFilterChip('🔴 Sakıncalı', _selectedLevel == SafetyLevel.unsafe, () {
+          _buildFilterChip('safety_level_unsafe_badge'.tr(), _selectedLevel == SafetyLevel.unsafe, () {
             setState(() => _selectedLevel = _selectedLevel == SafetyLevel.unsafe ? null : SafetyLevel.unsafe);
           }),
         ],
@@ -309,24 +313,30 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
     Color badgeColor;
     String badgeText;
     Color cardBorder;
+    final isEn = context.locale.languageCode == 'en';
 
     switch (item.level) {
       case SafetyLevel.safe:
         badgeColor = AppColors.successGreen;
-        badgeText = 'GÜVENLİ';
+        badgeText = isEn ? 'SAFE' : 'GÜVENLİ';
         cardBorder = AppColors.successGreen.withValues(alpha: 0.3);
         break;
       case SafetyLevel.moderate:
         badgeColor = AppColors.amberCaution;
-        badgeText = 'ÖLÇÜLÜ / DİKKAT';
+        badgeText = isEn ? 'CAUTION' : 'ÖLÇÜLÜ / DİKKAT';
         cardBorder = AppColors.amberCaution.withValues(alpha: 0.3);
         break;
       case SafetyLevel.unsafe:
         badgeColor = AppColors.medicalAlertRed;
-        badgeText = 'SAKINCALI';
+        badgeText = isEn ? 'AVOID' : 'SAKINCALI';
         cardBorder = AppColors.medicalAlertRed.withValues(alpha: 0.3);
         break;
     }
+
+    final itemTitle = item.localizedTitle(context.locale.languageCode);
+    final itemSummary = item.localizedSummary(context.locale.languageCode);
+    final itemReason = item.localizedMedicalReason(context.locale.languageCode);
+    final itemAlternative = item.localizedAlternative(context.locale.languageCode);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -357,7 +367,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          item.title,
+                          itemTitle,
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
@@ -367,8 +377,8 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                         const SizedBox(height: 2),
                         Text(
                           item.category == SafetyCategory.food
-                              ? 'Besin & İçecek'
-                              : (item.category == SafetyCategory.skincare ? 'Kozmetik & Cilt' : 'Bitki Çayı & Takviye'),
+                              ? 'safety_filter_food'.tr()
+                              : (item.category == SafetyCategory.skincare ? 'safety_filter_skincare'.tr() : 'safety_filter_herb'.tr()),
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             color: AppColors.textMuted,
@@ -414,7 +424,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(
-                  item.summary,
+                  itemSummary,
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     color: AppColors.primaryDark,
@@ -422,7 +432,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                   ),
                 ),
               ),
-              if (item.medicalReason.isNotEmpty) ...[
+              if (itemReason.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.all(10),
@@ -436,7 +446,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                       const Text('🩺 ', style: TextStyle(fontSize: 13)),
                       Expanded(
                         child: Text(
-                          item.medicalReason,
+                          itemReason,
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w400,
@@ -449,14 +459,14 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                   ),
                 ),
               ],
-              if (item.alternativeSuggestion != null && item.alternativeSuggestion!.isNotEmpty) ...[
+              if (itemAlternative != null && itemAlternative.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     const Text('💡 ', style: TextStyle(fontSize: 12)),
                     Expanded(
                       child: Text(
-                        'Güvenli Alternatif: ${item.alternativeSuggestion}',
+                        '${'safety_card_alternative'.tr()}: $itemAlternative',
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 11.5,
                           fontWeight: FontWeight.w600,
@@ -485,7 +495,7 @@ class _SafetyRadarScreenState extends State<SafetyRadarScreen> {
                           const Text('🍓', style: TextStyle(fontSize: 13)),
                           const SizedBox(width: 6),
                           Text(
-                            'Babaya Aşerme Paylaş',
+                            'safety_card_partner_share_btn'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,

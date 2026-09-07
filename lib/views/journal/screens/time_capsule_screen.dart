@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/time_capsule_model.dart';
@@ -47,6 +48,18 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
     }
   }
 
+  String _getLocalizedMilestone(String milestone) {
+    switch (milestone) {
+      case '1st_birthday':
+        return 'time_capsule_milestone_1'.tr();
+      case 'wedding':
+        return 'time_capsule_milestone_wedding'.tr();
+      case '18th_birthday':
+      default:
+        return 'time_capsule_milestone_18'.tr();
+    }
+  }
+
   void _showNewLetterDialog() {
     final titleCtrl = TextEditingController();
     final letterCtrl = TextEditingController();
@@ -59,7 +72,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
           backgroundColor: AppColors.background,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           title: Text(
-            'Geleceğe Mektup Mühürle 💌',
+            'time_capsule_dialog_title'.tr(),
             style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
           ),
           content: SingleChildScrollView(
@@ -68,7 +81,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mühür Açılış Zamanı:',
+                  'time_capsule_unlock_time_label'.tr(),
                   style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 6),
@@ -82,10 +95,10 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                     value: milestone,
                     isExpanded: true,
                     underline: const SizedBox(),
-                    items: const [
-                      DropdownMenuItem(value: '1st_birthday', child: Text('🎂 1. Yaş Doğum Günü')),
-                      DropdownMenuItem(value: '18th_birthday', child: Text('🎓 18. Yaş Doğum Günü')),
-                      DropdownMenuItem(value: 'wedding', child: Text('💍 Evlendiği Gün')),
+                    items: [
+                      DropdownMenuItem(value: '1st_birthday', child: Text('time_capsule_milestone_1'.tr())),
+                      DropdownMenuItem(value: '18th_birthday', child: Text('time_capsule_milestone_18'.tr())),
+                      DropdownMenuItem(value: 'wedding', child: Text('time_capsule_milestone_wedding'.tr())),
                     ],
                     onChanged: (v) {
                       if (v != null) setDialogState(() => milestone = v);
@@ -96,7 +109,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                 TextField(
                   controller: titleCtrl,
                   decoration: InputDecoration(
-                    hintText: 'Mektup Başlığı (Örn: İlk tekmendeki hislerim...)',
+                    hintText: 'time_capsule_input_title_hint'.tr(),
                     hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
                     filled: true,
                     fillColor: Colors.white,
@@ -108,7 +121,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                   controller: letterCtrl,
                   maxLines: 5,
                   decoration: InputDecoration(
-                    hintText: 'Bebeğinize gelecekte okuyacağı sevgi dolu cümlelerinizi yazın...',
+                    hintText: 'time_capsule_input_letter_hint'.tr(),
                     hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
                     filled: true,
                     fillColor: Colors.white,
@@ -121,7 +134,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: Text('Vazgeç', style: GoogleFonts.outfit(color: AppColors.textSecondary)),
+              child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -147,7 +160,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
-              child: Text('Kapsülü Mühürle 🔒', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: Text('time_capsule_seal_btn'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -185,7 +198,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  'Mühür Hedefi: ${letter.milestoneTitle}',
+                  'time_capsule_target_label'.tr(args: [_getLocalizedMilestone(letter.unlockMilestone)]),
                   style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
                 ),
               ),
@@ -208,7 +221,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('Kapat', style: GoogleFonts.outfit(color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+            child: Text('btn_close'.tr(), style: GoogleFonts.outfit(color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
           ),
           IconButton(
             icon: const Icon(Icons.delete_outline_rounded, color: AppColors.medicalAlertRed, size: 20),
@@ -246,7 +259,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 4, bottom: 10),
                             child: Text(
-                              'MÜHÜRLÜ MEKTUPLAR (${_letters.length})',
+                              'time_capsule_list_heading'.tr(args: [_letters.length.toString()]),
                               style: GoogleFonts.outfit(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w800,
@@ -271,7 +284,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         icon: const Icon(Icons.edit_note_rounded, color: Colors.white),
         label: Text(
-          'Mektup Mühürle',
+          'time_capsule_btn_seal'.tr(),
           style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
         ),
       ),
@@ -312,7 +325,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Zaman Kapsülü',
+                  'time_capsule_appbar_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -320,7 +333,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                   ),
                 ),
                 Text(
-                  'Bebeğinize Geleceğe Mühürlü Mektuplar',
+                  'time_capsule_appbar_sub'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -356,7 +369,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '18 Yıl Sonra Açılacak Bir Miras',
+                  'time_capsule_intro_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
@@ -365,7 +378,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Şu an hissettiğiniz heyecan ve sevgiyi kelimelere dökün. Zamanı geldiğinde bebeğiniz bu satırları gözyaşlarıyla okuyacak.',
+                  'time_capsule_intro_desc'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     color: AppColors.textSecondary,
@@ -389,12 +402,12 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
             const Text('📜', style: TextStyle(fontSize: 48)),
             const SizedBox(height: 12),
             Text(
-              'Henüz mühürlenmiş mektup yok.',
+              'time_capsule_empty_title'.tr(),
               style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
             ),
             const SizedBox(height: 6),
             Text(
-              'Aşağıdaki butona basarak ilk sevgi mektubunuzu yazın.',
+              'time_capsule_empty_sub'.tr(),
               style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textSecondary),
             ),
           ],
@@ -449,7 +462,7 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        'Mühür: ${letter.milestoneTitle}',
+                        'time_capsule_seal_tag'.tr(args: [_getLocalizedMilestone(letter.unlockMilestone)]),
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 12,
                           color: AppColors.accentGold,

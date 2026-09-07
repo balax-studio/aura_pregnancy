@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
@@ -30,6 +31,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
   late TextEditingController _momNameController;
   late TextEditingController _babyNameController;
   late String _selectedGender;
+  String? _selectedLanguageCode;
   bool _isSaving = false;
   int _resetCount = 0;
 
@@ -40,6 +42,38 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
     _babyNameController = TextEditingController(text: widget.profile.babyName ?? '');
     _selectedGender = widget.profile.babyGender ?? 'surprise';
     _loadResetCount();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _selectedLanguageCode ??= context.locale.languageCode;
+  }
+
+  Future<void> _changeLanguage(String langCode) async {
+    if (_selectedLanguageCode == langCode) return;
+    HapticFeedback.lightImpact();
+    setState(() {
+      _selectedLanguageCode = langCode;
+    });
+    final newLocale = Locale(langCode);
+    await context.setLocale(newLocale);
+    try {
+      await DatabaseHelper.instance.setSetting('app_language', langCode);
+    } catch (e) {
+      debugPrint('ProfileEditSheet changeLanguage error: $e');
+    }
+    if (mounted) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('language_changed_toast'.tr()),
+          backgroundColor: AppColors.successGreen,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   Future<void> _loadResetCount() async {
@@ -417,7 +451,61 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
             ),
             const SizedBox(height: 14),
 
-            // 4. Hukuki & Online Gizlilik Sözleşmesi Kartı
+            // 4. Uygulama Dili Seçeneği
+            ClayCard(
+              color: AppColors.clayCardSurface,
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.language_rounded, size: 16, color: AppColors.primaryPink),
+                      const SizedBox(width: 6),
+                      Text(
+                        'profile_edit_language_label'.tr(),
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.primaryDark,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'profile_edit_language_desc'.tr(),
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      _buildLanguagePill(
+                        label: 'profile_edit_language_tr'.tr(),
+                        code: 'tr',
+                        flagEmoji: '🇹🇷',
+                        activeColor: AppColors.clayMint,
+                        activeBorderColor: AppColors.successGreen,
+                      ),
+                      const SizedBox(width: 10),
+                      _buildLanguagePill(
+                        label: 'profile_edit_language_en'.tr(),
+                        code: 'en',
+                        flagEmoji: '🇬🇧',
+                        activeColor: AppColors.clayPeach,
+                        activeBorderColor: AppColors.secondaryPeach,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
+
+            // 5. Hukuki & Online Gizlilik Sözleşmesi Kartı
             ClayCard(
               color: AppColors.clayLavender,
               padding: const EdgeInsets.all(14),
@@ -606,6 +694,62 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
                   color: isSelected ? Colors.white : AppColors.textPrimary,
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLanguagePill({
+    required String label,
+    required String code,
+    required String flagEmoji,
+    required Color activeColor,
+    required Color activeBorderColor,
+  }) {
+    final currentCode = _selectedLanguageCode ?? context.locale.languageCode;
+    final isSelected = currentCode == code;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => _changeLanguage(code),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
+          decoration: ClayTheme.clayDecoration(
+            color: isSelected ? activeColor : AppColors.background,
+            borderRadius: 14,
+            isPressed: isSelected,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                flagEmoji,
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (isSelected) ...[
+                const SizedBox(width: 6),
+                Icon(
+                  Icons.check_circle_rounded,
+                  size: 16,
+                  color: activeBorderColor,
+                ),
+              ],
             ],
           ),
         ),

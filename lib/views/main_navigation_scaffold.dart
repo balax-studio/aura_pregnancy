@@ -8,9 +8,10 @@ import 'dashboard/dashboard_screen.dart';
 import 'weekly_panel/weekly_panel_screen.dart';
 import 'daily_tracker/daily_tracker_screen.dart';
 import 'journal/journal_screen.dart';
+import 'more/more_tools_screen.dart';
 import 'emergency/emergency_screen.dart';
 
-/// Aura Pregnancy - Ana Gezinme İskeleti (6 Sekmeli Akışkan Claymorphic Navigasyon)
+/// Aura Pregnancy - Ana Gezinme İskeleti (5 Sekmeli Akışkan Claymorphic Navigasyon)
 class MainNavigationScaffold extends StatefulWidget {
   final int initialIndex;
 
@@ -40,6 +41,7 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
       const WeeklyPanelScreen(),
       const DailyTrackerScreen(),
       const JournalScreen(),
+      const MoreToolsScreen(),
       EmergencyScreen(onBack: () => setState(() => _currentIndex = 0)),
     ];
 
@@ -56,7 +58,7 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
         valueListenable: AppNavObserver.instance.isModalOpen,
         builder: (context, isModalOpen, child) {
           final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-          final hideBottomBar = isModalOpen || isKeyboardOpen || _currentIndex == 4;
+          final hideBottomBar = isModalOpen || isKeyboardOpen || _currentIndex == 5;
 
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 240),
@@ -82,7 +84,7 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
           );
         },
         child: FluidClayBottomNavBar(
-          selectedIndex: _currentIndex.clamp(0, 3),
+          selectedIndex: _currentIndex.clamp(0, 4),
           onTabSelected: _onTabTapped,
           items: [
             FluidNavItem(
@@ -100,6 +102,10 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
             FluidNavItem(
               icon: Icons.menu_book_rounded,
               label: 'nav_journal'.tr(),
+            ),
+            FluidNavItem(
+              icon: Icons.grid_view_rounded,
+              label: 'nav_more'.tr(),
             ),
           ],
         ),

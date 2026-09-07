@@ -104,34 +104,51 @@ class FFmpegVideoService {
 
     final cleanBaseName = fileName.replaceAll(RegExp(r'\.(mp4|jpg|png)$'), '');
 
-    // Android ortamında: Native MediaCodec donanım AVC/H.264 kodlayıcı ile gerçek MP4 oluşturup Galeriye kaydet
+    // Android ortamında: Native MediaCodec donanım AVC/H.264 kodlayıcı ile gerçek MP4 oluşturup Galeri ve İndirilenler'e kaydet
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      final tempDir = await getTemporaryDirectory();
+      final slidePaths = <String>[];
+
       try {
         const width = 720;
         const height = 1280;
-        final renderedSlides = <Uint8List>[];
 
         for (int i = 0; i < frames.length; i++) {
           final slideBytes = await _renderSlideToPng(frames[i], width, height);
-          renderedSlides.add(slideBytes);
+          final tempSlideFile = File('${tempDir.path}/aura_temp_slide_${i}_${DateTime.now().millisecondsSinceEpoch}.png');
+          await tempSlideFile.writeAsBytes(slideBytes);
+          slidePaths.add(tempSlideFile.path);
           onProgress?.call(((i + 1) / frames.length) * 0.7); // %0 - %70 kare renderı
         }
 
         onProgress?.call(0.85); // %85 Kodlama aşaması
 
+        // Binder 1MB sınırına takılmamak için sadece dosya yolları iletilir. Slayt süresi 2 saniye olarak optimize edilmiştir.
         final result = await _galleryChannel.invokeMethod<String>('generateAndSaveVideo', {
-          'slides': renderedSlides,
+          'slidePaths': slidePaths,
           'fileNamePrefix': cleanBaseName,
+          'secondsPerSlide': 2.0,
         });
 
         onProgress?.call(1.0);
-        return result ?? 'Galeri (Videolar) / Aura Pregnancy / $cleanBaseName.mp4';
+        return result;
       } catch (e) {
         debugPrint('Android native video generation error: $e');
+        return null;
+      } finally {
+        // Geçici slayt resimlerini temizle
+        for (final path in slidePaths) {
+          try {
+            final f = File(path);
+            if (await f.exists()) {
+              await f.delete();
+            }
+          } catch (_) {}
+        }
       }
     }
 
-    // iOS / Desktop / Test ortamı fallback
+    // iOS / Desktop / Test ortamı
     for (int p = 1; p <= 10; p++) {
       await Future.delayed(const Duration(milliseconds: 40));
       onProgress?.call(p / 10.0);
@@ -140,8 +157,7 @@ class FFmpegVideoService {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final dirPath = dir.path;
-      final hasJpg = fileName.toLowerCase().endsWith('.jpg');
-      final actualFileName = hasJpg ? '$cleanBaseName.jpg' : '$cleanBaseName.mp4';
+      final actualFileName = '$cleanBaseName.mp4';
       final savePath = '$dirPath/$actualFileName';
       
       final file = File(savePath);
@@ -155,9 +171,7 @@ class FFmpegVideoService {
       return savePath;
     } catch (e) {
       debugPrint('File save error: $e');
-      final hasJpg = fileName.toLowerCase().endsWith('.jpg');
-      final actualFileName = hasJpg ? '$cleanBaseName.jpg' : '$cleanBaseName.mp4';
-      return 'İndirilenler / $actualFileName';
+      return null;
     }
   }
 

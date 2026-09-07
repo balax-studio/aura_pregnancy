@@ -18,7 +18,7 @@ class WelcomeCongratulationScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: AmbientBackground(
         child: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

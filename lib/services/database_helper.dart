@@ -1258,7 +1258,10 @@ class DatabaseHelper {
       } catch (_) {}
     } else {
       if (!_webHospitalBagSeeded) {
-        _webHospitalBag.addAll(_defaultHospitalBag);
+        int tempId = 1;
+        for (final item in _defaultHospitalBag) {
+          _webHospitalBag.add(item.copyWith(id: tempId++));
+        }
         _webHospitalBagSeeded = true;
       }
     }

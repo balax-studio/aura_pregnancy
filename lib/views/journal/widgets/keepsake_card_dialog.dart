@@ -102,33 +102,51 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
   Future<void> _saveArtboard() async {
     setState(() => _isSaving = true);
     try {
+      bool isSuccess = false;
       final boundary = _artboardKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary != null) {
         final image = await boundary.toImage(pixelRatio: 3.0);
         final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
         if (byteData != null) {
           final pngBytes = byteData.buffer.asUint8List();
-          await MediaService.instance.saveImageToGallery(
+          isSuccess = await MediaService.instance.saveImageToGallery(
             imageBytes: pngBytes,
             fileNamePrefix: 'Aura_Hatira_Karti',
           );
         }
       }
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
-                const SizedBox(width: 8),
-                Expanded(child: Text('keepsake_card_saved'.tr())),
-              ],
+        if (isSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text('keepsake_card_saved'.tr())),
+                ],
+              ),
+              backgroundColor: AppColors.successGreen,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            backgroundColor: AppColors.successGreen,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-        );
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
+                  SizedBox(width: 8),
+                  Expanded(child: Text('Görsel kaydedilemedi. Lütfen depolama ve galeri izinlerini kontrol ediniz.')),
+                ],
+              ),
+              backgroundColor: AppColors.medicalAlertRed,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            ),
+          );
+        }
       }
     } catch (e) {
       debugPrint('Error saving keepsake card: $e');
@@ -149,7 +167,9 @@ class _KeepsakeCardDialogState extends State<KeepsakeCardDialog> {
         );
       }
     } finally {
-      if (mounted) setState(() => _isSaving = false);
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
     }
   }
 

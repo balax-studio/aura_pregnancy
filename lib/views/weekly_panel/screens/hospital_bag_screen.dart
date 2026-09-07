@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/hospital_bag_item.dart';
@@ -27,10 +28,39 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
   bool _isLoading = true;
 
   final List<Map<String, dynamic>> _categories = const [
-    {'key': 'mom', 'title': 'Anne Çantası', 'emoji': '🌸', 'color': AppColors.clayRose},
-    {'key': 'baby', 'title': 'Bebek Çantası', 'emoji': '🍼', 'color': AppColors.clayMint},
-    {'key': 'partner', 'title': 'Refakatçi / Eş', 'emoji': '☕', 'color': AppColors.clayPeach},
+    {'key': 'mom', 'titleKey': 'hospital_bag_tab_mom', 'emoji': '🌸', 'color': AppColors.clayRose},
+    {'key': 'baby', 'titleKey': 'hospital_bag_tab_baby', 'emoji': '🍼', 'color': AppColors.clayMint},
+    {'key': 'partner', 'titleKey': 'hospital_bag_tab_partner', 'emoji': '☕', 'color': AppColors.clayPeach},
   ];
+
+  static const Map<String, String> _itemTitleTrToEn = {
+    'Önden açılan lohusa geceliği / pijama (2 takım)': 'Front-opening nursing nightgown / pajamas (2 sets)',
+    'Emzirme sütyeni & yıkanabilir göğüs pedleri': 'Nursing bra & washable breast pads',
+    'Göğüs ucu bakım kremi (Lanolin)': 'Nipple care cream (Lanolin)',
+    'Organik pamuklu lohusa pedi (büyük boy)': 'Organic cotton postpartum maternity pads (large size)',
+    'Kaymayan yumuşak terlik & kalın sıcak çorap': 'Non-slip soft slippers & warm socks',
+    'Kimlik, hastane kartı ve doktor doğum tercih planı': 'ID card, hospital records & birth plan preferences',
+    'Dudak nemlendiricisi & saç bandı/lastik': 'Lip balm & hair ties / headband',
+    'Diş fırçası, macun & seyahat boy şampuan': 'Toothbrush, toothpaste & travel-size toiletries',
+    'Yenidoğan hastane çıkış seti (zıbın, tulum, şapka, eldiven)': 'Newborn homecoming outfit (onesie, hat, mittens)',
+    'Yenidoğan bebek bezi (1 paket mini boy)': 'Newborn diapers (1 small pack)',
+    'Yumuşak müslin örtü & pamuklu kundak battaniyesi': 'Soft muslin swaddle & cotton receiving blanket',
+    'Alkolsüz yenidoğan ıslak mendili / pamuk': 'Alcohol-free newborn wipes / cotton pads',
+    'Doğal pişik önleyici krem': 'Natural barrier diaper rash cream',
+    'Yenidoğan anakucağı / oto koltuğu (hastane çıkışı için)': 'Infant car seat (approved for discharge)',
+    'Rahat yedek tişört & eşofman altı': 'Comfortable spare t-shirt & lounge pants',
+    'Uzun kablolu telefon şarj aleti & powerbank': 'Long phone charging cable & portable powerbank',
+    'Sağlıklı atıştırmalıklar (kuruyemiş, meyve barları)': 'Healthy snacks (nuts, dried fruits, energy bars)',
+    'Termos matarada taze su': 'Insulated water flask with fresh water',
+    'Otopark ve otomat için nakit bozuk para': 'Spare cash / coins for parking and vending machines',
+  };
+
+  String _getLocalizedTitle(String title) {
+    if (context.locale.languageCode == 'en') {
+      return _itemTitleTrToEn[title] ?? title;
+    }
+    return title;
+  }
 
   @override
   void initState() {
@@ -66,7 +96,9 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
 
   Future<void> _toggleItem(HospitalBagItem item) async {
     HapticFeedback.lightImpact();
-    await DatabaseHelper.instance.toggleHospitalBagItem(item.id!, !item.isPacked);
+    if (item.id != null) {
+      await DatabaseHelper.instance.toggleHospitalBagItem(item.id!, !item.isPacked);
+    }
   }
 
   Future<void> _addItem(String category) async {
@@ -93,36 +125,33 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
         backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(
-          'Özel Eşya Ekle',
+          'hospital_bag_add_dialog_title'.tr(),
           style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
         ),
         content: TextField(
           controller: _newItemController,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'Örn: Fotoğraf makinesi, lohusa tacı...',
-            hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted),
+            hintText: 'hospital_bag_add_dialog_hint'.tr(),
+            hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
             filled: true,
             fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide.none,
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('Vazgeç', style: GoogleFonts.outfit(color: AppColors.textMuted)),
+            child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () => _addItem(category),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryPink,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             ),
-            child: Text('Ekle', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('hospital_bag_add_btn'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -176,7 +205,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         icon: const Icon(Icons.add_rounded, color: Colors.white),
         label: Text(
-          'Eşya Ekle',
+          'hospital_bag_btn_add'.tr(),
           style: GoogleFonts.outfit(
             color: Colors.white,
             fontWeight: FontWeight.w700,
@@ -221,7 +250,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Doğum Çantası',
+                  'hospital_bag_appbar_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -229,7 +258,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
                   ),
                 ),
                 Text(
-                  '28+ Hafta Eksiksiz Hastane Kontrol Listesi',
+                  'hospital_bag_appbar_sub'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -267,7 +296,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
                   const Text('✨', style: TextStyle(fontSize: 18)),
                   const SizedBox(width: 8),
                   Text(
-                    'Hazırlık Durumu',
+                    'hospital_bag_status_packed'.tr(args: [percent.toString()]),
                     style: GoogleFonts.outfit(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
@@ -283,7 +312,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  '%$percent Tamam',
+                  '%$percent',
                   style: GoogleFonts.outfit(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
@@ -306,8 +335,11 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
           const SizedBox(height: 8),
           Text(
             percent == 100
-                ? '🎉 Harika! Tüm hazırlıklar tamam, doğum için hazırsınız.'
-                : '${_items.where((i) => i.isPacked).length} / ${_items.length} eşya hazırlandı.',
+                ? 'hospital_bag_all_done'.tr()
+                : 'hospital_bag_progress_text'.tr(args: [
+                    _items.where((i) => i.isPacked).length.toString(),
+                    _items.length.toString(),
+                  ]),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -348,7 +380,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
         unselectedLabelStyle: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600),
         tabs: _categories.map((c) {
           return Tab(
-            text: '${c['emoji']} ${c['title']}',
+            text: '${c['emoji']} ${(c['titleKey'] as String).tr()}',
           );
         }).toList(),
       ),
@@ -364,7 +396,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
             const Text('🎒', style: TextStyle(fontSize: 44)),
             const SizedBox(height: 12),
             Text(
-              'Bu listede henüz eşya yok.',
+              'hospital_bag_empty_title'.tr(),
               style: GoogleFonts.outfit(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -373,7 +405,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
             ),
             const SizedBox(height: 6),
             Text(
-              'Aşağıdaki butona basarak özel eşyalar ekleyebilirsiniz.',
+              'hospital_bag_empty_sub'.tr(),
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 color: AppColors.textSecondary,
@@ -395,7 +427,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 8, top: 4),
             child: Text(
-              'HAZIRLANACAKLAR (${unpackedList.length})',
+              'hospital_bag_unpacked_heading'.tr(args: [unpackedList.length.toString()]),
               style: GoogleFonts.outfit(
                 fontSize: 11,
                 fontWeight: FontWeight.w800,
@@ -410,7 +442,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 8, top: 16),
             child: Text(
-              'ÇANTAYA KONDU (${packedList.length})',
+              'hospital_bag_packed_heading'.tr(args: [packedList.length.toString()]),
               style: GoogleFonts.outfit(
                 fontSize: 11,
                 fontWeight: FontWeight.w800,
@@ -475,7 +507,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.title,
+                        _getLocalizedTitle(item.title),
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 14,
                           fontWeight: item.isPacked ? FontWeight.w500 : FontWeight.w600,
@@ -487,7 +519,7 @@ class _HospitalBagScreenState extends State<HospitalBagScreen> with SingleTicker
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
-                            'Özel Eşya',
+                            'hospital_bag_custom_tag'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,

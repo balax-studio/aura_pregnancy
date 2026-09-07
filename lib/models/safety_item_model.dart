@@ -14,45 +14,66 @@ enum SafetyCategory {
 class SafetyItem {
   final String id;
   final String title;
+  final String? titleEn;
   final SafetyCategory category;
   final SafetyLevel level;
   final String summary;
+  final String? summaryEn;
   final String medicalReason;
+  final String? medicalReasonEn;
   final String? alternativeSuggestion;
+  final String? alternativeSuggestionEn;
   final String emoji;
   final bool isCravingFavorite;
 
   const SafetyItem({
     required this.id,
     required this.title,
+    this.titleEn,
     required this.category,
     required this.level,
     required this.summary,
+    this.summaryEn,
     required this.medicalReason,
+    this.medicalReasonEn,
     this.alternativeSuggestion,
+    this.alternativeSuggestionEn,
     required this.emoji,
     this.isCravingFavorite = false,
   });
 
+  String localizedTitle(String lang) => (lang == 'en' && titleEn != null) ? titleEn! : title;
+  String localizedSummary(String lang) => (lang == 'en' && summaryEn != null) ? summaryEn! : summary;
+  String localizedMedicalReason(String lang) => (lang == 'en' && medicalReasonEn != null) ? medicalReasonEn! : medicalReason;
+  String? localizedAlternative(String lang) => (lang == 'en' && alternativeSuggestionEn != null) ? alternativeSuggestionEn! : alternativeSuggestion;
+
   SafetyItem copyWith({
     String? id,
     String? title,
+    String? titleEn,
     SafetyCategory? category,
     SafetyLevel? level,
     String? summary,
+    String? summaryEn,
     String? medicalReason,
+    String? medicalReasonEn,
     String? alternativeSuggestion,
+    String? alternativeSuggestionEn,
     String? emoji,
     bool? isCravingFavorite,
   }) {
     return SafetyItem(
       id: id ?? this.id,
       title: title ?? this.title,
+      titleEn: titleEn ?? this.titleEn,
       category: category ?? this.category,
       level: level ?? this.level,
       summary: summary ?? this.summary,
+      summaryEn: summaryEn ?? this.summaryEn,
       medicalReason: medicalReason ?? this.medicalReason,
+      medicalReasonEn: medicalReasonEn ?? this.medicalReasonEn,
       alternativeSuggestion: alternativeSuggestion ?? this.alternativeSuggestion,
+      alternativeSuggestionEn: alternativeSuggestionEn ?? this.alternativeSuggestionEn,
       emoji: emoji ?? this.emoji,
       isCravingFavorite: isCravingFavorite ?? this.isCravingFavorite,
     );

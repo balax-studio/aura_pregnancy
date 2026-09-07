@@ -278,7 +278,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(height: 8),
                 Text(
                   AppDateUtils.formatDisplay(
-                      AppDateUtils.toIso(_controller.selectedDate)),
+                      AppDateUtils.toIso(_controller.selectedDate),
+                      locale: context.locale.languageCode),
                   style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -294,6 +295,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onPressed: () async {
                     final picked = await showDatePicker(
                       context: context,
+                      locale: context.locale,
                       initialDate: _controller.selectedDate,
                       firstDate:
                           DateTime.now().subtract(const Duration(days: 300)),

@@ -74,7 +74,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                   const Icon(Icons.spa_rounded, color: AppColors.lavenderPurple, size: 18),
                   const SizedBox(width: 6),
                   Text(
-                    'Günün Canlılık Dengesi',
+                    'daily_vitality_balance'.tr(),
                     style: GoogleFonts.outfit(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -90,7 +90,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  '${(waterProgress * 100).toInt()}% Sıvı Hedefi',
+                  'daily_vitality_fluid_target'.tr(args: [(waterProgress * 100).toInt().toString()]),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10.5,
                     fontWeight: FontWeight.w800,
@@ -117,9 +117,9 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
 
   Widget _buildFilterBar() {
     final filters = [
-      {'label': 'Tümü', 'icon': Icons.dashboard_customize_rounded},
-      {'label': 'Sıvı & Beslenme', 'icon': Icons.local_dining_rounded},
-      {'label': 'Beden & Adım', 'icon': Icons.directions_walk_rounded},
+      {'label': 'daily_filter_all'.tr(), 'icon': Icons.dashboard_customize_rounded},
+      {'label': 'daily_filter_nutrition'.tr(), 'icon': Icons.local_dining_rounded},
+      {'label': 'daily_filter_body'.tr(), 'icon': Icons.directions_walk_rounded},
     ];
 
     return Container(
@@ -208,7 +208,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
               ),
             ),
             Text(
-              AppDateUtils.formatToday(),
+              AppDateUtils.formatToday(locale: context.locale.languageCode),
               style: GoogleFonts.plusJakartaSans(
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.w600,
@@ -262,11 +262,11 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Güvenlik Radarı',
+                                    'daily_safety_radar'.tr(),
                                     style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                                   ),
                                   Text(
-                                    'Yiyebilir Miyim?',
+                                    'daily_safety_radar_sub'.tr(),
                                     style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
                                   ),
                                 ],
@@ -301,11 +301,11 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Soru Kasası',
+                                    'daily_doctor_vault'.tr(),
                                     style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
                                   ),
                                   Text(
-                                    'Doktora Notlar',
+                                    'daily_doctor_vault_sub'.tr(),
                                     style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
                                   ),
                                 ],

@@ -516,10 +516,10 @@ class _ClayButtonState extends State<ClayButton> {
       child: AnimatedScale(
         scale: _isPressed ? 0.955 : 1.0,
         duration: Duration(milliseconds: _isPressed ? 90 : 160),
-        curve: _isPressed ? Curves.easeOutQuad : Curves.easeOutBack,
+        curve: _isPressed ? Curves.easeOutQuad : Curves.easeOutCubic,
         child: AnimatedContainer(
           duration: Duration(milliseconds: _isPressed ? 90 : 160),
-          curve: _isPressed ? Curves.easeOutQuad : Curves.easeOutBack,
+          curve: _isPressed ? Curves.easeOutQuad : Curves.easeOutCubic,
           width: widget.width,
           height: widget.height,
           decoration: ClayTheme.clayButtonDecoration(

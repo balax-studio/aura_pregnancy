@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/baby_zodiac_data.dart';
 import '../../../core/theme/clay_theme.dart';
@@ -26,6 +27,36 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
   bool _isExpanded = false;
   String _selectedMomSign = 'Yengeç';
 
+  String _getLocalizedSignName(String sign, String lang) {
+    if (lang != 'en') return sign;
+    const map = {
+      'Koç': 'Aries',
+      'Boğa': 'Taurus',
+      'İkizler': 'Gemini',
+      'Yengeç': 'Cancer',
+      'Aslan': 'Leo',
+      'Başak': 'Virgo',
+      'Terazi': 'Libra',
+      'Akrep': 'Scorpio',
+      'Yay': 'Sagittarius',
+      'Oğlak': 'Capricorn',
+      'Kova': 'Aquarius',
+      'Balık': 'Pisces',
+    };
+    return map[sign] ?? sign;
+  }
+
+  String _getLocalizedElement(String elem, String lang) {
+    if (lang != 'en') return elem;
+    const map = {
+      'Ateş': 'Fire',
+      'Toprak': 'Earth',
+      'Hava': 'Air',
+      'Su': 'Water',
+    };
+    return map[elem] ?? elem;
+  }
+
   @override
   Widget build(BuildContext context) {
     final babyZodiac = widget.dueDate != null && widget.dueDate!.isNotEmpty
@@ -37,9 +68,13 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
       babyZodiac.signName,
     );
 
+    final isEn = context.locale.languageCode == 'en';
+    final signName = _getLocalizedSignName(babyZodiac.signName, context.locale.languageCode);
+    final elementName = _getLocalizedElement(babyZodiac.element, context.locale.languageCode);
+
     final babyDisplayName = widget.babyName != null && widget.babyName!.trim().isNotEmpty
-        ? '${widget.babyName!.trim()} Bebek'
-        : 'Bebeğiniz';
+        ? (isEn ? '${widget.babyName!.trim()} Baby' : '${widget.babyName!.trim()} Bebek')
+        : (isEn ? 'Your Baby' : 'Bebeğiniz');
 
     return ClayCard(
       color: AppColors.clayLavender,
@@ -80,7 +115,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                     Row(
                       children: [
                         Text(
-                          '$babyDisplayName: ${babyZodiac.signName} Burcu',
+                          '$babyDisplayName: ${'zodiac_sign_format'.tr(args: [signName])}',
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
@@ -91,7 +126,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${babyZodiac.elementEmoji} ${babyZodiac.element} Elementi • ${babyZodiac.dateRangeStr}',
+                      '${babyZodiac.elementEmoji} $elementName ${'zodiac_element_label'.tr()} • ${babyZodiac.dateRangeStr}',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -110,7 +145,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'Geçiş Burcu ✨',
+                    'zodiac_cusp_badge'.tr(),
                     style: GoogleFonts.outfit(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -162,7 +197,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                         children: [
                           const Text('🌙 ', style: TextStyle(fontSize: 12)),
                           Text(
-                            'Uyku Eğilimi',
+                            'zodiac_sleep_tendency'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
@@ -201,7 +236,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                         children: [
                           const Text('💎 ', style: TextStyle(fontSize: 12)),
                           Text(
-                            'Uğurlu Taşı',
+                            'zodiac_gemstone'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
@@ -247,7 +282,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                   const Text('💕 ', style: TextStyle(fontSize: 14)),
                   Expanded(
                     child: Text(
-                      'Anne & Bebek Astrolojik Uyumu (%${compat['score']})',
+                      'zodiac_compat_button'.tr(args: [compat['score'].toString()]),
                       style: GoogleFonts.outfit(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w700,
@@ -281,7 +316,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Anne Burcu:',
+                        'zodiac_mom_sign_label'.tr(),
                         style: GoogleFonts.outfit(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -296,7 +331,7 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
                           return DropdownMenuItem(
                             value: s,
                             child: Text(
-                              s,
+                              _getLocalizedSignName(s, context.locale.languageCode),
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 12.5,
                                 fontWeight: FontWeight.w600,

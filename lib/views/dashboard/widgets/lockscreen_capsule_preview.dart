@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../models/profile_model.dart';
@@ -27,7 +28,7 @@ class LockscreenCapsulePreview extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              'Canlı Kilit Ekranı',
+              'lockscreen_title'.tr(),
               style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark, fontSize: 18),
             ),
           ],
@@ -36,7 +37,7 @@ class LockscreenCapsulePreview extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('Kapat', style: GoogleFonts.outfit(color: AppColors.primaryPink, fontWeight: FontWeight.bold)),
+            child: Text('btn_close'.tr(), style: GoogleFonts.outfit(color: AppColors.primaryPink, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -56,7 +57,7 @@ class LockscreenCapsulePreview extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Telefonunuz kilitliyken bile bebeğinizin nefes alışını ve günün mesajını kilit ekranında canlı takip edin:',
+          'lockscreen_desc'.tr(),
           style: GoogleFonts.plusJakartaSans(fontSize: 12.5, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 16),

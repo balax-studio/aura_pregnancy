@@ -19,15 +19,15 @@ class MediaService {
   static const MethodChannel _galleryChannel = MethodChannel('com.balaxstudio.aura/gallery');
   final ImagePicker _picker = ImagePicker();
 
-  /// Görseli cihaza / galeriye kaydeder (iOS'ta Fotoğraflar / Camera Roll, Android'de MediaStore Fotoğraflar albümü)
+  /// Görseli cihaza / galeriye kaydeder (Android'de MediaStore Fotoğraflar ve İndirilenler albümü, iOS'ta Fotoğraflar)
   Future<bool> saveImageToGallery({
     required Uint8List imageBytes,
     required String fileNamePrefix,
   }) async {
     if (kIsWeb) return false;
 
-    // Mobil (Android & iOS): Yerel MethodChannel ile doğrudan sistem galerisine kaydet
-    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    // Mobil (Android & iOS): Yerel MethodChannel ile doğrudan sistem galerisi ve indirilenlere kaydet
+    if (Platform.isAndroid || Platform.isIOS) {
       try {
         final success = await _galleryChannel.invokeMethod<bool>(
           'saveImageToGallery',
@@ -36,15 +36,14 @@ class MediaService {
             'fileNamePrefix': fileNamePrefix,
           },
         );
-        if (success == true) {
-          return true;
-        }
+        return success == true;
       } catch (e) {
         debugPrint('Native saveImageToGallery error: $e');
+        return false;
       }
     }
 
-    // Güvenli Fallback: Uygulama belgeler dizinine kaydet
+    // Masaüstü / Simülatör Test Fallback
     try {
       final dir = await getApplicationDocumentsDirectory();
       final file = File('${dir.path}/${fileNamePrefix}_${DateTime.now().millisecondsSinceEpoch}.png');

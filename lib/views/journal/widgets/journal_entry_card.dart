@@ -42,6 +42,21 @@ class JournalEntryCard extends StatelessWidget {
     }
   }
 
+  String _getLocalizedNoteText(String note) {
+    const sample1Tr = 'Bugün ilk defa ultrason görüntünde ellerini kıpırdattığını gördük bebeğim. O kadar minik ve masumdun ki... Hayatımızın en güzel anıydı.';
+    const sample1En = 'Today for the first time we saw you moving your tiny hands in the ultrasound, my baby. You were so little and pure... It was the most beautiful moment of our lives.';
+    const sample2Tr = 'Bugün ilk kez minik kalbinin pıt pıt atışlarını duyduk. Dünyanın en güzel ve huzur verici melodisiydi 🫐';
+    const sample2En = 'Today we heard your tiny heartbeat flutter for the first time. It was the most peaceful and sweetest melody in the world 🫐';
+
+    if (note == sample1Tr || note == sample1En || note == 'sample_diary_note_1') {
+      return 'sample_diary_note_1'.tr();
+    }
+    if (note == sample2Tr || note == sample2En || note == 'sample_diary_note_2') {
+      return 'sample_diary_note_2'.tr();
+    }
+    return note;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -85,7 +100,7 @@ class JournalEntryCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          AppDateUtils.formatDisplay(entry.date),
+                          AppDateUtils.formatDisplay(entry.date, locale: context.locale.languageCode),
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
@@ -137,7 +152,7 @@ class JournalEntryCard extends StatelessWidget {
             // Anı Notu
             if (entry.noteText != null && entry.noteText!.isNotEmpty)
               Text(
-                entry.noteText!,
+                _getLocalizedNoteText(entry.noteText!),
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,

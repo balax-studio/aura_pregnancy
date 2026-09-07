@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/doctor_questions_data.dart';
 import '../../../core/theme/clay_theme.dart';
 import '../../../models/doctor_question_model.dart';
 import '../../../services/database_helper.dart';
@@ -82,7 +84,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
         backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(
-          'Doktora Yeni Soru Ekle',
+          'doctor_vault_dialog_add_title'.tr(),
           style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
         ),
         content: TextField(
@@ -90,7 +92,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
           autofocus: true,
           maxLines: 3,
           decoration: InputDecoration(
-            hintText: 'Muayenede hekime sormak istediğiniz konuyu yazın...',
+            hintText: 'doctor_vault_dialog_add_hint'.tr(),
             hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
             filled: true,
             fillColor: Colors.white,
@@ -100,7 +102,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('İptal', style: GoogleFonts.outfit(color: AppColors.textSecondary)),
+            child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () => _addQuestion(trimester),
@@ -109,7 +111,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
               elevation: 0,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             ),
-            child: Text('Kaydet', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('doctor_vault_btn_save'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -118,13 +120,14 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
 
   void _showAnswerDialog(DoctorQuestion q) {
     final answerCtrl = TextEditingController(text: q.answerNote ?? '');
+    final displayQuestion = DoctorQuestionsData.getLocalizedQuestion(q.question, context.locale.languageCode);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(
-          'Hekimin Yanıtı / Notu',
+          'doctor_vault_dialog_answer_title'.tr(),
           style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
         ),
         content: Column(
@@ -138,7 +141,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Text(
-                q.question,
+                displayQuestion,
                 style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primaryDark),
               ),
             ),
@@ -147,7 +150,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
               controller: answerCtrl,
               maxLines: 4,
               decoration: InputDecoration(
-                hintText: 'Hekimin önerisini veya muayene sonucunu buraya not edin...',
+                hintText: 'doctor_vault_dialog_answer_hint'.tr(),
                 hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 12),
                 filled: true,
                 fillColor: Colors.white,
@@ -159,7 +162,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: Text('Vazgeç', style: GoogleFonts.outfit(color: AppColors.textSecondary)),
+            child: Text('doctor_vault_btn_cancel'.tr(), style: GoogleFonts.outfit(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -178,7 +181,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
               elevation: 0,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             ),
-            child: Text('Kaydet & İşaretle', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text('doctor_vault_btn_save_mark'.tr(), style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -234,7 +237,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         icon: const Icon(Icons.add_rounded, color: Colors.white),
         label: Text(
-          'Soru Ekle',
+          'doctor_vault_btn_add'.tr(),
           style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14),
         ),
       ),
@@ -275,7 +278,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Soru Kasası',
+                  'doctor_vault_appbar_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -283,7 +286,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
                   ),
                 ),
                 Text(
-                  'Muayenede Hekime Sorulacak Sorular',
+                  'doctor_vault_appbar_sub'.tr(),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -319,7 +322,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Muayene Hazırlığı & Notlar',
+                  'doctor_vault_summary_title'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
@@ -328,7 +331,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Toplam ${_questions.length} sorudan $answeredCount tanesi hekim tarafından yanıtlandı.',
+                  'doctor_vault_summary_text'.tr(args: [_questions.length.toString(), answeredCount.toString()]),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     color: AppColors.textSecondary,
@@ -369,10 +372,10 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
         unselectedLabelColor: AppColors.textSecondary,
         labelStyle: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w700),
         unselectedLabelStyle: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.w600),
-        tabs: const [
-          Tab(text: '1. Trimester (1-13)'),
-          Tab(text: '2. Trimester (14-27)'),
-          Tab(text: '3. Trimester (28-40)'),
+        tabs: [
+          Tab(text: 'doctor_vault_tab_t1'.tr()),
+          Tab(text: 'doctor_vault_tab_t2'.tr()),
+          Tab(text: 'doctor_vault_tab_t3'.tr()),
         ],
       ),
     );
@@ -387,7 +390,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
             const Text('🩺', style: TextStyle(fontSize: 44)),
             const SizedBox(height: 12),
             Text(
-              '$trimester. Trimester için soru yok.',
+              'doctor_vault_empty_title'.tr(args: [trimester.toString()]),
               style: GoogleFonts.outfit(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -396,7 +399,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
             ),
             const SizedBox(height: 6),
             Text(
-              'Aşağıdaki butona basarak aklınıza takılanları ekleyin.',
+              'doctor_vault_empty_sub'.tr(),
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 color: AppColors.textSecondary,
@@ -422,6 +425,8 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
   }
 
   Widget _buildQuestionCard(DoctorQuestion q) {
+    final displayQuestion = DoctorQuestionsData.getLocalizedQuestion(q.question, context.locale.languageCode);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Container(
@@ -476,7 +481,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          q.question,
+                          displayQuestion,
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
@@ -486,7 +491,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${q.pregnancyWeek}. Hafta Sorusudur',
+                          'doctor_vault_week_question_format'.tr(args: [q.pregnancyWeek.toString()]),
                           style: GoogleFonts.outfit(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
@@ -515,7 +520,7 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
                           const Icon(Icons.medical_services_outlined, size: 14, color: AppColors.successGreen),
                           const SizedBox(width: 6),
                           Text(
-                            'Doktorun Yanıtı / Önerisi:',
+                            'doctor_vault_doctor_answer_heading'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 11,
                               fontWeight: FontWeight.w800,
@@ -561,7 +566,9 @@ class _DoctorVaultScreenState extends State<DoctorVaultScreen> with SingleTicker
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            q.answerNote != null && q.answerNote!.isNotEmpty ? 'Yanıtı Düzenle' : 'Cevap / Not Ekle',
+                            q.answerNote != null && q.answerNote!.isNotEmpty
+                                ? 'doctor_vault_edit_note'.tr()
+                                : 'doctor_vault_add_note'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,

@@ -23,6 +23,8 @@ void main() async {
   try {
     await initializeDateFormatting('en_US', null);
     await initializeDateFormatting('tr_TR', null);
+    await initializeDateFormatting('tr', null);
+    await initializeDateFormatting('en', null);
   } catch (e) {
     debugPrint('Date formatting init error: $e');
   }
@@ -89,6 +91,12 @@ class _RootGateScreenState extends State<RootGateScreen> {
       final profile = await DatabaseHelper.instance.getProfile();
       final isOnboardingCompleted = await DatabaseHelper.instance.isOnboardingCompleted();
       final hasSeenGuide = await DatabaseHelper.instance.hasSeenGuide();
+      final savedLang = await DatabaseHelper.instance.getSetting('app_language');
+      if (savedLang != null && savedLang.isNotEmpty && mounted) {
+        if (context.locale.languageCode != savedLang) {
+          await context.setLocale(Locale(savedLang));
+        }
+      }
       setState(() {
         _profile = profile;
         _isOnboardingCompleted = isOnboardingCompleted;

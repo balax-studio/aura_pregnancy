@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../models/diary_model.dart';
 import '../../models/profile_model.dart';
 import '../../services/database_helper.dart';
@@ -35,7 +36,7 @@ class JournalController extends ChangeNotifier {
         final sample1 = DiaryModel(
           pregnancyWeek: 12,
           date: calculatedDates['week12'] ?? AppDateUtils.todayIso(),
-          noteText: 'Bugün ilk defa ultrason görüntünde ellerini kıpırdattığını gördük bebeğim. O kadar minik ve masumdun ki... Hayatımızın en güzel anıydı.',
+          noteText: 'sample_diary_note_1'.tr(),
           photoPath: 'assets/images/sample_ultrasound.png',
           moodRating: 5,
           isRomanticHighlight: true,
@@ -44,7 +45,7 @@ class JournalController extends ChangeNotifier {
         final sample2 = DiaryModel(
           pregnancyWeek: 8,
           date: calculatedDates['week8'] ?? AppDateUtils.toIso(DateTime.now().subtract(const Duration(days: 28))),
-          noteText: 'Bugün ilk kez minik kalbinin pıt pıt atışlarını duyduk. Dünyanın en güzel ve huzur verici melodisiydi 🫐',
+          noteText: 'sample_diary_note_2'.tr(),
           audioPath: 'assets/audio/voice_letter.m4a',
           moodRating: 5,
           isRomanticHighlight: true,
