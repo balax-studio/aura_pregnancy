@@ -5,8 +5,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/clay_theme.dart';
+import '../../../services/calm_audio_service.dart';
 
-/// Aura Pregnancy - Tam Ekran Rahim İçi Sesler & Akustik Beyaz Gürültü Odası
+/// Aura Pregnancy - Sakinleşme Çanı, Rahim İçi Sesler & Akustik Rahatlama Odası
+/// Harici ses dosyası indirmeye gerek kalmadan, saf matematiksel frekans sentezleyicisi ile ses üretir.
 class WombAmbienceScreen extends StatefulWidget {
   const WombAmbienceScreen({super.key});
 
@@ -26,6 +28,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
 
   int _selectedTrackIndex = 0;
   bool _isPlaying = false;
+  bool _isBuffering = false;
   double _volume = 0.75;
   int _timerMinutes = 30;
   int _secondsLeft = 1800;
@@ -33,21 +36,37 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
 
   final List<Map<String, String>> _tracks = const [
     {
+      'id': 'calm_bell',
+      'titleKey': 'womb_track_0_title',
+      'subtitleKey': 'womb_track_0_desc',
+      'emoji': '🔔',
+    },
+    {
+      'id': 'heartbeat',
       'titleKey': 'womb_track_1_title',
       'subtitleKey': 'womb_track_1_desc',
       'emoji': '💗',
     },
     {
+      'id': 'amniotic_fluid',
       'titleKey': 'womb_track_2_title',
       'subtitleKey': 'womb_track_2_desc',
-      'emoji': '🌊',
+      'emoji': '💧',
     },
     {
+      'id': 'pink_rain',
       'titleKey': 'womb_track_3_title',
       'subtitleKey': 'womb_track_3_desc',
       'emoji': '🌧️',
     },
     {
+      'id': 'white_noise',
+      'titleKey': 'womb_track_white_title',
+      'subtitleKey': 'womb_track_white_desc',
+      'emoji': '💨',
+    },
+    {
+      'id': 'lullaby_box',
       'titleKey': 'womb_track_4_title',
       'subtitleKey': 'womb_track_4_desc',
       'emoji': '🧸',
@@ -65,25 +84,49 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
     _pulseAnimation = Tween<double>(begin: 0.94, end: 1.08).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
+
+    // Ses motorunu arka planda ön ısıt
+    CalmAudioService.instance.init();
   }
 
   @override
   void dispose() {
     _pulseController.dispose();
     _countdownTimer?.cancel();
+    CalmAudioService.instance.pause();
     super.dispose();
   }
 
-  void _togglePlay() {
+  Future<void> _togglePlay() async {
     HapticFeedback.mediumImpact();
+    if (_isPlaying) {
+      _countdownTimer?.cancel();
+      setState(() => _isPlaying = false);
+      await CalmAudioService.instance.pause();
+    } else {
+      setState(() {
+        _isPlaying = true;
+        _isBuffering = true;
+      });
+      _startTimer();
+      final trackId = _tracks[_selectedTrackIndex]['id']!;
+      await CalmAudioService.instance.playTrack(trackId, volume: _volume);
+      if (mounted) setState(() => _isBuffering = false);
+    }
+  }
+
+  Future<void> _switchTrack(int index) async {
+    HapticFeedback.selectionClick();
     setState(() {
-      _isPlaying = !_isPlaying;
-      if (_isPlaying) {
-        _startTimer();
-      } else {
-        _countdownTimer?.cancel();
-      }
+      _selectedTrackIndex = index;
     });
+
+    if (_isPlaying) {
+      setState(() => _isBuffering = true);
+      final trackId = _tracks[index]['id']!;
+      await CalmAudioService.instance.playTrack(trackId, volume: _volume);
+      if (mounted) setState(() => _isBuffering = false);
+    }
   }
 
   void _startTimer() {
@@ -95,6 +138,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
           if (mounted) setState(() => _secondsLeft--);
         } else {
           t.cancel();
+          CalmAudioService.instance.pause();
           if (mounted) setState(() => _isPlaying = false);
         }
       });
@@ -143,10 +187,19 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                           ],
                         ),
                         child: Center(
-                          child: Text(
-                            activeTrack['emoji']!,
-                            style: const TextStyle(fontSize: 60),
-                          ),
+                          child: _isBuffering
+                              ? const SizedBox(
+                                  width: 44,
+                                  height: 44,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                    color: AppColors.primaryPink,
+                                  ),
+                                )
+                              : Text(
+                                  activeTrack['emoji']!,
+                                  style: const TextStyle(fontSize: 60),
+                                ),
                         ),
                       ),
                     ),
@@ -253,7 +306,10 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                               ),
                               child: Slider(
                                 value: _volume,
-                                onChanged: (v) => setState(() => _volume = v),
+                                onChanged: (v) {
+                                  setState(() => _volume = v);
+                                  CalmAudioService.instance.setVolume(v);
+                                },
                               ),
                             ),
                           ),
@@ -286,7 +342,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
                       final isSelected = _selectedTrackIndex == index;
                       return _buildTrackTile(track, index, isSelected);
                     }),
-                    const SizedBox(height: 84),
+                    const SizedBox(height: 84), // Alt gezinme barı payı
                   ],
                 ),
               ),
@@ -412,16 +468,7 @@ class _WombAmbienceScreenState extends State<WombAmbienceScreen> with SingleTick
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          setState(() {
-            _selectedTrackIndex = index;
-            if (!_isPlaying) {
-              _isPlaying = true;
-              _startTimer();
-            }
-          });
-        },
+        onTap: () => _switchTrack(index),
         borderRadius: BorderRadius.circular(18),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -60,6 +60,7 @@ class _ProfileEditSheetState extends State<ProfileEditSheet> {
     await context.setLocale(newLocale);
     try {
       await DatabaseHelper.instance.setSetting('app_language', langCode);
+      DatabaseHelper.notifyDataChanged();
     } catch (e) {
       debugPrint('ProfileEditSheet changeLanguage error: $e');
     }

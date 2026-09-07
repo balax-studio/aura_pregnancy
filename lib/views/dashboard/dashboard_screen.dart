@@ -400,7 +400,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text('🎧', style: TextStyle(fontSize: 14)),
+                                    const Text('🔔', style: TextStyle(fontSize: 14)),
                                     const SizedBox(width: 6),
                                     Text(
                                       'dashboard_womb_bell'.tr(),

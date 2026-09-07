@@ -14,6 +14,7 @@ import '../weekly_panel/screens/birth_plan_screen.dart';
 import '../weekly_panel/widgets/baby_zodiac_card.dart';
 import '../journal/screens/time_capsule_screen.dart';
 import '../postpartum/postpartum_bridge_screen.dart';
+import '../dashboard/screens/womb_ambience_screen.dart';
 import '../widgets/emergency_beacon_button.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 
@@ -351,8 +352,8 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
       _ToolItem(
         emoji: '🖼️',
         icon: Icons.card_giftcard_rounded,
-        title: 'more_tool_card_title'.tr(),
-        subtitle: 'more_tool_card_sub'.tr(),
+        title: 'more_tool_keepsake_title'.tr(),
+        subtitle: 'more_tool_keepsake_sub'.tr(),
         color: AppColors.clayRose,
         accentColor: AppColors.primaryPink,
         onTap: () {
@@ -379,6 +380,18 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
         onTap: () {
           HapticFeedback.selectionClick();
           PostpartumBridgeScreen.show(context, profile: _profile);
+        },
+      ),
+      _ToolItem(
+        emoji: '🔔',
+        icon: Icons.spa_rounded,
+        title: 'dashboard_womb_bell'.tr(),
+        subtitle: 'womb_ambience_subtitle'.tr(),
+        color: AppColors.clayLavender,
+        accentColor: AppColors.lavenderPurple,
+        onTap: () {
+          HapticFeedback.selectionClick();
+          WombAmbienceScreen.open(context);
         },
       ),
     ];

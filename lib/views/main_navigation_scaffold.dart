@@ -49,6 +49,7 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
       backgroundColor: AppColors.background,
       body: AmbientBackground(
         child: IndexedStack(
+          key: ValueKey('nav_stack_${context.locale.languageCode}'),
           index: _currentIndex,
           children: screens,
         ),
