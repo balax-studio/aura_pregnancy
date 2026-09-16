@@ -49,9 +49,26 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
   }
 
   String _getLocalizedMilestone(String milestone) {
+    if (milestone.startsWith('custom:')) {
+      return milestone.substring(7);
+    }
     switch (milestone) {
       case '1st_birthday':
         return 'time_capsule_milestone_1'.tr();
+      case '3rd_birthday':
+        return 'time_capsule_milestone_3'.tr();
+      case '5th_birthday':
+        return 'time_capsule_milestone_5'.tr();
+      case '7th_birthday':
+        return 'time_capsule_milestone_7'.tr();
+      case '10th_birthday':
+        return 'time_capsule_milestone_10'.tr();
+      case '15th_birthday':
+        return 'time_capsule_milestone_15'.tr();
+      case '21st_birthday':
+        return 'time_capsule_milestone_21'.tr();
+      case '25th_birthday':
+        return 'time_capsule_milestone_25'.tr();
       case 'wedding':
         return 'time_capsule_milestone_wedding'.tr();
       case '18th_birthday':
@@ -63,7 +80,9 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
   void _showNewLetterDialog() {
     final titleCtrl = TextEditingController();
     final letterCtrl = TextEditingController();
+    final customAgeCtrl = TextEditingController();
     String milestone = '18th_birthday';
+    bool isCustom = false;
 
     showDialog(
       context: context,
@@ -71,9 +90,24 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
         builder: (ctx, setDialogState) => AlertDialog(
           backgroundColor: AppColors.background,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          title: Text(
-            'time_capsule_dialog_title'.tr(),
-            style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.accentGold.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.mark_email_unread_rounded, color: AppColors.accentGold, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'time_capsule_dialog_title'.tr(),
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark, fontSize: 17),
+                ),
+              ),
+            ],
           ),
           content: SingleChildScrollView(
             child: Column(
@@ -92,19 +126,49 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: DropdownButton<String>(
-                    value: milestone,
+                    value: isCustom ? 'custom' : milestone,
                     isExpanded: true,
                     underline: const SizedBox(),
                     items: [
                       DropdownMenuItem(value: '1st_birthday', child: Text('time_capsule_milestone_1'.tr())),
+                      DropdownMenuItem(value: '3rd_birthday', child: Text('time_capsule_milestone_3'.tr())),
+                      DropdownMenuItem(value: '5th_birthday', child: Text('time_capsule_milestone_5'.tr())),
+                      DropdownMenuItem(value: '7th_birthday', child: Text('time_capsule_milestone_7'.tr())),
+                      DropdownMenuItem(value: '10th_birthday', child: Text('time_capsule_milestone_10'.tr())),
+                      DropdownMenuItem(value: '15th_birthday', child: Text('time_capsule_milestone_15'.tr())),
                       DropdownMenuItem(value: '18th_birthday', child: Text('time_capsule_milestone_18'.tr())),
+                      DropdownMenuItem(value: '21st_birthday', child: Text('time_capsule_milestone_21'.tr())),
+                      DropdownMenuItem(value: '25th_birthday', child: Text('time_capsule_milestone_25'.tr())),
                       DropdownMenuItem(value: 'wedding', child: Text('time_capsule_milestone_wedding'.tr())),
+                      DropdownMenuItem(value: 'custom', child: Text('time_capsule_milestone_custom'.tr())),
                     ],
                     onChanged: (v) {
-                      if (v != null) setDialogState(() => milestone = v);
+                      if (v != null) {
+                        setDialogState(() {
+                          if (v == 'custom') {
+                            isCustom = true;
+                          } else {
+                            isCustom = false;
+                            milestone = v;
+                          }
+                        });
+                      }
                     },
                   ),
                 ),
+                if (isCustom) ...[
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: customAgeCtrl,
+                    decoration: InputDecoration(
+                      hintText: 'time_capsule_custom_age_hint'.tr(),
+                      hintStyle: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 TextField(
                   controller: titleCtrl,
@@ -151,10 +215,17 @@ class _TimeCapsuleScreenState extends State<TimeCapsuleScreen> {
                     final t = titleCtrl.text.trim();
                     final l = letterCtrl.text.trim();
                     if (t.isEmpty || l.isEmpty) return;
+
+                    final effectiveMilestone = isCustom
+                        ? (customAgeCtrl.text.trim().isNotEmpty
+                            ? 'custom:${customAgeCtrl.text.trim()}'
+                            : '18th_birthday')
+                        : milestone;
+
                     HapticFeedback.mediumImpact();
                     await DatabaseHelper.instance.insertTimeCapsuleLetter(
                       TimeCapsuleLetter(
-                        unlockMilestone: milestone,
+                        unlockMilestone: effectiveMilestone,
                         title: t,
                         letterText: l,
                         createdDate: DateTime.now().toIso8601String(),

@@ -11,7 +11,7 @@ import '../journal/widgets/keepsake_card_dialog.dart';
 import '../baby_names/baby_names_screen.dart';
 import '../weekly_panel/screens/hospital_bag_screen.dart';
 import '../weekly_panel/screens/birth_plan_screen.dart';
-import '../weekly_panel/widgets/baby_zodiac_card.dart';
+import '../weekly_panel/screens/baby_zodiac_screen.dart';
 import '../journal/screens/time_capsule_screen.dart';
 import '../postpartum/postpartum_bridge_screen.dart';
 import '../dashboard/screens/womb_ambience_screen.dart';
@@ -61,74 +61,9 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
     }
   }
 
-  void _showZodiacModal() {
+  void _openZodiacScreen() {
     HapticFeedback.selectionClick();
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (ctx) => DraggableScrollableSheet(
-        initialChildSize: 0.85,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        builder: (_, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              Container(
-                width: 44,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryPink.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'more_tool_zodiac_title'.tr(),
-                      style: GoogleFonts.outfit(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.primaryDark,
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary),
-                      onPressed: () => Navigator.pop(ctx),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Column(
-                    children: [
-                      BabyZodiacCard(
-                        dueDate: _profile?.dueDate,
-                        momName: _profile?.momName,
-                        babyName: _profile?.babyName,
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    BabyZodiacScreen.open(context, profile: _profile);
   }
 
   void _showClinicalSummaryModal() {
@@ -284,7 +219,7 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
         subtitle: 'more_tool_zodiac_sub'.tr(),
         color: AppColors.clayLavender,
         accentColor: AppColors.lavenderPurple,
-        onTap: _showZodiacModal,
+        onTap: _openZodiacScreen,
       ),
       _ToolItem(
         emoji: '👶',

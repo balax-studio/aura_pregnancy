@@ -412,7 +412,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text('🔔', style: TextStyle(fontSize: 14)),
+                                    const Icon(
+                                      Icons.notifications_active_rounded,
+                                      size: 15,
+                                      color: AppColors.lavenderPurple,
+                                    ),
                                     const SizedBox(width: 6),
                                     Text(
                                       'dashboard_womb_bell'.tr(),
@@ -444,7 +448,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text('📱', style: TextStyle(fontSize: 14)),
+                                    const Icon(
+                                      Icons.phone_iphone_rounded,
+                                      size: 15,
+                                      color: AppColors.successGreen,
+                                    ),
                                     const SizedBox(width: 6),
                                     Text(
                                       'dashboard_lock_screen'.tr(),

@@ -109,5 +109,32 @@ class AppColors {
   static const Color clayHighlightTop = Color(0xFFFFFFFF); // Üst Işık
   static const Color clayShadowDark = Color(0x28000000);   // Alt İç Gölge
   static const Color clayOuterDrop = Color(0x24C49A9E);    // Dış Yumuşak Gölge
+
+  // Meyve & Sebze Pastel Zemin Token'ları (Fruit & Vegetable Clay Tokens)
+  static const Color fruitBgGreenPastel = Color(0xFFEAF5EA);
+  static const Color fruitBgRosePastel = Color(0xFFFFECEF);
+  static const Color fruitBgLemonPastel = Color(0xFFFFFBEA);
+  static const Color fruitBgBananaPastel = Color(0xFFFFF9DB);
+  static const Color fruitBgBluePastel = Color(0xFFEBF0FA);
+  static const Color fruitBgPineapplePastel = Color(0xFFFFF5D9);
+  static const Color fruitBgWatermelonPastel = Color(0xFFEBF8EC);
+  static const Color fruitBgPeachPastel = Color(0xFFFFF0E6);
+  static const Color fruitBgEggplantPastel = Color(0xFFF6ECFA);
+  static const Color fruitBgCoconutPastel = Color(0xFFF4ECE8);
+  static const Color fruitBgMelonPastel = Color(0xFFFFF3E0);
+
+  // Meyve Vurgu & Gölge Token'ları
+  static const Color fruitAccentGreen = Color(0xFF388E3C);
+  static const Color fruitAccentRed = Color(0xFFD32F2F);
+  static const Color fruitAccentYellow = Color(0xFFFBC02D);
+  static const Color fruitAccentOrange = Color(0xFFF57F17);
+  static const Color fruitAccentDeepBlue = Color(0xFF3949AB);
+  static const Color fruitAccentAmber = Color(0xFFFFA000);
+  static const Color fruitAccentDeepGreen = Color(0xFF2E7D32);
+  static const Color fruitAccentCoral = Color(0xFFE64A19);
+  static const Color fruitAccentPurple = Color(0xFF7B1FA2);
+  static const Color fruitAccentBrown = Color(0xFF5D4037);
+  static const Color fruitAccentWarmOrange = Color(0xFFEF6C00);
+  static const Color fruitAccentForest = Color(0xFF4E8D55);
 }
 

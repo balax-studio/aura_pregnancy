@@ -7,12 +7,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'dart:io' if (dart.library.html) 'services/io_stubs.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' if (dart.library.html) 'services/sqflite_ffi_stubs.dart';
 import 'core/theme/clay_theme.dart';
-import 'core/constants/app_colors.dart';
 import 'services/database_helper.dart';
 import 'services/att_tracking_service.dart';
 import 'services/app_nav_observer.dart';
 import 'core/services/ad_service.dart';
 import 'models/profile_model.dart';
+import 'views/welcome/generative_splash_screen.dart';
 import 'views/welcome/language_selection_screen.dart';
 import 'views/onboarding/onboarding_screen.dart';
 import 'views/main_navigation_scaffold.dart';
@@ -66,7 +66,7 @@ class AuraPregnancyApp extends StatelessWidget {
   }
 }
 
-/// Veritabanı ve Profil Durumuna Göre Yönlendirici (Gatekeeper)
+/// Veritabanı ve Profil Durumuna Göre Yönlendirici (Gatekeeper & Generatif Splash Ekranı)
 class RootGateScreen extends StatefulWidget {
   const RootGateScreen({super.key});
 
@@ -75,7 +75,8 @@ class RootGateScreen extends StatefulWidget {
 }
 
 class _RootGateScreenState extends State<RootGateScreen> {
-  bool _isLoading = true;
+  bool _isDataReady = false;
+  bool _isSplashComplete = false;
   ProfileModel? _profile;
   bool _isOnboardingCompleted = false;
   bool _hasSeenGuide = false;
@@ -97,13 +98,15 @@ class _RootGateScreenState extends State<RootGateScreen> {
           await context.setLocale(Locale(savedLang));
         }
       }
-      setState(() {
-        _profile = profile;
-        _isOnboardingCompleted = isOnboardingCompleted;
-        _hasSeenGuide = hasSeenGuide;
-        _isLoading = false;
-      });
-      // iOS ATT (App Tracking Transparency) izin kontrolü (Kullanıcı dostu Pre-ATT diyaloğu ile)
+      if (mounted) {
+        setState(() {
+          _profile = profile;
+          _isOnboardingCompleted = isOnboardingCompleted;
+          _hasSeenGuide = hasSeenGuide;
+          _isDataReady = true;
+        });
+      }
+      // iOS ATT (App Tracking Transparency) izin kontrolü
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           AttTrackingService.instance.requestConsentWithPreDialogIfNeeded(context);
@@ -111,58 +114,45 @@ class _RootGateScreenState extends State<RootGateScreen> {
       });
     } catch (e) {
       debugPrint('RootGateScreen error: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isDataReady = true);
+      }
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        backgroundColor: AppColors.background,
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 70,
-                height: 70,
-                decoration: ClayTheme.clayDecoration(
-                  color: AppColors.clayRose,
-                  borderRadius: 35,
-                ),
-                child: const Center(
-                  child: Icon(Icons.favorite_rounded, color: AppColors.primaryPink, size: 36),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Aura Pregnancy',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.primaryDark,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const CircularProgressIndicator(color: AppColors.primaryPink),
-            ],
-          ),
-        ),
-      );
-    }
-
+  Widget _buildDestinationScreen() {
     // Profil varsa veya onboarding tamamlanmışsa doğrudan ana navigasyona yönlendir
     if (_profile != null || _isOnboardingCompleted) {
-      return const MainNavigationScaffold();
+      return const MainNavigationScaffold(key: ValueKey('main_nav_screen'));
     }
 
     // Kullanıcı daha önce dili seçip rehberi tamamlamışsa tekrar gösterme, doğrudan Onboarding'e al
     if (_hasSeenGuide) {
-      return const OnboardingScreen();
+      return const OnboardingScreen(key: ValueKey('onboarding_screen'));
     }
 
     // Yeni kullanıcı için: Dil Seçimi -> Hoş Geldiniz -> Uygulama Rehberi -> Onboarding -> Ana Uygulama
-    return const LanguageSelectionScreen();
+    return const LanguageSelectionScreen(key: ValueKey('language_screen'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final showSplash = !_isDataReady || !_isSplashComplete;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 450),
+      switchInCurve: Curves.easeInOutCubic,
+      switchOutCurve: Curves.easeInOutCubic,
+      child: showSplash
+          ? GenerativeSplashScreen(
+              key: const ValueKey('generative_splash'),
+              onAnimationComplete: () {
+                if (mounted) {
+                  setState(() => _isSplashComplete = true);
+                }
+              },
+            )
+          : _buildDestinationScreen(),
+    );
   }
 }

@@ -46,6 +46,7 @@ class AdRewardDialog extends StatefulWidget {
 
 class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProviderStateMixin {
   bool _isPlaying = false;
+  bool _isLoadingAd = false;
   int _countdown = 5;
   Timer? _timer;
   bool _isCompleted = false;
@@ -58,14 +59,25 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
+    // Dialog açılır açılmaz arka planda ödüllü reklam yüklemesini tetikle
+    AdService.instance.loadRewardedAd();
   }
 
   Future<void> _startAdPlayback() async {
-    if (AdService.instance.isRewardedAdReady) {
+    if (_isLoadingAd || _isPlaying) return;
+
+    setState(() => _isLoadingAd = true);
+
+    try {
+      // Gerçek AdMob Ödüllü Reklamını göster (Hazır değilse 7 sn'ye kadar yüklenmesini bekler)
       final earned = await AdService.instance.showRealRewardedAd(
         onRewardEarned: widget.onRewardEarned ?? () {},
+        timeout: const Duration(seconds: 7),
       );
+
       if (!mounted) return;
+      setState(() => _isLoadingAd = false);
+
       if (earned) {
         setState(() {
           _isCompleted = true;
@@ -73,14 +85,23 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
         });
         return;
       }
+    } catch (e) {
+      debugPrint('[AdRewardDialog] Reklam gösterim hatası: $e');
+      if (mounted) {
+        setState(() => _isLoadingAd = false);
+      }
     }
 
-    _runFallbackCountdown();
+    // AdMob yüklenemezse veya kullanıcı reklamı kapatıp ödül almadıysa fallback akışını devreye sok
+    if (mounted) {
+      _runFallbackCountdown();
+    }
   }
 
   void _runFallbackCountdown() {
     setState(() {
       _isPlaying = true;
+      _isLoadingAd = false;
       _countdown = 5;
       _isCompleted = false;
     });
@@ -192,22 +213,45 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
               ClayButton(
                 color: AppColors.clayPeach,
                 height: 52,
-                onPressed: _startAdPlayback,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.play_circle_filled_rounded, color: AppColors.primaryDark, size: 22),
-                    const SizedBox(width: 8),
-                    Text(
-                      'ad_watch_btn'.tr(),
-                      style: GoogleFonts.nunito(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.primaryDark,
+                onPressed: _isLoadingAd ? null : _startAdPlayback,
+                child: _isLoadingAd
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryDark),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'ad_loading_reward'.tr(),
+                            style: GoogleFonts.nunito(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primaryDark,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.play_circle_filled_rounded, color: AppColors.primaryDark, size: 22),
+                          const SizedBox(width: 8),
+                          Text(
+                            'ad_watch_btn'.tr(),
+                            style: GoogleFonts.nunito(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.primaryDark,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
               ),
               const SizedBox(height: 10),
 

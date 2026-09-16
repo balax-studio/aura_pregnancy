@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/baby_zodiac_data.dart';
 import '../../../core/theme/clay_theme.dart';
+import '../screens/baby_zodiac_screen.dart';
 
 /// Aura Pregnancy - Bebek Burç, Mizaç ve Anne-Bebek Uyum Bento Kartı
 class BabyZodiacCard extends StatefulWidget {
@@ -278,7 +279,8 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
               ),
               child: Row(
                 children: [
-                  const Text('💕 ', style: TextStyle(fontSize: 14)),
+                  const Icon(Icons.favorite_rounded, color: AppColors.primaryPink, size: 16),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       'zodiac_compat_button'.tr(args: [compat['score'].toString()]),
@@ -369,6 +371,44 @@ class _BabyZodiacCardState extends State<BabyZodiacCard> {
               ),
             ),
           ],
+          const SizedBox(height: 12),
+
+          // Detaylı Alt Sayfaya Git Butonu
+          InkWell(
+            onTap: () {
+              HapticFeedback.selectionClick();
+              BabyZodiacScreen.open(context, initialSign: babyZodiac.signName);
+            },
+            borderRadius: BorderRadius.circular(14),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.9),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: AppColors.lavenderPurple.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.auto_awesome_rounded, color: AppColors.lavenderPurple, size: 16),
+                  const SizedBox(width: 8),
+                  Text(
+                    'zodiac_open_full_guide'.tr(),
+                    style: GoogleFonts.outfit(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.lavenderPurple,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.arrow_forward_ios_rounded, color: AppColors.lavenderPurple, size: 12),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

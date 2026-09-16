@@ -78,14 +78,31 @@ class TimeCapsuleLetter {
   }
 
   String get milestoneTitle {
+    if (unlockMilestone.startsWith('custom:')) {
+      return unlockMilestone.substring(7);
+    }
     switch (unlockMilestone) {
       case '1st_birthday':
-        return '1. Yaş Günü 🎂';
+        return '1. Yaş (İlk Adımlar)';
+      case '3rd_birthday':
+        return '3. Yaş (İlk Cümleler)';
+      case '5th_birthday':
+        return '5. Yaş (Anaokulu & Merak)';
+      case '7th_birthday':
+        return '7. Yaş (Okula Başlarken)';
+      case '10th_birthday':
+        return '10. Yaş (İlk Çift Hane)';
+      case '15th_birthday':
+        return '15. Yaş (Gençlik Çağı)';
+      case '21st_birthday':
+        return '21. Yaş (Kendi Kanatlarıyla)';
+      case '25th_birthday':
+        return '25. Yaş (Kendi Yolunu Çizerken)';
       case 'wedding':
-        return 'Evlendiği Gün 💍';
+        return 'Evlendiği Gün';
       case '18th_birthday':
       default:
-        return '18. Yaş Doğum Günü 🎓';
+        return '18. Yaş (Reşitlik Mirası)';
     }
   }
 }

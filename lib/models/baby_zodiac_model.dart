@@ -7,6 +7,7 @@ class BabyZodiacModel {
   final String dateRangeStr;
   final String headline;
   final String temperament;
+  final String sensoryPlay;
   final String sleepTendency;
   final String emotionalNeeds;
   final String parentingAdvice;
@@ -23,6 +24,7 @@ class BabyZodiacModel {
     required this.dateRangeStr,
     required this.headline,
     required this.temperament,
+    this.sensoryPlay = '',
     required this.sleepTendency,
     required this.emotionalNeeds,
     required this.parentingAdvice,

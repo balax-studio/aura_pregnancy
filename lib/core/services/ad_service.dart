@@ -69,6 +69,9 @@ class AdService {
 
   RewardedAd? _preloadedRewardedAd;
   bool _isLoadingRewarded = false;
+  Completer<RewardedAd?>? _loadingCompleter;
+  int _retryAttempt = 0;
+  Timer? _retryTimer;
 
   /// Reklam motorunu başlatır
   Future<void> initialize() async {
@@ -76,49 +79,99 @@ class AdService {
     try {
       if (isMobile) {
         await MobileAds.instance.initialize();
-        loadRewardedAd();
+        unawaited(loadRewardedAd());
       }
       _isInitialized = true;
-      debugPrint('[AdService] Google Mobile Ads servisi hazırlandı.');
+      debugPrint('[AdService] Google Mobile Ads servisi hazırlandı (Platform: ${defaultTargetPlatform.name}, ReleaseMode: $kReleaseMode).');
     } catch (e) {
       _isInitialized = true;
       debugPrint('[AdService] Başlatma notu: $e');
     }
   }
 
-  /// Arka planda bir sonraki ödüllü reklamı hazırlar (Preload)
-  void loadRewardedAd() {
-    if (!isMobile || _isLoadingRewarded || _preloadedRewardedAd != null) return;
+  /// Arka planda veya anlık olarak bir sonraki ödüllü reklamı yükler
+  Future<RewardedAd?> loadRewardedAd() async {
+    if (!isMobile) return null;
+
+    // Halihazırda geçerli bir reklam varsa doğrudan döndür
+    if (_preloadedRewardedAd != null) {
+      return _preloadedRewardedAd;
+    }
+
+    // Halihazırda devam eden bir yükleme isteği varsa o Completer'ı bekle
+    if (_isLoadingRewarded && _loadingCompleter != null) {
+      return _loadingCompleter!.future;
+    }
+
     _isLoadingRewarded = true;
+    _loadingCompleter = Completer<RewardedAd?>();
+    final targetAdUnitId = rewardedAdUnitId;
+
+    debugPrint('[AdService] RewardedAd yükleniyor (AdUnitId: $targetAdUnitId)...');
 
     RewardedAd.load(
-      adUnitId: rewardedAdUnitId,
+      adUnitId: targetAdUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           _preloadedRewardedAd = ad;
           _isLoadingRewarded = false;
+          _retryAttempt = 0;
+          _retryTimer?.cancel();
           debugPrint('[AdService] RewardedAd başarıyla önbelleklendi.');
+          if (_loadingCompleter != null && !_loadingCompleter!.isCompleted) {
+            _loadingCompleter!.complete(ad);
+          }
+          _loadingCompleter = null;
         },
         onAdFailedToLoad: (error) {
           _preloadedRewardedAd = null;
           _isLoadingRewarded = false;
-          debugPrint('[AdService] RewardedAd yüklenemedi: $error');
+          debugPrint('[AdService] RewardedAd yüklenemedi: $error (Code: ${error.code}, Message: ${error.message})');
+          if (_loadingCompleter != null && !_loadingCompleter!.isCompleted) {
+            _loadingCompleter!.complete(null);
+          }
+          _loadingCompleter = null;
+
+          // Hata durumunda exponential backoff ile otomatik tekrar deneme
+          _retryAttempt++;
+          final nextRetrySeconds = (_retryAttempt * 5).clamp(5, 30);
+          _retryTimer?.cancel();
+          _retryTimer = Timer(Duration(seconds: nextRetrySeconds), () {
+            if (_preloadedRewardedAd == null && !_isLoadingRewarded) {
+              debugPrint('[AdService] RewardedAd otomatik retry başlatılıyor ($_retryAttempt. deneme)...');
+              loadRewardedAd();
+            }
+          });
         },
       ),
     );
+
+    return _loadingCompleter!.future;
   }
 
   /// Ödüllü reklam hazır mı kontrolü
   bool get isRewardedAdReady => _preloadedRewardedAd != null;
 
-  /// Gerçek AdMob Rewarded reklamını ekranda gösterir
+  /// Gerçek AdMob Rewarded reklamını ekranda gösterir (Hazır değilse yüklenmesini bekler)
   Future<bool> showRealRewardedAd({
     required VoidCallback onRewardEarned,
+    Duration timeout = const Duration(seconds: 7),
   }) async {
-    final ad = _preloadedRewardedAd;
+    if (!isMobile) return false;
+
+    RewardedAd? ad = _preloadedRewardedAd;
     if (ad == null) {
-      loadRewardedAd();
+      debugPrint('[AdService] RewardedAd önbellekte yok, anlık olarak yükleniyor...');
+      try {
+        ad = await loadRewardedAd().timeout(timeout);
+      } catch (e) {
+        debugPrint('[AdService] RewardedAd anlık yükleme zaman aşımına uğradı ($timeout): $e');
+      }
+    }
+
+    if (ad == null) {
+      debugPrint('[AdService] Gösterilecek RewardedAd bulunamadı.');
       return false;
     }
 
@@ -126,30 +179,45 @@ class AdService {
     bool rewardEarned = false;
 
     ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (ad) {
+        debugPrint('[AdService] RewardedAd tam ekran açıldı.');
+      },
       onAdDismissedFullScreenContent: (ad) {
+        debugPrint('[AdService] RewardedAd kapatıldı.');
         ad.dispose();
         _preloadedRewardedAd = null;
-        loadRewardedAd();
+        unawaited(loadRewardedAd());
         if (!completer.isCompleted) {
           completer.complete(rewardEarned);
         }
       },
       onAdFailedToShowFullScreenContent: (ad, err) {
+        debugPrint('[AdService] RewardedAd gösterim hatası: $err');
         ad.dispose();
         _preloadedRewardedAd = null;
-        loadRewardedAd();
+        unawaited(loadRewardedAd());
         if (!completer.isCompleted) {
           completer.complete(false);
         }
       },
     );
 
-    ad.show(
-      onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-        rewardEarned = true;
-        onRewardEarned();
-      },
-    );
+    try {
+      await ad.show(
+        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+          debugPrint('[AdService] Ödül kazanıldı! (${reward.amount} ${reward.type})');
+          rewardEarned = true;
+          onRewardEarned();
+        },
+      );
+    } catch (e) {
+      debugPrint('[AdService] ad.show istisnası: $e');
+      _preloadedRewardedAd = null;
+      unawaited(loadRewardedAd());
+      if (!completer.isCompleted) {
+        completer.complete(false);
+      }
+    }
 
     return completer.future;
   }
