@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors
 import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -76,14 +77,14 @@ class BirthPlanPdfService {
                     pw.Container(
                       width: 48,
                       height: 48,
-                      decoration: const pw.BoxDecoration(
+                      decoration: pw.BoxDecoration(
                         shape: pw.BoxShape.circle,
                         color: accentGold,
                       ),
                       child: pw.Center(
                         child: pw.Text(
                           s('AURA'),
-                          style: const pw.TextStyle(
+                          style: pw.TextStyle(
                             color: PdfColors.white,
                             fontSize: 10,
                             fontWeight: pw.FontWeight.bold,
@@ -98,7 +99,7 @@ class BirthPlanPdfService {
                         children: [
                           pw.Text(
                             s('KİŞİSEL DOĞUM TERCİHLERİ VE GÜVENLİK PLANI'),
-                            style: const pw.TextStyle(
+                            style: pw.TextStyle(
                               color: darkCharcoal,
                               fontSize: 13.5,
                               fontWeight: pw.FontWeight.bold,
@@ -108,7 +109,7 @@ class BirthPlanPdfService {
                           pw.SizedBox(height: 3),
                           pw.Text(
                             s('Hekim ve Ebe Ekibine Bilgilendirme Notudur • Düzenleme Tarihi: $todayStr'),
-                            style: const pw.TextStyle(
+                            style: pw.TextStyle(
                                 color: slateMuted, fontSize: 8.5),
                           ),
                         ],
@@ -334,18 +335,18 @@ class BirthPlanPdfService {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Text(title,
-              style: const pw.TextStyle(
-                  color: PdfColor.fromInt(0xFF635666), fontSize: 7.5)),
+              style: pw.TextStyle(
+                  color: const PdfColor.fromInt(0xFF635666), fontSize: 7.5)),
           pw.SizedBox(height: 2),
           pw.Text(main,
-              style: const pw.TextStyle(
-                  color: PdfColor.fromInt(0xFF231B24),
+              style: pw.TextStyle(
+                  color: const PdfColor.fromInt(0xFF231B24),
                   fontSize: 9.5,
                   fontWeight: pw.FontWeight.bold)),
           pw.SizedBox(height: 1),
           pw.Text(sub,
-              style: const pw.TextStyle(
-                  color: PdfColor.fromInt(0xFFD85A7F), fontSize: 7.5)),
+              style: pw.TextStyle(
+                  color: const PdfColor.fromInt(0xFFD85A7F), fontSize: 7.5)),
         ],
       ),
     );
@@ -382,7 +383,7 @@ class BirthPlanPdfService {
             child: isChecked
                 ? pw.Center(
                     child: pw.Text('V',
-                        style: const pw.TextStyle(
+                        style: pw.TextStyle(
                             color: PdfColors.white,
                             fontSize: 7,
                             fontWeight: pw.FontWeight.bold)),

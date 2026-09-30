@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors
 import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -89,7 +90,7 @@ class ClinicalPdfService {
                           children: [
                             pw.Text(
                               'Aura Pregnancy',
-                              style: const pw.TextStyle(
+                              style: pw.TextStyle(
                                 color: primaryPink,
                                 fontSize: 18,
                                 fontWeight: pw.FontWeight.bold,
@@ -116,7 +117,7 @@ class ClinicalPdfService {
                         pw.SizedBox(height: 2),
                         pw.Text(
                           s('Hekim Kontrolü & Rutin Gebelik Muayene Formu'),
-                          style: const pw.TextStyle(
+                          style: pw.TextStyle(
                               color: slateMuted, fontSize: 10),
                         ),
                       ],
@@ -126,12 +127,12 @@ class ClinicalPdfService {
                       children: [
                         pw.Text(
                           s('Rapor Tarihi'),
-                          style: const pw.TextStyle(
+                          style: pw.TextStyle(
                               color: slateMuted, fontSize: 9),
                         ),
                         pw.Text(
                           todayStr,
-                          style: const pw.TextStyle(
+                          style: pw.TextStyle(
                             color: darkCharcoal,
                             fontSize: 11,
                             fontWeight: pw.FontWeight.bold,
@@ -453,8 +454,8 @@ class ClinicalPdfService {
         pw.Expanded(
           child: pw.Text(
             value,
-            style: const pw.TextStyle(
-              color: PdfColor.fromInt(0xFF2D232E),
+            style: pw.TextStyle(
+              color: const PdfColor.fromInt(0xFF2D232E),
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
             ),

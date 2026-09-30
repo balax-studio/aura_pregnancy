@@ -17,6 +17,7 @@ import '../postpartum/postpartum_bridge_screen.dart';
 import '../dashboard/screens/womb_ambience_screen.dart';
 import '../widgets/emergency_beacon_button.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
+import 'widgets/notification_settings_sheet.dart';
 
 /// Aura Pregnancy - 5. Sekme: "Daha Fazlası" & Özel Araçlar Stüdyosu
 class MoreToolsScreen extends StatefulWidget {
@@ -338,6 +339,18 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
         onTap: () {
           HapticFeedback.selectionClick();
           WombAmbienceScreen.open(context);
+        },
+      ),
+      _ToolItem(
+        emoji: '🌸',
+        icon: Icons.notifications_active_rounded,
+        title: 'more_tool_notifications_title'.tr(),
+        subtitle: 'more_tool_notifications_sub'.tr(),
+        color: AppColors.clayRose,
+        accentColor: AppColors.primaryPink,
+        onTap: () {
+          HapticFeedback.selectionClick();
+          NotificationSettingsSheet.show(context);
         },
       ),
     ];

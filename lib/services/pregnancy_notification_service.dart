@@ -45,14 +45,20 @@ class PregnancyNotificationService {
       'aura_pregnancy_messages',
       'Aura Pregnancy',
       channelDescription: 'Günlük mesajlar ve bebek notları',
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
+      importance: Importance.high,
+      priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
     ),
     iOS: DarwinNotificationDetails(
       threadIdentifier: 'aura_pregnancy_messages',
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
     ),
   );
+
+  DateTime? _lastDailyScheduleDate;
+  String? _lastDailyScheduleLanguage;
 
   Future<void> initialize() async {
     if (!_isSupportedPlatform) return;
@@ -78,8 +84,15 @@ class PregnancyNotificationService {
   }
 
   Future<void> _setLocalTimezone() async {
-    final localTimezone = await FlutterTimezone.getLocalTimezone();
-    timezone.setLocalLocation(timezone.getLocation(localTimezone.identifier));
+    try {
+      final localTimezone = await FlutterTimezone.getLocalTimezone();
+      timezone.setLocalLocation(timezone.getLocation(localTimezone.identifier));
+    } catch (e) {
+      debugPrint('Could not set native timezone, falling back to UTC / local: $e');
+      try {
+        timezone.setLocalLocation(timezone.getLocation('UTC'));
+      } catch (_) {}
+    }
   }
 
   Future<bool> hasNotificationPermission() async {
@@ -107,8 +120,25 @@ class PregnancyNotificationService {
         false;
   }
 
-  Future<void> scheduleDailyMessages({required String languageCode}) async {
+  bool shouldRescheduleDaily({required String languageCode}) {
+    if (_lastDailyScheduleDate == null ||
+        _lastDailyScheduleLanguage != languageCode) {
+      return true;
+    }
+    final now = DateTime.now();
+    return now.year != _lastDailyScheduleDate!.year ||
+        now.month != _lastDailyScheduleDate!.month ||
+        now.day != _lastDailyScheduleDate!.day;
+  }
+
+  Future<void> scheduleDailyMessages({
+    required String languageCode,
+    bool force = false,
+  }) async {
     if (!_isSupportedPlatform || !_initialized) return;
+    if (!force && !shouldRescheduleDaily(languageCode: languageCode)) {
+      return;
+    }
 
     await clearDailyMessages();
 
@@ -138,6 +168,9 @@ class PregnancyNotificationService {
         );
       }
     }
+
+    _lastDailyScheduleDate = DateTime.now();
+    _lastDailyScheduleLanguage = languageCode;
   }
 
   Future<void> clearDailyMessages() async {
@@ -146,13 +179,36 @@ class PregnancyNotificationService {
       await _plugin.cancel(_morningNotificationId(dayOffset));
       await _plugin.cancel(_eveningNotificationId(dayOffset));
     }
+    _lastDailyScheduleDate = null;
+    _lastDailyScheduleLanguage = null;
+  }
+
+  static DateTime calculateSafeNotificationTime(DateTime referenceTime) {
+    var scheduled = referenceTime.add(const Duration(hours: 1));
+    // Gece 22:00 ile sabah 09:00 arası sessiz saatler: anneyi uyandırmamak için ertesi sabah 09:30'a ötele
+    if (scheduled.hour >= 22) {
+      final nextDay = scheduled.add(const Duration(days: 1));
+      return DateTime(nextDay.year, nextDay.month, nextDay.day, 9, 30);
+    } else if (scheduled.hour < 9) {
+      return DateTime(scheduled.year, scheduled.month, scheduled.day, 9, 30);
+    }
+    return scheduled;
   }
 
   Future<void> scheduleAfterExitMessage({required String languageCode}) async {
     if (!_isSupportedPlatform || !_initialized) return;
 
-    final scheduledTime =
-        timezone.TZDateTime.now(timezone.local).add(const Duration(hours: 1));
+    final now = timezone.TZDateTime.now(timezone.local);
+    final safeTime = calculateSafeNotificationTime(now);
+    final scheduledTime = timezone.TZDateTime(
+      timezone.local,
+      safeTime.year,
+      safeTime.month,
+      safeTime.day,
+      safeTime.hour,
+      safeTime.minute,
+    );
+
     final index = DateTime.now().day + DateTime.now().hour;
     await _plugin.cancel(_afterExitNotificationId);
     await _plugin.zonedSchedule(

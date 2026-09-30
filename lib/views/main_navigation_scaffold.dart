@@ -69,9 +69,10 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold>
   }
 
   Future<void> _scheduleAfterExitMessage() async {
-    final languageCode = context.locale.languageCode;
     final notificationService = PregnancyNotificationService.instance;
     if (!notificationService.isSupportedPlatform) return;
+    final languageCode =
+        mounted ? context.locale.languageCode : (_lastScheduledLanguage ?? 'tr');
     try {
       await notificationService.initialize();
       if (await notificationService.hasNotificationPermission()) {
@@ -88,9 +89,10 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold>
     bool requestPermissionIfNeeded = false,
   }) async {
     if (_isRefreshingNotifications) return;
-    final languageCode = context.locale.languageCode;
     final notificationService = PregnancyNotificationService.instance;
     if (!notificationService.isSupportedPlatform) return;
+    final languageCode =
+        mounted ? context.locale.languageCode : (_lastScheduledLanguage ?? 'tr');
     _isRefreshingNotifications = true;
     try {
       await notificationService.initialize();
