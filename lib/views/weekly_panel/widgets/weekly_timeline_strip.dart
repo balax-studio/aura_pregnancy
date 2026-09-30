@@ -8,7 +8,7 @@ import '../../../core/theme/clay_theme.dart';
 class WeeklyTimelineStrip extends StatelessWidget {
   final int selectedWeek;
   final int currentWeek;
-  final Set<int> unlockedWeeks;
+  final bool Function(int week) isWeekUnlocked;
   final Function(int) onWeekSelected;
   final Function(int) onLockedWeekTapped;
 
@@ -16,7 +16,7 @@ class WeeklyTimelineStrip extends StatelessWidget {
     super.key,
     required this.selectedWeek,
     required this.currentWeek,
-    required this.unlockedWeeks,
+    required this.isWeekUnlocked,
     required this.onWeekSelected,
     required this.onLockedWeekTapped,
   });
@@ -34,7 +34,7 @@ class WeeklyTimelineStrip extends StatelessWidget {
           final isSelected = week == selectedWeek;
           final isCurrent = week == currentWeek;
           final isFuture = week > currentWeek;
-          final isUnlocked = !isFuture || unlockedWeeks.contains(week);
+          final isUnlocked = isWeekUnlocked(week);
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
@@ -54,7 +54,9 @@ class WeeklyTimelineStrip extends StatelessWidget {
                       ? AppColors.clayRose
                       : (isCurrent
                           ? AppColors.clayMint
-                          : (isFuture && !isUnlocked ? AppColors.backgroundSubtle : AppColors.clayCardSurface)),
+                          : (isFuture && !isUnlocked
+                              ? AppColors.backgroundSubtle
+                              : AppColors.clayCardSurface)),
                   borderRadius: 22,
                   isPressed: isSelected,
                 ),
@@ -71,7 +73,9 @@ class WeeklyTimelineStrip extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             color: isSelected
                                 ? AppColors.primaryDark
-                                : (isFuture && !isUnlocked ? AppColors.textMuted : AppColors.textSecondary),
+                                : (isFuture && !isUnlocked
+                                    ? AppColors.textMuted
+                                    : AppColors.textSecondary),
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -84,7 +88,9 @@ class WeeklyTimelineStrip extends StatelessWidget {
                                 ? AppColors.primaryDark
                                 : (isCurrent
                                     ? AppColors.successGreen
-                                    : (isFuture && !isUnlocked ? AppColors.textMuted : AppColors.textPrimary)),
+                                    : (isFuture && !isUnlocked
+                                        ? AppColors.textMuted
+                                        : AppColors.textPrimary)),
                           ),
                         ),
                         if (isCurrent)
@@ -107,7 +113,8 @@ class WeeklyTimelineStrip extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
-                            color: AppColors.secondaryPeach.withValues(alpha: 0.18),
+                            color: AppColors.secondaryPeach
+                                .withValues(alpha: 0.18),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(

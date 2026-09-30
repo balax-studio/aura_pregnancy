@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../core/constants/app_colors.dart';
 import '../core/widgets/ambient_background.dart';
 import '../core/widgets/fluid_clay_bottom_bar.dart';
 import '../services/app_nav_observer.dart';
+import '../services/database_helper.dart';
+import '../services/pregnancy_notification_service.dart';
+import 'widgets/notification_permission_dialog.dart';
 import 'dashboard/dashboard_screen.dart';
 import 'weekly_panel/weekly_panel_screen.dart';
 import 'daily_tracker/daily_tracker_screen.dart';
@@ -21,17 +26,122 @@ class MainNavigationScaffold extends StatefulWidget {
   State<MainNavigationScaffold> createState() => _MainNavigationScaffoldState();
 }
 
-class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
+class _MainNavigationScaffoldState extends State<MainNavigationScaffold>
+    with WidgetsBindingObserver {
   late int _currentIndex;
+  bool _isRefreshingNotifications = false;
+  String? _lastScheduledLanguage;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(_refreshNotifications(requestPermissionIfNeeded: true));
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final languageCode = context.locale.languageCode;
+    if (_lastScheduledLanguage != null &&
+        _lastScheduledLanguage != languageCode) {
+      unawaited(_refreshNotifications());
+    }
+    _lastScheduledLanguage = languageCode;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      unawaited(_scheduleAfterExitMessage());
+    } else if (state == AppLifecycleState.resumed) {
+      unawaited(_onAppResumed());
+    }
+  }
+
+  Future<void> _onAppResumed() async {
+    final notificationService = PregnancyNotificationService.instance;
+    await notificationService.cancelAfterExitMessage();
+    await _refreshNotifications();
+  }
+
+  Future<void> _scheduleAfterExitMessage() async {
+    final languageCode = context.locale.languageCode;
+    final notificationService = PregnancyNotificationService.instance;
+    if (!notificationService.isSupportedPlatform) return;
+    try {
+      await notificationService.initialize();
+      if (await notificationService.hasNotificationPermission()) {
+        await notificationService.scheduleAfterExitMessage(
+          languageCode: languageCode,
+        );
+      }
+    } catch (error) {
+      debugPrint('Could not schedule the after-exit baby message: $error');
+    }
+  }
+
+  Future<void> _refreshNotifications({
+    bool requestPermissionIfNeeded = false,
+  }) async {
+    if (_isRefreshingNotifications) return;
+    final languageCode = context.locale.languageCode;
+    final notificationService = PregnancyNotificationService.instance;
+    if (!notificationService.isSupportedPlatform) return;
+    _isRefreshingNotifications = true;
+    try {
+      await notificationService.initialize();
+      var isGranted = await notificationService.hasNotificationPermission();
+
+      if (requestPermissionIfNeeded && !isGranted) {
+        final settings = DatabaseHelper.instance;
+        final alreadyAsked =
+            await settings.getSetting('notification_permission_requested');
+        final rationaleWasSeen =
+            await settings.getSetting('notification_permission_rationale_seen');
+        if (alreadyAsked != 'true' && rationaleWasSeen != 'true') {
+          if (!mounted) return;
+          final wantsNotifications =
+              await NotificationPermissionDialog.show(context);
+          if (!mounted) return;
+          await settings.setSetting(
+            'notification_permission_rationale_seen',
+            'true',
+          );
+          if (wantsNotifications == true) {
+            isGranted =
+                await notificationService.requestNotificationPermission();
+            await settings.setSetting(
+                'notification_permission_requested', 'true');
+          }
+        }
+      }
+
+      if (isGranted) {
+        await notificationService.scheduleDailyMessages(
+          languageCode: languageCode,
+        );
+      } else {
+        await notificationService.clearDailyMessages();
+      }
+    } catch (error) {
+      debugPrint('Could not refresh pregnancy notifications: $error');
+    } finally {
+      _isRefreshingNotifications = false;
+    }
   }
 
   void _onTabTapped(int index) {
     setState(() => _currentIndex = index);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -54,12 +164,12 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
           children: screens,
         ),
       ),
-
       bottomNavigationBar: ValueListenableBuilder<bool>(
         valueListenable: AppNavObserver.instance.isModalOpen,
         builder: (context, isModalOpen, child) {
           final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-          final hideBottomBar = isModalOpen || isKeyboardOpen || _currentIndex == 5;
+          final hideBottomBar =
+              isModalOpen || isKeyboardOpen || _currentIndex == 5;
 
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 240),
@@ -114,5 +224,3 @@ class _MainNavigationScaffoldState extends State<MainNavigationScaffold> {
     );
   }
 }
-
-

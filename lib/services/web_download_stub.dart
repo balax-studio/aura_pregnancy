@@ -11,3 +11,6 @@ Future<String?> recordAndDownloadVideoWeb({
 
 /// Web harici platformlar için indirme stub'ı (Mobil ve Masaüstü)
 void downloadFileWeb(Uint8List bytes, String fileName) {}
+
+/// Web harici platformlarda görsel indirme stub'ı.
+void downloadImageWeb(Uint8List bytes, String fileName) {}

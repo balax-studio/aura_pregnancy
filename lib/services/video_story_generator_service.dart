@@ -1,4 +1,3 @@
-
 import '../services/database_helper.dart';
 
 /// Video Karesi (Story Frame) Modeli
@@ -25,7 +24,8 @@ class VideoStoryFrame {
 /// Aura Pregnancy - Time-lapse Video ve Hikaye Oluşturucu Servisi
 class VideoStoryGeneratorService {
   VideoStoryGeneratorService._internal();
-  static final VideoStoryGeneratorService instance = VideoStoryGeneratorService._internal();
+  static final VideoStoryGeneratorService instance =
+      VideoStoryGeneratorService._internal();
 
   /// Veritabanındaki tüm anı ve fotoğraflardan Time-lapse hikaye karelerini derler
   Future<List<VideoStoryFrame>> generateStoryFrames() async {
@@ -33,11 +33,12 @@ class VideoStoryGeneratorService {
     final diaries = await DatabaseHelper.instance.getAllDiaries();
 
     // Fotoğrafı olan veya romantik highlight olarak işaretlenen anıları filtrele
-    final visualDiaries = diaries.where((d) =>
-      (d.photoPath != null && d.photoPath!.isNotEmpty) ||
-      d.isRomanticHighlight ||
-      (d.noteText != null && d.noteText!.isNotEmpty)
-    ).toList();
+    final visualDiaries = diaries
+        .where((d) =>
+            (d.photoPath != null && d.photoPath!.isNotEmpty) ||
+            d.isRomanticHighlight ||
+            (d.noteText != null && d.noteText!.isNotEmpty))
+        .toList();
 
     // Haftaya göre kronolojik sırala
     visualDiaries.sort((a, b) => a.pregnancyWeek.compareTo(b.pregnancyWeek));
@@ -46,7 +47,7 @@ class VideoStoryGeneratorService {
 
     // Eğer hiç anı yoksa varsayılan trimester dönüm noktalarından bir demo hikayesi oluştur
     if (visualDiaries.isEmpty) {
-      final currentWeek = profile?.currentWeek ?? 12;
+      final currentWeek = profile?.currentPregnancyWeek ?? 12;
       return [
         const VideoStoryFrame(
           week: 4,

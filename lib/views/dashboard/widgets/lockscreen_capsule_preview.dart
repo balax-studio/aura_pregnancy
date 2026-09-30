@@ -25,12 +25,16 @@ class LockscreenCapsulePreview extends StatelessWidget {
                 color: AppColors.clayPeach,
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(Icons.phone_iphone_rounded, color: AppColors.primaryDark, size: 20),
+              child: const Icon(Icons.phone_iphone_rounded,
+                  color: AppColors.primaryDark, size: 20),
             ),
             const SizedBox(width: 10),
             Text(
               'lockscreen_title'.tr(),
-              style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.primaryDark, fontSize: 18),
+              style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.primaryDark,
+                  fontSize: 18),
             ),
           ],
         ),
@@ -41,7 +45,11 @@ class LockscreenCapsulePreview extends StatelessWidget {
             color: AppColors.clayCardSurface,
             borderRadius: 14,
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            child: Text('btn_close'.tr(), style: GoogleFonts.outfit(color: AppColors.primaryPink, fontWeight: FontWeight.bold, fontSize: 13)),
+            child: Text('btn_close'.tr(),
+                style: GoogleFonts.outfit(
+                    color: AppColors.primaryPink,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13)),
           ),
         ],
       ),
@@ -50,7 +58,7 @@ class LockscreenCapsulePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final week = profile?.currentWeek ?? 24;
+    final week = profile?.currentPregnancyWeek ?? 24;
     final babyName = profile?.babyDisplayName ?? 'Bebeğiniz';
 
     int daysRemaining = 280 - (week * 7);
@@ -62,7 +70,8 @@ class LockscreenCapsulePreview extends StatelessWidget {
       children: [
         Text(
           'lockscreen_desc'.tr(),
-          style: GoogleFonts.plusJakartaSans(fontSize: 12.5, color: AppColors.textSecondary),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 12.5, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 16),
 
@@ -93,7 +102,9 @@ class LockscreenCapsulePreview extends StatelessWidget {
                       color: AppColors.primaryPink.withValues(alpha: 0.25),
                       shape: BoxShape.circle,
                     ),
-                    child: const Center(child: Icon(Icons.child_care_rounded, color: Colors.white, size: 22)),
+                    child: const Center(
+                        child: Icon(Icons.child_care_rounded,
+                            color: Colors.white, size: 22)),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -119,13 +130,15 @@ class LockscreenCapsulePreview extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Icon(Icons.favorite_rounded, color: AppColors.primaryPink, size: 20),
+                  const Icon(Icons.favorite_rounded,
+                      color: AppColors.primaryPink, size: 20),
                 ],
               ),
               const SizedBox(height: 12),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(14),
@@ -147,7 +160,8 @@ class LockscreenCapsulePreview extends StatelessWidget {
 
         Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: AppColors.successGreen, size: 16),
+            const Icon(Icons.check_circle_rounded,
+                color: AppColors.successGreen, size: 16),
             const SizedBox(width: 6),
             Expanded(
               child: Text(

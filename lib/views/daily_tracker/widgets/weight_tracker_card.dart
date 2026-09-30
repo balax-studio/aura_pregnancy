@@ -29,7 +29,8 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
   @override
   void initState() {
     super.initState();
-    final val = widget.currentWeightEntry ?? widget.profile?.prePregnancyWeight ?? 60.0;
+    final val =
+        widget.currentWeightEntry ?? widget.profile?.prePregnancyWeight ?? 60.0;
     _controller = TextEditingController(text: val.toStringAsFixed(1));
   }
 
@@ -42,9 +43,11 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
   @override
   Widget build(BuildContext context) {
     final preWeight = widget.profile?.prePregnancyWeight ?? 60.0;
-    final currentWeight = double.tryParse(_controller.text) ?? widget.currentWeightEntry ?? preWeight;
+    final currentWeight = double.tryParse(_controller.text) ??
+        widget.currentWeightEntry ??
+        preWeight;
     final vki = widget.profile?.vki ?? 22.0;
-    final week = widget.profile?.currentWeek ?? 12;
+    final week = widget.profile?.currentPregnancyWeek ?? 12;
 
     final targetInfo = MedicalCalculator.calculateTargetWeightForWeek(
       prePregnancyWeight: preWeight,
@@ -70,7 +73,8 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                   borderRadius: 12,
                 ),
                 child: const Center(
-                  child: Icon(Icons.monitor_weight_rounded, color: AppColors.primaryDark, size: 20),
+                  child: Icon(Icons.monitor_weight_rounded,
+                      color: AppColors.primaryDark, size: 20),
                 ),
               ),
               const SizedBox(width: 10),
@@ -101,7 +105,8 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                       Expanded(
                         child: TextField(
                           controller: _controller,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           style: GoogleFonts.outfit(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
@@ -123,7 +128,10 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                       ),
                       Text(
                         'kg',
-                        style: GoogleFonts.plusJakartaSans(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textSecondary),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -132,7 +140,8 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
               const SizedBox(width: 10),
               ClayButton(
                 color: AppColors.clayRose,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 onPressed: () {
                   final parsed = double.tryParse(_controller.text);
                   if (parsed != null) {
@@ -144,7 +153,9 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                 },
                 child: Text(
                   'common_save'.tr(),
-                  style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                  style: GoogleFonts.plusJakartaSans(
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primaryDark),
                 ),
               ),
             ],
@@ -163,29 +174,49 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('weight_start_label'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
-                    Text('${preWeight.toStringAsFixed(1)} kg', style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                    Text('weight_start_label'.tr(),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textSecondary)),
+                    Text('${preWeight.toStringAsFixed(1)} kg',
+                        style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textPrimary)),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('weight_target_label'.tr(args: [week.toString()]), style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
-                    Text('${targetWeight.toStringAsFixed(1)} kg', style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: AppColors.successGreen)),
+                    Text('weight_target_label'.tr(args: [week.toString()]),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textSecondary)),
+                    Text('${targetWeight.toStringAsFixed(1)} kg',
+                        style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.successGreen)),
                   ],
                 ),
                 const Divider(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('weight_total_gain_label'.tr(), style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.primaryDark)),
+                    Text('weight_total_gain_label'.tr(),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryDark)),
                     Text(
                       '${diff >= 0 ? "+" : ""}${diff.toStringAsFixed(1)} kg',
                       style: GoogleFonts.outfit(
                         fontWeight: FontWeight.w800,
                         fontSize: 15,
-                        color: diff > 5.0 ? AppColors.secondaryPeach : AppColors.primaryDark,
+                        color: diff > 5.0
+                            ? AppColors.secondaryPeach
+                            : AppColors.primaryDark,
                       ),
                     ),
                   ],
@@ -198,4 +229,3 @@ class _WeightTrackerCardState extends State<WeightTrackerCard> {
     );
   }
 }
-

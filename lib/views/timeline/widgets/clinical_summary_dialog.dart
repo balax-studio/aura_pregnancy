@@ -60,13 +60,17 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
 
     buffer.writeln('AURA PREGNANCY - KLİNİK HEKİM ÖZETİ');
     buffer.writeln('────────────────────────────────────────');
-    buffer.writeln('Hasta (Anne): ${p?.momName ?? ec?.patientName ?? "Belirtilmedi"}');
-    buffer.writeln('Bebek: ${p?.babyName ?? "Belirtilmedi"} (${p?.babyGender ?? "-"})');
-    buffer.writeln('Gebelik Haftası: ${p?.currentWeek ?? 12}. Hafta');
+    buffer.writeln(
+        'Hasta (Anne): ${p?.momName ?? ec?.patientName ?? "Belirtilmedi"}');
+    buffer.writeln(
+        'Bebek: ${p?.babyName ?? "Belirtilmedi"} (${p?.babyGender ?? "-"})');
+    buffer.writeln('Gebelik Haftası: ${p?.currentPregnancyWeek ?? 12}. Hafta');
     buffer.writeln('Kan Grubu: ${ec?.bloodType ?? "Belirtilmedi"}');
-    buffer.writeln('Son Adet Tarihi (SAT): ${p?.lmpDate ?? ec?.lmpDate ?? "-"}');
+    buffer
+        .writeln('Son Adet Tarihi (SAT): ${p?.lmpDate ?? ec?.lmpDate ?? "-"}');
     buffer.writeln('Tahmini Doğum: ${p?.dueDate ?? ec?.dueDate ?? "-"}');
-    buffer.writeln('Başlangıç Kilo: ${p?.prePregnancyWeight ?? "-"} kg | Boy: ${p?.height ?? "-"} cm | VKİ: ${p?.vki ?? "-"}');
+    buffer.writeln(
+        'Başlangıç Kilo: ${p?.prePregnancyWeight ?? "-"} kg | Boy: ${p?.height ?? "-"} cm | VKİ: ${p?.vki ?? "-"}');
     if (ec != null && ec.doctorName.isNotEmpty) {
       buffer.writeln('Takip Eden Hekim: ${ec.doctorName} (${ec.doctorPhone})');
     }
@@ -80,7 +84,8 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
       buffer.writeln('Kronik Durumlar: ${ec.chronicDiseases}');
     }
     buffer.writeln('────────────────────────────────────────');
-    buffer.writeln('Rapor Tarihi: ${DateTime.now().toLocal().toString().split(" ")[0]}');
+    buffer.writeln(
+        'Rapor Tarihi: ${DateTime.now().toLocal().toString().split(" ")[0]}');
 
     return buffer.toString();
   }
@@ -102,7 +107,8 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
             content: Text('PDF oluşturulurken bir sorun oluştu: $e'),
             backgroundColor: Colors.redAccent,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
         );
       }
@@ -119,12 +125,16 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+            const Icon(Icons.check_circle_rounded,
+                color: Colors.white, size: 20),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 'doctor_report_copied'.tr(),
-                style: GoogleFonts.nunito(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13),
+                style: GoogleFonts.nunito(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13),
               ),
             ),
           ],
@@ -142,14 +152,16 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Container(
-        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
+        constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.85),
         padding: const EdgeInsets.all(22),
         decoration: ClayTheme.clayDecoration(
           color: AppColors.clayCardSurface,
           borderRadius: 32,
         ),
         child: _isLoading
-            ? const Center(child: CircularProgressIndicator(color: AppColors.primaryPink))
+            ? const Center(
+                child: CircularProgressIndicator(color: AppColors.primaryPink))
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -165,7 +177,8 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: const Center(
-                          child: Icon(Icons.medical_services_rounded, color: AppColors.clinicalGreen, size: 26),
+                          child: Icon(Icons.medical_services_rounded,
+                              color: AppColors.clinicalGreen, size: 26),
                         ),
                       ),
                       const SizedBox(width: 14),
@@ -194,7 +207,8 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                       ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close_rounded, color: AppColors.textSecondary),
+                        icon: const Icon(Icons.close_rounded,
+                            color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -208,29 +222,49 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                         children: [
                           _buildSectionTitle('doctor_report_general_info'.tr()),
                           _buildCard([
-                            _buildRow('Anne Adayı', _profile?.momName ?? _emergencyCard?.patientName ?? '-'),
-                            _buildRow('Bebek İsmi', _profile?.babyName ?? 'Bebeğimiz'),
-                            _buildRow('Gebelik Haftası', '${_profile?.currentWeek ?? 12}. Hafta'),
-                            _buildRow('SAT', _profile?.lmpDate ?? _emergencyCard?.lmpDate ?? '-'),
-                            _buildRow('Tahmini Doğum', _profile?.dueDate ?? _emergencyCard?.dueDate ?? '-'),
+                            _buildRow(
+                                'Anne Adayı',
+                                _profile?.momName ??
+                                    _emergencyCard?.patientName ??
+                                    '-'),
+                            _buildRow('Bebek İsmi',
+                                _profile?.babyName ?? 'Bebeğimiz'),
+                            _buildRow('Gebelik Haftası',
+                                '${_profile?.currentPregnancyWeek ?? 12}. Hafta'),
+                            _buildRow(
+                                'SAT',
+                                _profile?.lmpDate ??
+                                    _emergencyCard?.lmpDate ??
+                                    '-'),
+                            _buildRow(
+                                'Tahmini Doğum',
+                                _profile?.dueDate ??
+                                    _emergencyCard?.dueDate ??
+                                    '-'),
                           ]),
                           const SizedBox(height: 12),
-
                           _buildSectionTitle('doctor_report_health_info'.tr()),
                           _buildCard([
-                            _buildRow('Kan Grubu', _emergencyCard?.bloodType ?? '-'),
-                            _buildRow('Başlangıç Kilosu', '${_profile?.prePregnancyWeight ?? "-"} kg'),
-                            _buildRow('Boy & VKİ', '${_profile?.height ?? "-"} cm  (VKİ: ${_profile?.vki ?? "-"})'),
+                            _buildRow(
+                                'Kan Grubu', _emergencyCard?.bloodType ?? '-'),
+                            _buildRow('Başlangıç Kilosu',
+                                '${_profile?.prePregnancyWeight ?? "-"} kg'),
+                            _buildRow('Boy & VKİ',
+                                '${_profile?.height ?? "-"} cm  (VKİ: ${_profile?.vki ?? "-"})'),
                           ]),
                           const SizedBox(height: 12),
-
-                          if (_emergencyCard != null && _emergencyCard!.doctorName.isNotEmpty) ...[
-                            _buildSectionTitle('doctor_report_emergency_info'.tr()),
+                          if (_emergencyCard != null &&
+                              _emergencyCard!.doctorName.isNotEmpty) ...[
+                            _buildSectionTitle(
+                                'doctor_report_emergency_info'.tr()),
                             _buildCard([
-                              _buildRow('Doktor', '${_emergencyCard!.doctorName} (${_emergencyCard!.doctorPhone})'),
-                              _buildRow('Hastane', _emergencyCard!.hospitalName),
+                              _buildRow('Doktor',
+                                  '${_emergencyCard!.doctorName} (${_emergencyCard!.doctorPhone})'),
+                              _buildRow(
+                                  'Hastane', _emergencyCard!.hospitalName),
                               if (_emergencyCard!.allergies.isNotEmpty)
-                                _buildRow('Alerjiler', _emergencyCard!.allergies),
+                                _buildRow(
+                                    'Alerjiler', _emergencyCard!.allergies),
                             ]),
                             const SizedBox(height: 12),
                           ],
@@ -253,7 +287,8 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                           const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primaryPink),
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: AppColors.primaryPink),
                           ),
                           const SizedBox(width: 10),
                           Text(
@@ -265,7 +300,8 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                             ),
                           ),
                         ] else ...[
-                          const Icon(Icons.picture_as_pdf_rounded, color: AppColors.primaryPink, size: 20),
+                          const Icon(Icons.picture_as_pdf_rounded,
+                              color: AppColors.primaryPink, size: 20),
                           const SizedBox(width: 8),
                           Text(
                             'doctor_report_pdf_btn'.tr(),
@@ -290,7 +326,8 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.copy_rounded, color: AppColors.clinicalGreen, size: 18),
+                        const Icon(Icons.copy_rounded,
+                            color: AppColors.clinicalGreen, size: 18),
                         const SizedBox(width: 8),
                         Text(
                           'doctor_report_copy_btn'.tr(),

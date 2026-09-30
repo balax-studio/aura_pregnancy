@@ -68,7 +68,7 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
 
   void _showClinicalSummaryModal() {
     HapticFeedback.selectionClick();
-    final week = _profile?.currentWeek ?? 12;
+    final week = _profile?.currentPregnancyWeek ?? 12;
     final babyName = _profile?.babyDisplayName ?? 'Bebeğiniz';
     final momName = _profile?.momName ?? 'Anne Adayı';
     final dueDate = _profile?.dueDate ?? '-';
@@ -106,7 +106,8 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
                     color: AppColors.clayMint,
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Icon(Icons.medical_services_rounded, color: AppColors.successGreen, size: 24),
+                  child: const Icon(Icons.medical_services_rounded,
+                      color: AppColors.successGreen, size: 24),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -143,11 +144,13 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
                   const Divider(height: 16),
                   _buildClinicRow('clinic_row_baby'.tr(), babyName),
                   const Divider(height: 16),
-                  _buildClinicRow('clinic_row_week'.tr(), 'week_num_format'.tr(args: [week.toString()])),
+                  _buildClinicRow('clinic_row_week'.tr(),
+                      'week_num_format'.tr(args: [week.toString()])),
                   const Divider(height: 16),
                   _buildClinicRow('clinic_row_edd'.tr(), dueDate),
                   const Divider(height: 16),
-                  _buildClinicRow('clinic_row_weight'.tr(), '${_profile?.prePregnancyWeight ?? '-'} kg (${'clinic_weight_initial'.tr()})'),
+                  _buildClinicRow('clinic_row_weight'.tr(),
+                      '${_profile?.prePregnancyWeight ?? '-'} kg (${'clinic_weight_initial'.tr()})'),
                 ],
               ),
             ),
@@ -158,7 +161,8 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
               borderRadius: 16,
               onPressed: () {
                 Clipboard.setData(ClipboardData(
-                  text: 'Aura Gebelik Özeti:\nAnne: $momName\nBebek: $babyName\nHafta: $week\nEDD: $dueDate',
+                  text:
+                      'Aura Gebelik Özeti:\nAnne: $momName\nBebek: $babyName\nHafta: $week\nEDD: $dueDate',
                 ));
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -192,11 +196,17 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
       children: [
         Text(
           label,
-          style: GoogleFonts.plusJakartaSans(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textSecondary),
         ),
         Text(
           value,
-          style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+          style: GoogleFonts.outfit(
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+              color: AppColors.primaryDark),
         ),
       ],
     );
@@ -207,7 +217,8 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
     if (_isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator(color: AppColors.primaryPink)),
+        body: Center(
+            child: CircularProgressIndicator(color: AppColors.primaryPink)),
       );
     }
 
@@ -370,7 +381,8 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
                       color: AppColors.clayRose,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: const Icon(Icons.grid_view_rounded, color: AppColors.primaryPink, size: 26),
+                    child: const Icon(Icons.grid_view_rounded,
+                        color: AppColors.primaryPink, size: 26),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -437,10 +449,13 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
                               ),
                             ),
                             child: Center(
-                              child: Icon(tool.icon, color: tool.accentColor, size: 22),
+                              child: Icon(tool.icon,
+                                  color: tool.accentColor, size: 22),
                             ),
                           ),
-                          Icon(Icons.arrow_forward_ios_rounded, size: 13, color: tool.accentColor.withValues(alpha: 0.6)),
+                          Icon(Icons.arrow_forward_ios_rounded,
+                              size: 13,
+                              color: tool.accentColor.withValues(alpha: 0.6)),
                         ],
                       ),
                       const Spacer(),

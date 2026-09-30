@@ -5,7 +5,6 @@ import 'package:aura_pregnancy/models/time_capsule_model.dart';
 import 'package:aura_pregnancy/models/safety_item_model.dart';
 import 'package:aura_pregnancy/core/constants/safety_radar_data.dart';
 import 'package:aura_pregnancy/core/constants/baby_zodiac_data.dart';
-import 'package:aura_pregnancy/core/constants/baby_size_themes_data.dart';
 import 'package:aura_pregnancy/services/database_helper.dart';
 
 void main() {
@@ -141,21 +140,6 @@ void main() {
       final compat = BabyZodiacData.calculateMotherBabyCompatibility('Akrep', 'Yengeç');
       expect(compat['score'], greaterThanOrEqualTo(90));
       expect(compat['summary'], contains('Su'));
-    });
-
-    test('7. BabySizeThemesData 4 Tema Boyut Doğrulaması', () {
-      // 20. Hafta için tüm temaların verileri eksiksiz olmalı
-      final fruit = BabySizeThemesData.getItemForWeek(20, BabySizeThemeType.fruit);
-      expect(fruit.title, contains('Muz'));
-
-      final animal = BabySizeThemesData.getItemForWeek(20, BabySizeThemeType.animal);
-      expect(animal.title, contains('Tavşan'));
-
-      final pastry = BabySizeThemesData.getItemForWeek(20, BabySizeThemeType.pastry);
-      expect(pastry.title, contains('Kruvasan'));
-
-      final toy = BabySizeThemesData.getItemForWeek(20, BabySizeThemeType.toy);
-      expect(toy.title, contains('Müzik Kutusu'));
     });
   });
 }

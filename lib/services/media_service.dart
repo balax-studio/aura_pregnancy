@@ -10,13 +10,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import '../core/constants/app_colors.dart';
 import '../core/theme/clay_theme.dart';
+import 'web_download_stub.dart' if (dart.library.html) 'web_download_web.dart';
 
 /// Aura Pregnancy - Medya ve Fotoğraf Yönetim Servisi
 class MediaService {
   MediaService._internal();
   static final MediaService instance = MediaService._internal();
 
-  static const MethodChannel _galleryChannel = MethodChannel('com.balaxstudio.aura/gallery');
+  static const MethodChannel _galleryChannel =
+      MethodChannel('com.balaxstudio.aura/gallery');
   final ImagePicker _picker = ImagePicker();
 
   /// Görseli cihaza / galeriye kaydeder (Android'de MediaStore Fotoğraflar ve İndirilenler albümü, iOS'ta Fotoğraflar)
@@ -24,7 +26,17 @@ class MediaService {
     required Uint8List imageBytes,
     required String fileNamePrefix,
   }) async {
-    if (kIsWeb) return false;
+    if (kIsWeb) {
+      try {
+        final fileName =
+            '${fileNamePrefix}_${DateTime.now().millisecondsSinceEpoch}.png';
+        downloadImageWeb(imageBytes, fileName);
+        return true;
+      } catch (e) {
+        debugPrint('Web image download error: $e');
+        return false;
+      }
+    }
 
     // Mobil (Android & iOS): Yerel MethodChannel ile doğrudan sistem galerisi ve indirilenlere kaydet
     if (Platform.isAndroid || Platform.isIOS) {
@@ -46,7 +58,8 @@ class MediaService {
     // Masaüstü / Simülatör Test Fallback
     try {
       final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/${fileNamePrefix}_${DateTime.now().millisecondsSinceEpoch}.png');
+      final file = File(
+          '${dir.path}/${fileNamePrefix}_${DateTime.now().millisecondsSinceEpoch}.png');
       await file.writeAsBytes(imageBytes);
       return true;
     } catch (e) {
@@ -92,7 +105,8 @@ class MediaService {
 
               Row(
                 children: [
-                  const Icon(Icons.camera_alt_rounded, color: AppColors.primaryPink, size: 24),
+                  const Icon(Icons.camera_alt_rounded,
+                      color: AppColors.primaryPink, size: 24),
                   const SizedBox(width: 8),
                   Text(
                     'media_picker_title'.tr(),
@@ -107,7 +121,10 @@ class MediaService {
               const SizedBox(height: 6),
               Text(
                 'media_picker_subtitle'.tr(),
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 18),
 
@@ -199,12 +216,16 @@ class MediaService {
                       const SizedBox(height: 2),
                       Text(
                         subtitle,
-                        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios_rounded, size: 14, color: iconColor.withValues(alpha: 0.7)),
+                Icon(Icons.arrow_forward_ios_rounded,
+                    size: 14, color: iconColor.withValues(alpha: 0.7)),
               ],
             ),
           ),
@@ -254,7 +275,8 @@ class MediaService {
         final cameraStatus = await Permission.camera.request();
         if (cameraStatus.isPermanentlyDenied) {
           if (context.mounted) {
-            _showPermissionDialog(context, 'media_perm_camera_title'.tr(), 'media_perm_camera_desc'.tr());
+            _showPermissionDialog(context, 'media_perm_camera_title'.tr(),
+                'media_perm_camera_desc'.tr());
           }
           return null;
         }
@@ -303,7 +325,8 @@ class MediaService {
 
     if (status.isPermanentlyDenied) {
       if (context.mounted) {
-        _showPermissionDialog(context, 'media_perm_gallery_title'.tr(), 'media_perm_gallery_desc'.tr());
+        _showPermissionDialog(context, 'media_perm_gallery_title'.tr(),
+            'media_perm_gallery_desc'.tr());
       }
       return false;
     }
@@ -326,8 +349,11 @@ class MediaService {
         await memoriesDir.create(recursive: true);
       }
 
-      final extension = p.extension(pickedFile.path).isNotEmpty ? p.extension(pickedFile.path) : '.jpg';
-      final fileName = 'memory_photo_${DateTime.now().millisecondsSinceEpoch}$extension';
+      final extension = p.extension(pickedFile.path).isNotEmpty
+          ? p.extension(pickedFile.path)
+          : '.jpg';
+      final fileName =
+          'memory_photo_${DateTime.now().millisecondsSinceEpoch}$extension';
       final targetPath = p.join(memoriesDir.path, fileName);
 
       final bytes = await pickedFile.readAsBytes();
@@ -341,7 +367,8 @@ class MediaService {
   }
 
   /// İzin Yönlendirme Diyaloğu
-  static void _showPermissionDialog(BuildContext context, String title, String message) {
+  static void _showPermissionDialog(
+      BuildContext context, String title, String message) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -350,11 +377,18 @@ class MediaService {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         title: Text(
           title,
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 17, color: AppColors.primaryDark),
+          style: GoogleFonts.outfit(
+              fontWeight: FontWeight.w900,
+              fontSize: 17,
+              color: AppColors.primaryDark),
         ),
         content: Text(
           message,
-          style: GoogleFonts.plusJakartaSans(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w600, height: 1.4),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w600,
+              height: 1.4),
         ),
         actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
@@ -369,7 +403,10 @@ class MediaService {
                   child: Center(
                     child: Text(
                       'common_cancel_opt'.tr(),
-                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.textSecondary),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                          color: AppColors.textSecondary),
                     ),
                   ),
                 ),
@@ -387,7 +424,10 @@ class MediaService {
                   child: Center(
                     child: Text(
                       'media_perm_open_settings'.tr(),
-                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800, fontSize: 13, color: Colors.white),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                          color: Colors.white),
                     ),
                   ),
                 ),
@@ -484,7 +524,10 @@ class MediaService {
             SizedBox(height: 4),
             Text(
               'Ultrason & Anı Fotoğrafı',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF7A6E78)),
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF7A6E78)),
             ),
           ],
         ),

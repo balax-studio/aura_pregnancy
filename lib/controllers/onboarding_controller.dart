@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/profile_model.dart';
 import '../../services/medical_calculator.dart';
+import '../../services/pregnancy_progress.dart';
 import '../../services/database_helper.dart';
 import '../../utils/date_utils.dart';
 
@@ -9,8 +10,9 @@ enum DateInputMode { lmp, dueDate }
 /// Onboarding ve Profil Oluşturma Durum Yöneticisi (Anne, Bebek İsmi ve Cinsiyet Destekli)
 class OnboardingController extends ChangeNotifier {
   DateInputMode inputMode = DateInputMode.lmp;
-  DateTime selectedDate = DateTime.now().subtract(const Duration(days: 70)); // Varsayılan ~10. Hafta
-  
+  DateTime selectedDate = DateTime.now()
+      .subtract(const Duration(days: 70)); // Varsayılan ~10. Hafta
+
   double heightCm = 165.0;
   double prePregnancyWeightKg = 60.0;
 
@@ -36,13 +38,12 @@ class OnboardingController extends ChangeNotifier {
     return selectedDate;
   }
 
-  int get currentWeek {
-    return MedicalCalculator.calculateCurrentWeekFromLmp(calculatedLmp);
-  }
+  PregnancyProgress get pregnancyProgress =>
+      PregnancyProgress.fromLmpDate(calculatedLmp);
 
-  int get trimester {
-    return MedicalCalculator.getTrimester(currentWeek);
-  }
+  int get currentWeek => pregnancyProgress.displayWeek;
+
+  int get trimester => pregnancyProgress.trimester;
 
   double get vki {
     return MedicalCalculator.calculateVki(

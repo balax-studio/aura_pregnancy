@@ -37,24 +37,27 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
     final mom = p?.momName ?? 'Annemiz';
     final partner = p?.partnerName ?? 'Babamız';
     final baby = p?.babyDisplayName ?? 'Bebeğimiz';
-    final week = p?.currentWeek ?? 20;
+    final week = p?.currentPregnancyWeek ?? 20;
 
     final cards = [
       {
         'title': 'Bebekten Babaya Mektup 💌',
-        'message': 'Babacığım ($partner) selam! Bugün $week. haftamızdayız. Kulaklarım artık senin sesini tanıyor. Anneme ($mom) sıcacık sarılmanı ve karnımı sevmeni bekliyorum! 💕',
+        'message':
+            'Babacığım ($partner) selam! Bugün $week. haftamızdayız. Kulaklarım artık senin sesini tanıyor. Anneme ($mom) sıcacık sarılmanı ve karnımı sevmeni bekliyorum! 💕',
         'emoji': '👶',
         'accent': AppColors.clayRose,
       },
       {
         'title': 'Bugün Anneye Nasıl Destek Olabilirsin? 🌸',
-        'message': 'Günün Baba Tavsiyesi: Sevgili $partner, $mom bugün hormonlar ve $week. haftanın ağırlığıyla biraz yorulmuş olabilir. Ona ılık bir ayak masajı yapmak veya akşam yemeğini hazırlamak harika bir sürpriz olur! ☕',
+        'message':
+            'Günün Baba Tavsiyesi: Sevgili $partner, $mom bugün hormonlar ve $week. haftanın ağırlığıyla biraz yorulmuş olabilir. Ona ılık bir ayak masajı yapmak veya akşam yemeğini hazırlamak harika bir sürpriz olur! ☕',
         'emoji': '💆‍♀️',
         'accent': AppColors.clayPeach,
       },
       {
         'title': 'Günün Minik Aşermesi 🍓',
-        'message': 'Babası ($partner), $baby bugün lezzetli bir şeyler istiyor gibi! Annemizin ($mom) canı tatlı bir meyve çekiyor, eve gelirken sürpriz yapmaya ne dersin? 🍇',
+        'message':
+            'Babası ($partner), $baby bugün lezzetli bir şeyler istiyor gibi! Annemizin ($mom) canı tatlı bir meyve çekiyor, eve gelirken sürpriz yapmaya ne dersin? 🍇',
         'emoji': '✨',
         'accent': AppColors.clayMint,
       },
@@ -72,7 +75,8 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
             _buildAppBar(context),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Column(
                   children: [
                     _buildTemplateSelector(cards),
@@ -103,7 +107,8 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
             height: 44,
             borderRadius: 16,
             padding: EdgeInsets.zero,
-            child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.primaryDark),
+            child: const Icon(Icons.arrow_back_ios_new_rounded,
+                size: 18, color: AppColors.primaryDark),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -134,7 +139,8 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
               color: AppColors.clayRose,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.mark_email_unread_rounded, size: 20, color: AppColors.primaryDark),
+            child: const Icon(Icons.mark_email_unread_rounded,
+                size: 20, color: AppColors.primaryDark),
           ),
         ],
       ),
@@ -157,7 +163,8 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
               },
               borderRadius: BorderRadius.circular(16),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.primaryPink : Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -171,14 +178,18 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
                 ),
                 child: Row(
                   children: [
-                    Text(c['emoji'] as String, style: const TextStyle(fontSize: 15)),
+                    Text(c['emoji'] as String,
+                        style: const TextStyle(fontSize: 15)),
                     const SizedBox(width: 6),
                     Text(
-                      index == 0 ? 'Bebekten Mektup' : (index == 1 ? 'Anneye Destek' : 'Minik Aşerme'),
+                      index == 0
+                          ? 'Bebekten Mektup'
+                          : (index == 1 ? 'Anneye Destek' : 'Minik Aşerme'),
                       style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: isSelected ? Colors.white : AppColors.textSecondary,
+                        color:
+                            isSelected ? Colors.white : AppColors.textSecondary,
                       ),
                     ),
                   ],
@@ -201,7 +212,8 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
         children: [
           Row(
             children: [
-              Text(card['emoji'] as String, style: const TextStyle(fontSize: 32)),
+              Text(card['emoji'] as String,
+                  style: const TextStyle(fontSize: 32)),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -245,7 +257,8 @@ class _PartnerShareScreenState extends State<PartnerShareScreen> {
                   color: AppColors.textSecondary,
                 ),
               ),
-              const Icon(Icons.favorite_rounded, size: 16, color: AppColors.primaryPink),
+              const Icon(Icons.favorite_rounded,
+                  size: 16, color: AppColors.primaryPink),
             ],
           ),
         ],

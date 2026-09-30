@@ -30,24 +30,27 @@ class _PartnerShareModalState extends State<PartnerShareModal> {
     final mom = p?.momName ?? 'Annemiz';
     final partner = p?.partnerName ?? 'Babamız';
     final baby = p?.babyDisplayName ?? 'Bebeğimiz';
-    final week = p?.currentWeek ?? 20;
+    final week = p?.currentPregnancyWeek ?? 20;
 
     final cards = [
       {
         'title': 'Bebekten Babaya Mektup 💌',
-        'message': 'Babacığım ($partner) selam! Bugün $week. haftamızdayız. Kulaklarım artık senin sesini tanıyor. Anneme ($mom) sıcacık sarılmanı ve karnımı sevmeni bekliyorum! 💕',
+        'message':
+            'Babacığım ($partner) selam! Bugün $week. haftamızdayız. Kulaklarım artık senin sesini tanıyor. Anneme ($mom) sıcacık sarılmanı ve karnımı sevmeni bekliyorum! 💕',
         'emoji': '👶',
         'accent': AppColors.clayRose,
       },
       {
         'title': 'Bugün Anneye Nasıl Destek Olabilirsin? 🌸',
-        'message': 'Günün Baba Tavsiyesi: Sevgili $partner, $mom bugün hormonlar ve $week. haftanın ağırlığıyla biraz yorulmuş olabilir. Ona ılık bir ayak masajı yapmak veya akşam yemeğini hazırlamak harika bir sürpriz olur! ☕',
+        'message':
+            'Günün Baba Tavsiyesi: Sevgili $partner, $mom bugün hormonlar ve $week. haftanın ağırlığıyla biraz yorulmuş olabilir. Ona ılık bir ayak masajı yapmak veya akşam yemeğini hazırlamak harika bir sürpriz olur! ☕',
         'emoji': '💆‍♀️',
         'accent': AppColors.clayPeach,
       },
       {
         'title': 'Günün Minik Aşermesi 🍓',
-        'message': 'Babası ($partner), $baby bugün lezzetli bir şeyler istiyor gibi! Annemizin ($mom) canı tatlı bir meyve çekiyor, eve gelirken sürpriz yapmaya ne dersin? 🍇',
+        'message':
+            'Babası ($partner), $baby bugün lezzetli bir şeyler istiyor gibi! Annemizin ($mom) canı tatlı bir meyve çekiyor, eve gelirken sürpriz yapmaya ne dersin? 🍇',
         'emoji': '✨',
         'accent': AppColors.clayMint,
       },
@@ -130,9 +133,12 @@ class _PartnerShareModalState extends State<PartnerShareModal> {
                   },
                   child: Container(
                     margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected ? AppColors.primaryPink : AppColors.clayCardSurface,
+                      color: isSelected
+                          ? AppColors.primaryPink
+                          : AppColors.clayCardSurface,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Text(
@@ -140,7 +146,8 @@ class _PartnerShareModalState extends State<PartnerShareModal> {
                       style: GoogleFonts.outfit(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: isSelected ? Colors.white : AppColors.textSecondary,
+                        color:
+                            isSelected ? Colors.white : AppColors.textSecondary,
                       ),
                     ),
                   ),
@@ -211,7 +218,8 @@ class _PartnerShareModalState extends State<PartnerShareModal> {
                   child: InkWell(
                     onTap: () {
                       HapticFeedback.mediumImpact();
-                      Clipboard.setData(ClipboardData(text: currentCard['message'] as String));
+                      Clipboard.setData(ClipboardData(
+                          text: currentCard['message'] as String));
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -230,7 +238,8 @@ class _PartnerShareModalState extends State<PartnerShareModal> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.copy_rounded, color: Colors.white, size: 18),
+                          const Icon(Icons.copy_rounded,
+                              color: Colors.white, size: 18),
                           const SizedBox(width: 8),
                           Text(
                             'Mesajı Kopyala & Gönder',

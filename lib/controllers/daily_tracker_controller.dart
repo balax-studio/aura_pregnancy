@@ -15,8 +15,10 @@ class DailyTrackerController extends ChangeNotifier {
   ProfileModel? get profile => _profile;
   bool get isLoading => _isLoading;
 
-  int get currentWeek => _profile?.currentWeek ?? 12;
-  int get trimester => MedicalCalculator.getTrimester(currentWeek);
+  int get currentWeek => _profile?.currentPregnancyWeek ?? 12;
+  int get trimester =>
+      _profile?.pregnancyProgress.trimester ??
+      MedicalCalculator.getTrimester(currentWeek);
 
   /// Başlangıç verilerini veritabanından yükle
   Future<void> loadTodayData() async {

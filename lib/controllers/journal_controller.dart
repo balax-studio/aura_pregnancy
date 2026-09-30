@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../models/diary_model.dart';
 import '../../models/profile_model.dart';
 import '../../services/database_helper.dart';
+import '../../services/pregnancy_progress.dart';
 import '../../utils/date_utils.dart';
 
 /// Aura Journal (Romantik Anı Günlüğü) Controller'ı
@@ -15,7 +16,7 @@ class JournalController extends ChangeNotifier {
   ProfileModel? get profile => _profile;
   bool get isLoading => _isLoading;
 
-  int get currentWeek => _profile?.currentWeek ?? 12;
+  int get currentWeek => _profile?.currentPregnancyWeek ?? 12;
 
   List<DiaryModel> get highlightEntries =>
       _entries.where((e) => e.isRomanticHighlight).toList();
@@ -41,10 +42,12 @@ class JournalController extends ChangeNotifier {
           moodRating: 5,
           isRomanticHighlight: true,
         );
-        
+
         final sample2 = DiaryModel(
           pregnancyWeek: 8,
-          date: calculatedDates['week8'] ?? AppDateUtils.toIso(DateTime.now().subtract(const Duration(days: 28))),
+          date: calculatedDates['week8'] ??
+              AppDateUtils.toIso(
+                  DateTime.now().subtract(const Duration(days: 28))),
           noteText: 'sample_diary_note_2'.tr(),
           audioPath: 'assets/audio/voice_letter.m4a',
           moodRating: 5,
@@ -65,31 +68,23 @@ class JournalController extends ChangeNotifier {
 
   /// Kullanıcının SAT (LMP) veya Tahmini Doğum Tarihine göre haftalık kesin tarihleri hesaplar
   Map<String, String> _calculateAccurateMilestoneDates(ProfileModel? prof) {
-    DateTime? lmp;
-
-    if (prof?.lmpDate != null && prof!.lmpDate!.isNotEmpty) {
-      try {
-        lmp = DateTime.parse(prof.lmpDate!);
-      } catch (_) {}
-    }
-
-    if (lmp == null && prof?.dueDate != null && prof!.dueDate.isNotEmpty) {
-      try {
-        final due = DateTime.parse(prof.dueDate);
-        lmp = due.subtract(const Duration(days: 280));
-      } catch (_) {}
-    }
+    DateTime? lmp = prof == null
+        ? null
+        : PregnancyProgress.resolveLmpDate(
+            lmpDate: prof.lmpDate,
+            dueDate: prof.dueDate,
+          );
 
     // Eğer profilde SAT veya Due yoksa mevcut haftaya göre lmp kestir
-    if (lmp == null) {
-      final curWeek = prof?.currentWeek ?? 12;
-      lmp = DateTime.now().subtract(Duration(days: (curWeek - 1) * 7));
-    }
+    lmp ??= PregnancyProgress.addCalendarDays(
+      DateTime.now(),
+      -((prof?.currentPregnancyWeek ?? 12) - 1) * 7,
+    );
 
     // 8. Hafta: 7 hafta + 3 gün (52. gün)
-    final dateWeek8 = lmp.add(const Duration(days: 7 * 7 + 3));
+    final dateWeek8 = PregnancyProgress.addCalendarDays(lmp, 7 * 7 + 3);
     // 12. Hafta: 11 hafta + 3 gün (80. gün)
-    final dateWeek12 = lmp.add(const Duration(days: 11 * 7 + 3));
+    final dateWeek12 = PregnancyProgress.addCalendarDays(lmp, 11 * 7 + 3);
 
     return {
       'week8': AppDateUtils.toIso(dateWeek8),

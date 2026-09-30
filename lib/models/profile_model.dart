@@ -1,16 +1,18 @@
+import '../services/pregnancy_progress.dart';
+
 /// Aura Pregnancy - Gebelik Profili Modeli (Anne, Bebek İsmi ve Cinsiyet Destekli)
 class ProfileModel {
   final int? id;
-  final String dueDate;              // Tahmini Doğum Tarihi (YYYY-MM-DD)
-  final String? lmpDate;             // Son Adet Tarihi (SAT) (YYYY-MM-DD)
-  final double prePregnancyWeight;   // Hamilelik öncesi kilo (kg)
-  final double height;               // Boy (cm)
-  final double vki;                  // Vücut Kitle İndeksi (Kilo / (Boy/100)^2)
-  final int currentWeek;             // Mevcut gebelik haftası (1-40)
-  final String? momName;             // Anne İsmi (Örn: Elif)
-  final String? partnerName;         // Baba / Eş İsmi (Örn: Emre)
-  final String? babyName;            // Bebeğin İsmi (Örn: Ayşe, Mehmet, Mavi)
-  final String? babyGender;          // Bebeğin Cinsiyeti ('girl', 'boy', 'surprise')
+  final String dueDate; // Tahmini Doğum Tarihi (YYYY-MM-DD)
+  final String? lmpDate; // Son Adet Tarihi (SAT) (YYYY-MM-DD)
+  final double prePregnancyWeight; // Hamilelik öncesi kilo (kg)
+  final double height; // Boy (cm)
+  final double vki; // Vücut Kitle İndeksi (Kilo / (Boy/100)^2)
+  final int currentWeek; // Mevcut gebelik haftası (1-40)
+  final String? momName; // Anne İsmi (Örn: Elif)
+  final String? partnerName; // Baba / Eş İsmi (Örn: Emre)
+  final String? babyName; // Bebeğin İsmi (Örn: Ayşe, Mehmet, Mavi)
+  final String? babyGender; // Bebeğin Cinsiyeti ('girl', 'boy', 'surprise')
 
   ProfileModel({
     this.id,
@@ -73,6 +75,16 @@ class ProfileModel {
     return 'Bebeğiniz';
   }
 
+  /// Runtime age comes from the saved dates. [currentWeek] remains the stored
+  /// snapshot so existing database records keep their original value.
+  PregnancyProgress get pregnancyProgress => PregnancyProgress.fromDateStrings(
+        lmpDate: lmpDate,
+        dueDate: dueDate,
+        fallbackWeek: currentWeek,
+      );
+
+  int get currentPregnancyWeek => pregnancyProgress.displayWeek;
+
   /// Bebeğin Sade Adı (Örn: "Ayşe" veya "Bebeğiniz")
   String get babySimpleName {
     if (babyName != null && babyName!.trim().isNotEmpty) {
@@ -113,12 +125,8 @@ class ProfileModel {
     return 'Obese';
   }
 
-  /// Trimester Belirleyici (1: 1-13, 2: 14-27, 3: 28-40)
-  int get trimester {
-    if (currentWeek <= 13) return 1;
-    if (currentWeek <= 27) return 2;
-    return 3;
-  }
+  /// Trimester follows the current date-derived pregnancy progress.
+  int get trimester => pregnancyProgress.trimester;
 
   ProfileModel copyWith({
     int? id,

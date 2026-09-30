@@ -25,7 +25,8 @@ Future<String?> recordAndDownloadVideoWeb({
     fileExt = '.mp4';
   } else if (html.MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
     mimeType = 'video/webm;codecs=h264';
-    fileExt = '.mp4'; // H264 içeren webm dosyaları MP4 oynatıcılarla tam uyumludur
+    fileExt =
+        '.mp4'; // H264 içeren webm dosyaları MP4 oynatıcılarla tam uyumludur
   } else if (html.MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
     mimeType = 'video/webm;codecs=vp8';
     fileExt = '.webm';
@@ -46,7 +47,9 @@ Future<String?> recordAndDownloadVideoWeb({
 
   final completer = Completer<String?>();
 
-  final actualFileName = fileName.replaceAll(RegExp(r'\.(mp4|webm)$', caseSensitive: false), '') + fileExt;
+  final actualFileName =
+      fileName.replaceAll(RegExp(r'\.(mp4|webm)$', caseSensitive: false), '') +
+          fileExt;
 
   recorder.addEventListener('stop', (event) {
     final blob = html.Blob(chunks, mimeType);
@@ -85,7 +88,8 @@ Future<String?> recordAndDownloadVideoWeb({
     html.ImageElement? img;
     try {
       img = html.ImageElement(src: photoUrl);
-      await img.onLoad.first.timeout(const Duration(milliseconds: 500), onTimeout: () => html.Event('timeout'));
+      await img.onLoad.first.timeout(const Duration(milliseconds: 500),
+          onTimeout: () => html.Event('timeout'));
     } catch (_) {}
 
     for (int f = 0; f < framesPerSlide; f++) {
@@ -157,7 +161,8 @@ Future<String?> recordAndDownloadVideoWeb({
   return await completer.future;
 }
 
-void _drawRoundRect(html.CanvasRenderingContext2D ctx, num x, num y, num w, num h, num r) {
+void _drawRoundRect(
+    html.CanvasRenderingContext2D ctx, num x, num y, num w, num h, num r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.lineTo(x + w - r, y);
@@ -172,7 +177,8 @@ void _drawRoundRect(html.CanvasRenderingContext2D ctx, num x, num y, num w, num 
   ctx.fill();
 }
 
-void _drawWrappedText(html.CanvasRenderingContext2D ctx, String text, num x, num y, num maxWidth, num lineHeight) {
+void _drawWrappedText(html.CanvasRenderingContext2D ctx, String text, num x,
+    num y, num maxWidth, num lineHeight) {
   final words = text.split(' ');
   var line = '';
   var currentY = y;
@@ -196,6 +202,19 @@ void _drawWrappedText(html.CanvasRenderingContext2D ctx, String text, num x, num
 /// Basit indirme yardımcı fonksiyonu
 void downloadFileWeb(Uint8List bytes, String fileName) {
   final blob = html.Blob([bytes], 'video/mp4');
+  final url = html.Url.createObjectUrlFromBlob(blob);
+  final anchor = html.AnchorElement(href: url)
+    ..setAttribute('download', fileName)
+    ..style.display = 'none';
+  html.document.body?.children.add(anchor);
+  anchor.click();
+  html.document.body?.children.remove(anchor);
+  html.Url.revokeObjectUrl(url);
+}
+
+/// PNG portresini tarayıcının indirme akışına gönderir.
+void downloadImageWeb(Uint8List bytes, String fileName) {
+  final blob = html.Blob([bytes], 'image/png');
   final url = html.Url.createObjectUrlFromBlob(blob);
   final anchor = html.AnchorElement(href: url)
     ..setAttribute('download', fileName)

@@ -23,8 +23,10 @@ class EmergencyController extends ChangeNotifier {
       _profile = await DatabaseHelper.instance.getProfile();
       final lmp = _profile?.lmpDate ?? AppDateUtils.todayIso();
       final due = _profile?.dueDate ?? AppDateUtils.todayIso();
-      final week = _profile?.currentWeek ?? 12;
-      final momName = _profile?.momName?.isNotEmpty == true ? _profile!.momName! : 'Anne Adayı';
+      final week = _profile?.currentPregnancyWeek ?? 12;
+      final momName = _profile?.momName?.isNotEmpty == true
+          ? _profile!.momName!
+          : 'Anne Adayı';
 
       final savedCard = await DatabaseHelper.instance.getEmergencyCard();
       if (savedCard != null) {
@@ -44,7 +46,9 @@ class EmergencyController extends ChangeNotifier {
           allergies: 'İlaç alerjisi bildirilmedi',
           chronicDiseases: 'Yok',
           medications: 'Folik Asit, Magnezyum, Demir Takviyesi',
-          emergencyContactName: _profile?.partnerName?.isNotEmpty == true ? _profile!.partnerName! : 'Acil Yakını (Eş)',
+          emergencyContactName: _profile?.partnerName?.isNotEmpty == true
+              ? _profile!.partnerName!
+              : 'Acil Yakını (Eş)',
           emergencyContactPhone: '+90 555 000 11 22',
           doctorName: 'Uzm. Dr. Zeynep Kaya (Kadın Hastalıkları ve Doğum)',
           doctorPhone: '+90 532 111 22 33',

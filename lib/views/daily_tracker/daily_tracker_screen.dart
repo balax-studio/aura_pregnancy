@@ -71,7 +71,8 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.spa_rounded, color: AppColors.lavenderPurple, size: 18),
+                  const Icon(Icons.spa_rounded,
+                      color: AppColors.lavenderPurple, size: 18),
                   const SizedBox(width: 6),
                   Text(
                     'daily_vitality_balance'.tr(),
@@ -90,7 +91,8 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  'daily_vitality_fluid_target'.tr(args: [(waterProgress * 100).toInt().toString()]),
+                  'daily_vitality_fluid_target'
+                      .tr(args: [(waterProgress * 100).toInt().toString()]),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10.5,
                     fontWeight: FontWeight.w800,
@@ -117,9 +119,18 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
 
   Widget _buildFilterBar() {
     final filters = [
-      {'label': 'daily_filter_all'.tr(), 'icon': Icons.dashboard_customize_rounded},
-      {'label': 'daily_filter_nutrition'.tr(), 'icon': Icons.local_dining_rounded},
-      {'label': 'daily_filter_body'.tr(), 'icon': Icons.directions_walk_rounded},
+      {
+        'label': 'daily_filter_all'.tr(),
+        'icon': Icons.dashboard_customize_rounded
+      },
+      {
+        'label': 'daily_filter_nutrition'.tr(),
+        'icon': Icons.local_dining_rounded
+      },
+      {
+        'label': 'daily_filter_body'.tr(),
+        'icon': Icons.directions_walk_rounded
+      },
     ];
 
     return Container(
@@ -162,7 +173,8 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     filters[index]['label'] as String,
                     style: GoogleFonts.outfit(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
+                      fontWeight:
+                          isSelected ? FontWeight.w900 : FontWeight.w700,
                       color: isSelected ? Colors.white : AppColors.textPrimary,
                     ),
                   ),
@@ -180,14 +192,16 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
     if (_controller.isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator(color: AppColors.primaryPink)),
+        body: Center(
+            child: CircularProgressIndicator(color: AppColors.primaryPink)),
       );
     }
 
     final log = _controller.currentLog;
 
     // Filtreleme mantığı
-    final showNutrition = _selectedFilterIndex == 0 || _selectedFilterIndex == 1;
+    final showNutrition =
+        _selectedFilterIndex == 0 || _selectedFilterIndex == 1;
     final showBody = _selectedFilterIndex == 0 || _selectedFilterIndex == 2;
 
     return Scaffold(
@@ -250,10 +264,12 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                       },
                       color: AppColors.clayMint,
                       borderRadius: 20,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 12),
                       child: Row(
                         children: [
-                          const Icon(Icons.radar_rounded, size: 20, color: AppColors.clinicalGreen),
+                          const Icon(Icons.radar_rounded,
+                              size: 20, color: AppColors.clinicalGreen),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Column(
@@ -261,11 +277,16 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                               children: [
                                 Text(
                                   'daily_safety_radar'.tr(),
-                                  style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                  style: GoogleFonts.outfit(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primaryDark),
                                 ),
                                 Text(
                                   'daily_safety_radar_sub'.tr(),
-                                  style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
+                                  style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 10.5,
+                                      color: AppColors.textSecondary),
                                 ),
                               ],
                             ),
@@ -281,15 +302,18 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                         HapticFeedback.selectionClick();
                         DoctorVaultScreen.open(
                           context,
-                          currentWeek: _controller.profile?.currentWeek ?? 1,
+                          currentWeek:
+                              _controller.profile?.currentPregnancyWeek ?? 1,
                         );
                       },
                       color: AppColors.clayLavender,
                       borderRadius: 20,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 12),
                       child: Row(
                         children: [
-                          const Icon(Icons.medical_services_rounded, size: 20, color: AppColors.lavenderPurple),
+                          const Icon(Icons.medical_services_rounded,
+                              size: 20, color: AppColors.lavenderPurple),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Column(
@@ -297,11 +321,16 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                               children: [
                                 Text(
                                   'daily_doctor_vault'.tr(),
-                                  style: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                  style: GoogleFonts.outfit(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primaryDark),
                                 ),
                                 Text(
                                   'daily_doctor_vault_sub'.tr(),
-                                  style: GoogleFonts.plusJakartaSans(fontSize: 10.5, color: AppColors.textSecondary),
+                                  style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 10.5,
+                                      color: AppColors.textSecondary),
                                 ),
                               ],
                             ),
@@ -360,7 +389,8 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     stepCount: log.stepCount,
                     walkingMinutes: log.walkingMinutes,
                     currentWeek: _controller.currentWeek,
-                    onAddSteps: (steps, {minutes = 0}) => _controller.addSteps(steps, minutes: minutes),
+                    onAddSteps: (steps, {minutes = 0}) =>
+                        _controller.addSteps(steps, minutes: minutes),
                     onReset: () => _controller.resetSteps(),
                   ),
                 ),
@@ -405,4 +435,3 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
     );
   }
 }
-

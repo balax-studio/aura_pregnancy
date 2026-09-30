@@ -62,7 +62,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
     setState(() => _isLoading = true);
     try {
       _profile = await DatabaseHelper.instance.getProfile();
-      final currentWeek = _profile?.currentWeek ?? 12;
+      final currentWeek = _profile?.currentPregnancyWeek ?? 12;
 
       final allLogs = await DatabaseHelper.instance.getAllDailyLogs();
       final allDiaries = await DatabaseHelper.instance.getAllDiaries();
@@ -71,7 +71,9 @@ class _TimelineScreenState extends State<TimelineScreen> {
       _totalSteps = allLogs.fold(0, (sum, log) => sum + log.stepCount);
       _totalWaterMl = allLogs.fold(0, (sum, log) => sum + log.waterIntakeMl);
       _totalDiariesCount = allDiaries.length;
-      _totalAudioLettersCount = allDiaries.where((d) => d.audioPath != null && d.audioPath!.isNotEmpty).length;
+      _totalAudioLettersCount = allDiaries
+          .where((d) => d.audioPath != null && d.audioPath!.isNotEmpty)
+          .length;
 
       // Tarihlere göre birleştirme haritası
       final Map<String, TimelineDayEntry> map = {};
@@ -109,7 +111,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
       // Bugünün tarihi haritada yoksa ekle
       final today = AppDateUtils.todayIso();
       if (!map.containsKey(today)) {
-        final todayLog = await DatabaseHelper.instance.getOrCreateDailyLog(today);
+        final todayLog =
+            await DatabaseHelper.instance.getOrCreateDailyLog(today);
         map[today] = TimelineDayEntry(
           date: today,
           pregnancyWeek: currentWeek,
@@ -139,7 +142,9 @@ class _TimelineScreenState extends State<TimelineScreen> {
       case TimelineFilter.steps:
         return _timelineEntries.where((e) => e.totalSteps > 0).toList();
       case TimelineFilter.waterCaffeine:
-        return _timelineEntries.where((e) => e.totalWaterMl > 0 || e.totalCaffeineMg > 0).toList();
+        return _timelineEntries
+            .where((e) => e.totalWaterMl > 0 || e.totalCaffeineMg > 0)
+            .toList();
       case TimelineFilter.weight:
         return _timelineEntries.where((e) => e.weightEntry != null).toList();
     }
@@ -150,7 +155,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
     if (_isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator(color: AppColors.primaryPink)),
+        body: Center(
+            child: CircularProgressIndicator(color: AppColors.primaryPink)),
       );
     }
 
@@ -194,7 +200,9 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 itemCount: filtered.length,
                 itemBuilder: (context, index) {
                   final dayEntry = filtered[index];
-                  return _buildTimelineDayItem(dayEntry, isFirst: index == 0, isLast: index == filtered.length - 1);
+                  return _buildTimelineDayItem(dayEntry,
+                      isFirst: index == 0,
+                      isLast: index == filtered.length - 1);
                 },
               ),
             const SizedBox(height: 16),
@@ -255,7 +263,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
             context,
             MaterialPageRoute(
               builder: (_) => NewEntryScreen(
-                currentWeek: _profile?.currentWeek ?? 12,
+                currentWeek: _profile?.currentPregnancyWeek ?? 12,
                 onSave: (entry) async {
                   await DatabaseHelper.instance.insertDiary(entry);
                   _loadTimelineData();
@@ -272,7 +280,10 @@ class _TimelineScreenState extends State<TimelineScreen> {
             const SizedBox(width: 8),
             Text(
               'journal_write_memory'.tr(),
-              style: GoogleFonts.outfit(fontWeight: FontWeight.w800, color: Colors.white, fontSize: 14),
+              style: GoogleFonts.outfit(
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  fontSize: 14),
             ),
           ],
         ),
@@ -292,11 +303,15 @@ class _TimelineScreenState extends State<TimelineScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded, color: AppColors.primaryPink, size: 20),
+              const Icon(Icons.auto_awesome_rounded,
+                  color: AppColors.primaryPink, size: 20),
               const SizedBox(width: 8),
               Text(
                 'timeline_summary_title'.tr(),
-                style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primaryDark),
               ),
             ],
           ),
@@ -304,11 +319,22 @@ class _TimelineScreenState extends State<TimelineScreen> {
           Row(
             children: [
               Expanded(
-                child: _buildSummaryBox('timeline_stat_steps'.tr(), '$_totalSteps', 'timeline_stat_distance_val'.tr(args: [distanceKm]), Icons.directions_walk_rounded, AppColors.clayMint),
+                child: _buildSummaryBox(
+                    'timeline_stat_steps'.tr(),
+                    '$_totalSteps',
+                    'timeline_stat_distance_val'.tr(args: [distanceKm]),
+                    Icons.directions_walk_rounded,
+                    AppColors.clayMint),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: _buildSummaryBox('timeline_stat_water'.tr(), '$waterLiters L', 'timeline_stat_water_val'.tr(args: [_totalWaterMl.toString()]), Icons.water_drop_rounded, AppColors.claySky),
+                child: _buildSummaryBox(
+                    'timeline_stat_water'.tr(),
+                    '$waterLiters L',
+                    'timeline_stat_water_val'
+                        .tr(args: [_totalWaterMl.toString()]),
+                    Icons.water_drop_rounded,
+                    AppColors.claySky),
               ),
             ],
           ),
@@ -316,11 +342,23 @@ class _TimelineScreenState extends State<TimelineScreen> {
           Row(
             children: [
               Expanded(
-                child: _buildSummaryBox('timeline_stat_diaries'.tr(), 'timeline_stat_count'.tr(args: [_totalDiariesCount.toString()]), 'timeline_stat_diaries_sub'.tr(), Icons.menu_book_rounded, AppColors.clayRose),
+                child: _buildSummaryBox(
+                    'timeline_stat_diaries'.tr(),
+                    'timeline_stat_count'
+                        .tr(args: [_totalDiariesCount.toString()]),
+                    'timeline_stat_diaries_sub'.tr(),
+                    Icons.menu_book_rounded,
+                    AppColors.clayRose),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: _buildSummaryBox('timeline_stat_audio'.tr(), 'timeline_stat_count'.tr(args: [_totalAudioLettersCount.toString()]), 'timeline_stat_audio_sub'.tr(), Icons.mic_rounded, AppColors.clayPeach),
+                child: _buildSummaryBox(
+                    'timeline_stat_audio'.tr(),
+                    'timeline_stat_count'
+                        .tr(args: [_totalAudioLettersCount.toString()]),
+                    'timeline_stat_audio_sub'.tr(),
+                    Icons.mic_rounded,
+                    AppColors.clayPeach),
               ),
             ],
           ),
@@ -347,7 +385,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
               borderRadius: BorderRadius.circular(14),
             ),
             child: const Center(
-              child: Icon(Icons.picture_as_pdf_rounded, color: AppColors.clinicalGreen, size: 24),
+              child: Icon(Icons.picture_as_pdf_rounded,
+                  color: AppColors.clinicalGreen, size: 24),
             ),
           ),
           const SizedBox(width: 12),
@@ -385,7 +424,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.play_circle_fill_rounded, color: AppColors.clinicalGreen, size: 16),
+                const Icon(Icons.play_circle_fill_rounded,
+                    color: AppColors.clinicalGreen, size: 16),
                 const SizedBox(width: 6),
                 Text(
                   'timeline_pdf_report_btn'.tr(),
@@ -416,7 +456,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
     );
   }
 
-  Widget _buildSummaryBox(String title, String mainValue, String subValue, IconData icon, Color color) {
+  Widget _buildSummaryBox(String title, String mainValue, String subValue,
+      IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: ClayTheme.clayDecoration(
@@ -430,12 +471,24 @@ class _TimelineScreenState extends State<TimelineScreen> {
             children: [
               Icon(icon, size: 14, color: AppColors.primaryDark),
               const SizedBox(width: 4),
-              Text(title, style: GoogleFonts.plusJakartaSans(fontSize: 10.5, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+              Text(title,
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textSecondary)),
             ],
           ),
           const SizedBox(height: 4),
-          Text(mainValue, style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.primaryDark)),
-          Text(subValue, style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+          Text(mainValue,
+              style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.primaryDark)),
+          Text(subValue,
+              style: GoogleFonts.plusJakartaSans(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary)),
         ],
       ),
     );
@@ -447,11 +500,16 @@ class _TimelineScreenState extends State<TimelineScreen> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildFilterChip('filter_all'.tr(), TimelineFilter.all, Icons.dashboard_rounded),
-          _buildFilterChip('filter_diaries'.tr(), TimelineFilter.diaries, Icons.menu_book_rounded),
-          _buildFilterChip('filter_steps'.tr(), TimelineFilter.steps, Icons.directions_walk_rounded),
-          _buildFilterChip('filter_water_caffeine'.tr(), TimelineFilter.waterCaffeine, Icons.water_drop_rounded),
-          _buildFilterChip('filter_weight'.tr(), TimelineFilter.weight, Icons.monitor_weight_rounded),
+          _buildFilterChip(
+              'filter_all'.tr(), TimelineFilter.all, Icons.dashboard_rounded),
+          _buildFilterChip('filter_diaries'.tr(), TimelineFilter.diaries,
+              Icons.menu_book_rounded),
+          _buildFilterChip('filter_steps'.tr(), TimelineFilter.steps,
+              Icons.directions_walk_rounded),
+          _buildFilterChip('filter_water_caffeine'.tr(),
+              TimelineFilter.waterCaffeine, Icons.water_drop_rounded),
+          _buildFilterChip('filter_weight'.tr(), TimelineFilter.weight,
+              Icons.monitor_weight_rounded),
         ],
       ),
     );
@@ -474,14 +532,20 @@ class _TimelineScreenState extends State<TimelineScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 14, color: isSelected ? AppColors.primaryPink : AppColors.textSecondary),
+              Icon(icon,
+                  size: 14,
+                  color: isSelected
+                      ? AppColors.primaryPink
+                      : AppColors.textSecondary),
               const SizedBox(width: 5),
               Text(
                 label,
                 style: GoogleFonts.outfit(
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
-                  color: isSelected ? AppColors.primaryPink : AppColors.textPrimary,
+                  color: isSelected
+                      ? AppColors.primaryPink
+                      : AppColors.textPrimary,
                 ),
               ),
             ],
@@ -492,7 +556,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
   }
 
   /// Zaman Tüneli Tek Bir Günlük Kartı
-  Widget _buildTimelineDayItem(TimelineDayEntry day, {required bool isFirst, required bool isLast}) {
+  Widget _buildTimelineDayItem(TimelineDayEntry day,
+      {required bool isFirst, required bool isLast}) {
     final isToday = day.date == AppDateUtils.todayIso();
 
     return Row(
@@ -518,7 +583,9 @@ class _TimelineScreenState extends State<TimelineScreen> {
               ),
               child: Center(
                 child: Icon(
-                  isToday ? Icons.star_rounded : Icons.fiber_manual_record_rounded,
+                  isToday
+                      ? Icons.star_rounded
+                      : Icons.fiber_manual_record_rounded,
                   size: isToday ? 12 : 8,
                   color: isToday ? Colors.white : AppColors.primaryPink,
                 ),
@@ -560,25 +627,35 @@ class _TimelineScreenState extends State<TimelineScreen> {
                           if (isToday) ...[
                             const SizedBox(width: 6),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: AppColors.primaryPink,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Text('common_today'.tr(), style: GoogleFonts.plusJakartaSans(color: Colors.white, fontSize: 9.5, fontWeight: FontWeight.w800)),
+                              child: Text('common_today'.tr(),
+                                  style: GoogleFonts.plusJakartaSans(
+                                      color: Colors.white,
+                                      fontSize: 9.5,
+                                      fontWeight: FontWeight.w800)),
                             ),
                           ],
                         ],
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          'weekly_week_range'.tr(args: [day.pregnancyWeek.toString()]),
-                          style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.secondaryPeach),
+                          'weekly_week_range'
+                              .tr(args: [day.pregnancyWeek.toString()]),
+                          style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.secondaryPeach),
                         ),
                       ),
                     ],
@@ -591,23 +668,43 @@ class _TimelineScreenState extends State<TimelineScreen> {
                     runSpacing: 6,
                     children: [
                       if (day.totalSteps > 0)
-                        _buildBadgeChip('timeline_badge_steps'.tr(args: [day.totalSteps.toString()]), Icons.directions_walk_rounded, AppColors.clayMint, AppColors.successGreen),
+                        _buildBadgeChip(
+                            'timeline_badge_steps'
+                                .tr(args: [day.totalSteps.toString()]),
+                            Icons.directions_walk_rounded,
+                            AppColors.clayMint,
+                            AppColors.successGreen),
                       if (day.totalWaterMl > 0)
-                        _buildBadgeChip('timeline_badge_water'.tr(args: [day.totalWaterMl.toString()]), Icons.water_drop_rounded, AppColors.claySky, AppColors.waterBlue),
+                        _buildBadgeChip(
+                            'timeline_badge_water'
+                                .tr(args: [day.totalWaterMl.toString()]),
+                            Icons.water_drop_rounded,
+                            AppColors.claySky,
+                            AppColors.waterBlue),
                       if (day.totalCaffeineMg > 0)
                         _buildBadgeChip(
-                          'timeline_badge_caffeine'.tr(args: [day.totalCaffeineMg.toString()]),
+                          'timeline_badge_caffeine'
+                              .tr(args: [day.totalCaffeineMg.toString()]),
                           Icons.local_cafe_rounded,
-                          day.totalCaffeineMg > 200 ? AppColors.medicalAlertBg : AppColors.clayPeach,
-                          day.totalCaffeineMg > 200 ? AppColors.medicalAlertRed : AppColors.secondaryPeach,
+                          day.totalCaffeineMg > 200
+                              ? AppColors.medicalAlertBg
+                              : AppColors.clayPeach,
+                          day.totalCaffeineMg > 200
+                              ? AppColors.medicalAlertRed
+                              : AppColors.secondaryPeach,
                         ),
                       if (day.weightEntry != null)
-                        _buildBadgeChip('${day.weightEntry} kg', Icons.monitor_weight_rounded, AppColors.clayLavender, AppColors.primaryDark),
+                        _buildBadgeChip(
+                            '${day.weightEntry} kg',
+                            Icons.monitor_weight_rounded,
+                            AppColors.clayLavender,
+                            AppColors.primaryDark),
                     ],
                   ),
 
                   // Semptom Notu (Varsa)
-                  if (day.symptomNotes != null && day.symptomNotes!.isNotEmpty) ...[
+                  if (day.symptomNotes != null &&
+                      day.symptomNotes!.isNotEmpty) ...[
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -617,12 +714,16 @@ class _TimelineScreenState extends State<TimelineScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.medical_information_rounded, size: 14, color: AppColors.primaryPink),
+                          const Icon(Icons.medical_information_rounded,
+                              size: 14, color: AppColors.primaryPink),
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
                               day.symptomNotes!,
-                              style: GoogleFonts.plusJakartaSans(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.textPrimary),
                             ),
                           ),
                         ],
@@ -642,7 +743,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
                           entry: diary,
                           onDelete: () async {
                             if (diary.id != null) {
-                              await DatabaseHelper.instance.deleteDiary(diary.id!);
+                              await DatabaseHelper.instance
+                                  .deleteDiary(diary.id!);
                               _loadTimelineData();
                             }
                           },
@@ -659,7 +761,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
     );
   }
 
-  Widget _buildBadgeChip(String label, IconData icon, Color bg, Color textColor) {
+  Widget _buildBadgeChip(
+      String label, IconData icon, Color bg, Color textColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: ClayTheme.clayDecoration(
@@ -674,7 +777,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
           const SizedBox(width: 4),
           Text(
             label,
-            style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w800, color: textColor),
+            style: GoogleFonts.plusJakartaSans(
+                fontSize: 11, fontWeight: FontWeight.w800, color: textColor),
           ),
         ],
       ),
@@ -687,17 +791,24 @@ class _TimelineScreenState extends State<TimelineScreen> {
       child: Center(
         child: Column(
           children: [
-            const Icon(Icons.calendar_month_rounded, size: 48, color: AppColors.primaryPink),
+            const Icon(Icons.calendar_month_rounded,
+                size: 48, color: AppColors.primaryPink),
             const SizedBox(height: 12),
             Text(
               'timeline_empty_title'.tr(),
-              style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+              style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.primaryDark),
             ),
             const SizedBox(height: 6),
             Text(
               'timeline_empty_desc'.tr(),
               textAlign: TextAlign.center,
-              style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+              style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary),
             ),
           ],
         ),

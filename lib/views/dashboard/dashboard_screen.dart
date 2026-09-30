@@ -6,7 +6,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/theme/clay_theme.dart';
 import '../../core/constants/weekly_medical_data.dart';
 import '../../services/database_helper.dart';
-import '../../services/medical_calculator.dart';
+import '../../services/pregnancy_progress.dart';
 import '../widgets/medical_disclaimer_sheet.dart';
 import '../../models/profile_model.dart';
 import '../../models/daily_log_model.dart';
@@ -29,7 +29,8 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _DashboardScreenState extends State<DashboardScreen>
+    with WidgetsBindingObserver {
   ProfileModel? _profile;
   DailyLogModel? _todayLog;
   int _medsTotal = 0;
@@ -39,6 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadDashboardData();
     DatabaseHelper.appDataRevision.addListener(_onAppDataChanged);
   }
@@ -51,8 +53,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     DatabaseHelper.appDataRevision.removeListener(_onAppDataChanged);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _loadDashboardData();
+    }
   }
 
   Future<void> _loadDashboardData() async {
@@ -100,8 +110,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _quickAddWater() async {
     HapticFeedback.lightImpact();
     final today = AppDateUtils.todayIso();
-    final current = _todayLog ?? await DatabaseHelper.instance.getOrCreateDailyLog(today);
-    final updated = current.copyWith(waterIntakeMl: current.waterIntakeMl + 250);
+    final current =
+        _todayLog ?? await DatabaseHelper.instance.getOrCreateDailyLog(today);
+    final updated =
+        current.copyWith(waterIntakeMl: current.waterIntakeMl + 250);
     setState(() {
       _todayLog = updated;
     });
@@ -110,7 +122,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('+250 ml su kaydedildi (${((updated.waterIntakeMl) / 250).floor()}/8 bardak)'),
+          content: Text(
+              '+250 ml su kaydedildi (${((updated.waterIntakeMl) / 250).floor()}/8 bardak)'),
           duration: const Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),
@@ -129,7 +142,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final untaken = meds.where((m) => !m.isTakenOnDate(today)).toList();
     if (untaken.isNotEmpty) {
       final targetMed = untaken.first;
-      await DatabaseHelper.instance.toggleMedicationTaken(targetMed.id!, today, true);
+      await DatabaseHelper.instance
+          .toggleMedicationTaken(targetMed.id!, today, true);
       if (mounted) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -160,32 +174,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (_isLoading) {
       return const Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator(color: AppColors.primaryPink)),
+        body: Center(
+            child: CircularProgressIndicator(color: AppColors.primaryPink)),
       );
     }
 
-    final currentWeek = _profile?.currentWeek ?? 12;
+    final progress = _profile?.pregnancyProgress ??
+        PregnancyProgress.fromTotalDays((12 - 1) * 7);
+    final weekNumber = progress.contentWeek;
     final dueDateStr = _profile?.dueDate ?? '2026-10-15';
-    final daysRemaining = AppDateUtils.daysUntil(dueDateStr);
-    final weeksRemaining = daysRemaining > 0
-        ? ((daysRemaining + 6) ~/ 7).clamp(0, 40)
-        : (40 - currentWeek).clamp(0, 40);
+    final weeksRemaining = ((progress.daysUntilDueDate + 6) ~/ 7).clamp(0, 40);
     final babyName = _profile?.babyDisplayName ?? 'Bebeğiniz';
     final momName = _profile?.momName ?? 'Anne Adayı';
 
-    // Detaylı Yaş Hesaplama (Kaçıncı haftanın kaçıncı gününde)
-    DateTime lmpDate;
-    if (_profile?.lmpDate != null && _profile!.lmpDate!.isNotEmpty) {
-      lmpDate = DateTime.tryParse(_profile!.lmpDate!) ?? DateTime.now().subtract(Duration(days: (currentWeek - 1) * 7));
-    } else {
-      lmpDate = DateTime.now().subtract(Duration(days: (currentWeek - 1) * 7));
-    }
-    final detailedAge = MedicalCalculator.getDetailedPregnancyAge(lmpDate);
-    final weekNumber = (detailedAge['weeks'] ?? currentWeek).clamp(1, 40);
-    final dayNumber = (detailedAge['days'] ?? 0) + 1; // 1-7. Gün
-    final trimester = MedicalCalculator.getTrimester(weekNumber);
+    // Age uses completed weeks + day (0-6); content remains numbered 1-40.
+    final dayNumber = progress.day;
+    final fetusDayNumber = progress.displayDay;
+    final trimester = progress.trimester;
 
-    // Hafta verisi ve meyve adı gösterilen weekNumber ile %100 senkronize
+    // Weekly fruit, measurements, and detail data all use the same content week.
     final weekData = WeeklyMedicalData.getInfoForWeek(weekNumber);
     final fruitName = weekData['fruit_name'] as String? ?? 'Gelişim';
 
@@ -201,7 +208,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.favorite_rounded, color: AppColors.primaryPink, size: 16),
+                const Icon(Icons.favorite_rounded,
+                    color: AppColors.primaryPink, size: 16),
                 const SizedBox(width: 6),
                 Text(
                   'dashboard_welcome'.tr(args: [momName]),
@@ -229,13 +237,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(width: 4),
           IconButton(
             tooltip: 'dashboard_profile_settings'.tr(),
-            icon: const Icon(Icons.settings_suggest_rounded, color: AppColors.primaryDark),
+            icon: const Icon(Icons.settings_suggest_rounded,
+                color: AppColors.primaryDark),
             onPressed: _openProfileEditor,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 14),
             child: EmergencyBeaconButton(
-              onTap: () => widget.onNavigateTab(5), // Acil Durum ekranı (Index 5)
+              onTap: () =>
+                  widget.onNavigateTab(5), // Acil Durum ekranı (Index 5)
             ),
           ),
         ],
@@ -255,7 +265,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   index: 0,
                   child: ClayCard(
                     color: AppColors.clayCardSurface,
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 16),
                     onTap: () {
                       _triggerHeartbeatHaptic();
                       widget.onNavigateTab(1); // Haftalık Detay sekmesine
@@ -267,17 +278,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.85),
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(
-                                  color: AppColors.lavenderPurple.withValues(alpha: 0.25),
+                                  color: AppColors.lavenderPurple
+                                      .withValues(alpha: 0.25),
                                   width: 1,
                                 ),
                               ),
                               child: Text(
-                                'dashboard_trimester'.tr(args: [trimester.toString()]),
+                                'dashboard_trimester'
+                                    .tr(args: [trimester.toString()]),
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.w800,
@@ -286,22 +300,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.85),
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(
-                                  color: AppColors.primaryPink.withValues(alpha: 0.25),
+                                  color: AppColors.primaryPink
+                                      .withValues(alpha: 0.25),
                                   width: 1,
                                 ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.hourglass_top_rounded, size: 13, color: AppColors.primaryDark),
+                                  const Icon(Icons.hourglass_top_rounded,
+                                      size: 13, color: AppColors.primaryDark),
                                   const SizedBox(width: 5),
                                   Text(
-                                    'dashboard_weeks_left'.tr(args: [weeksRemaining.toString()]),
+                                    'dashboard_weeks_left'
+                                        .tr(args: [weeksRemaining.toString()]),
                                     style: GoogleFonts.plusJakartaSans(
                                       fontSize: 11.5,
                                       fontWeight: FontWeight.w800,
@@ -318,7 +336,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         // 360° İnteraktif 3D Fetus Modeli
                         Interactive3DFetusWidget(
                           currentWeek: weekNumber,
-                          currentDay: dayNumber,
+                          currentDay: fetusDayNumber,
                           babyName: babyName,
                           eddDate: dueDateStr,
                           onTap: () {
@@ -330,7 +348,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                         // Hafta ve Gün Başlığı
                         Text(
-                          'dashboard_week_day'.tr(args: [weekNumber.toString(), dayNumber.toString()]),
+                          'dashboard_week_day'.tr(args: [
+                            progress.week.toString(),
+                            dayNumber.toString()
+                          ]),
                           textAlign: TextAlign.center,
                           style: GoogleFonts.outfit(
                             fontSize: 25,
@@ -344,12 +365,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         // Bebeğin Meyve Büyüklüğü
                         Container(
                           margin: const EdgeInsets.only(top: 6),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.85),
                             borderRadius: BorderRadius.circular(18),
                             border: Border.all(
-                              color: AppColors.secondaryPeach.withValues(alpha: 0.25),
+                              color: AppColors.secondaryPeach
+                                  .withValues(alpha: 0.25),
                               width: 1,
                             ),
                           ),
@@ -389,6 +412,85 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             color: AppColors.textSecondary,
                           ),
                         ),
+                        const SizedBox(height: 14),
+
+                        // This week's baby and mother changes come from the
+                        // same weekly record as the fruit and measurements.
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(13),
+                          decoration: BoxDecoration(
+                            color: AppColors.background.withValues(alpha: 0.85),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: AppColors.secondaryPeach
+                                  .withValues(alpha: 0.18),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(Icons.auto_awesome_rounded,
+                                      size: 16, color: AppColors.primaryPink),
+                                  const SizedBox(width: 7),
+                                  Expanded(
+                                    child: Text(
+                                      'baby_developing_title'
+                                          .tr(args: [babyName]),
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w800,
+                                        color: AppColors.primaryDark,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                weekData['baby_dev']?.toString() ?? '',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.4,
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Divider(height: 1),
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.favorite_rounded,
+                                      size: 16,
+                                      color: AppColors.secondaryPeach),
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    'dashboard_mother_changes_title'.tr(),
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primaryDark,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                weekData['mother_changes']?.toString() ?? '',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.4,
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 12),
 
                         // Aura İnovatif Kapsüller: Sakinleşme Çanı & Kilit Ekranı
@@ -403,11 +505,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               },
                               borderRadius: BorderRadius.circular(16),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 7),
                                 decoration: BoxDecoration(
                                   color: AppColors.clayLavender,
                                   borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: Colors.white, width: 1),
+                                  border:
+                                      Border.all(color: Colors.white, width: 1),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -435,15 +539,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             InkWell(
                               onTap: () {
                                 HapticFeedback.selectionClick();
-                                LockscreenCapsulePreview.show(context, profile: _profile);
+                                LockscreenCapsulePreview.show(context,
+                                    profile: _profile);
                               },
                               borderRadius: BorderRadius.circular(16),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 7),
                                 decoration: BoxDecoration(
                                   color: AppColors.clayMint,
                                   borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: Colors.white, width: 1),
+                                  border:
+                                      Border.all(color: Colors.white, width: 1),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -480,8 +587,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: ClayCard(
                     isGlazed: true,
                     color: AppColors.clayCardSurface,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    onTap: () => widget.onNavigateTab(2), // Günlük Takip Sekmesine
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
+                    onTap: () =>
+                        widget.onNavigateTab(2), // Günlük Takip Sekmesine
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -493,10 +602,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primaryPink.withValues(alpha: 0.12),
+                                    color: AppColors.primaryPink
+                                        .withValues(alpha: 0.12),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.favorite_rounded, color: AppColors.primaryPink, size: 14),
+                                  child: const Icon(Icons.favorite_rounded,
+                                      color: AppColors.primaryPink, size: 14),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
@@ -521,7 +632,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                const Icon(Icons.arrow_forward_ios_rounded, size: 10, color: AppColors.primaryPink),
+                                const Icon(Icons.arrow_forward_ios_rounded,
+                                    size: 10, color: AppColors.primaryPink),
                               ],
                             ),
                           ],
@@ -538,27 +650,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   onTap: _quickAddWater,
                                   borderRadius: BorderRadius.circular(14),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
                                     decoration: BoxDecoration(
                                       color: AppColors.claySky,
                                       borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 1),
+                                      border: Border.all(
+                                          color: Colors.white
+                                              .withValues(alpha: 0.8),
+                                          width: 1),
                                     ),
                                     child: Row(
                                       children: [
-                                        const Icon(Icons.water_drop_rounded, color: AppColors.waterBlue, size: 16),
+                                        const Icon(Icons.water_drop_rounded,
+                                            color: AppColors.waterBlue,
+                                            size: 16),
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'dashboard_pulse_water'.tr(),
-                                                style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+                                                style:
+                                                    GoogleFonts.plusJakartaSans(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: AppColors
+                                                            .textSecondary),
                                               ),
                                               Text(
                                                 '${((_todayLog?.waterIntakeMl ?? 0) / 250).floor()}/8',
-                                                style: GoogleFonts.outfit(fontSize: 11.5, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                                style: GoogleFonts.outfit(
+                                                    fontSize: 11.5,
+                                                    fontWeight: FontWeight.w800,
+                                                    color:
+                                                        AppColors.primaryDark),
                                               ),
                                             ],
                                           ),
@@ -566,10 +695,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(3),
                                           decoration: BoxDecoration(
-                                            color: AppColors.waterBlue.withValues(alpha: 0.15),
+                                            color: AppColors.waterBlue
+                                                .withValues(alpha: 0.15),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.add_rounded, size: 13, color: AppColors.waterBlue),
+                                          child: const Icon(Icons.add_rounded,
+                                              size: 13,
+                                              color: AppColors.waterBlue),
                                         ),
                                       ],
                                     ),
@@ -586,30 +718,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   onTap: _quickToggleMedications,
                                   borderRadius: BorderRadius.circular(14),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
                                     decoration: BoxDecoration(
                                       color: AppColors.clayLavender,
                                       borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 1),
+                                      border: Border.all(
+                                          color: Colors.white
+                                              .withValues(alpha: 0.8),
+                                          width: 1),
                                     ),
                                     child: Row(
                                       children: [
-                                        const Icon(Icons.medication_rounded, color: AppColors.lavenderPurple, size: 16),
+                                        const Icon(Icons.medication_rounded,
+                                            color: AppColors.lavenderPurple,
+                                            size: 16),
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'dashboard_pulse_vitamin'.tr(),
-                                                style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+                                                style:
+                                                    GoogleFonts.plusJakartaSans(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: AppColors
+                                                            .textSecondary),
                                               ),
                                               Text(
-                                                _medsTotal > 0 ? '$_medsTaken/$_medsTotal' : 'dashboard_pulse_add'.tr(),
+                                                _medsTotal > 0
+                                                    ? '$_medsTaken/$_medsTotal'
+                                                    : 'dashboard_pulse_add'
+                                                        .tr(),
                                                 style: GoogleFonts.outfit(
                                                   fontSize: 11.5,
                                                   fontWeight: FontWeight.w800,
-                                                  color: (_medsTotal > 0 && _medsTaken == _medsTotal) ? AppColors.successGreen : AppColors.primaryDark,
+                                                  color: (_medsTotal > 0 &&
+                                                          _medsTaken ==
+                                                              _medsTotal)
+                                                      ? AppColors.successGreen
+                                                      : AppColors.primaryDark,
                                                 ),
                                               ),
                                             ],
@@ -618,15 +770,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(3),
                                           decoration: BoxDecoration(
-                                            color: (_medsTotal > 0 && _medsTaken == _medsTotal)
-                                                ? AppColors.successGreen.withValues(alpha: 0.18)
-                                                : AppColors.lavenderPurple.withValues(alpha: 0.15),
+                                            color: (_medsTotal > 0 &&
+                                                    _medsTaken == _medsTotal)
+                                                ? AppColors.successGreen
+                                                    .withValues(alpha: 0.18)
+                                                : AppColors.lavenderPurple
+                                                    .withValues(alpha: 0.15),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
-                                            (_medsTotal > 0 && _medsTaken == _medsTotal) ? Icons.check_rounded : Icons.check_circle_outline_rounded,
+                                            (_medsTotal > 0 &&
+                                                    _medsTaken == _medsTotal)
+                                                ? Icons.check_rounded
+                                                : Icons
+                                                    .check_circle_outline_rounded,
                                             size: 13,
-                                            color: (_medsTotal > 0 && _medsTaken == _medsTotal) ? AppColors.successGreen : AppColors.lavenderPurple,
+                                            color: (_medsTotal > 0 &&
+                                                    _medsTaken == _medsTotal)
+                                                ? AppColors.successGreen
+                                                : AppColors.lavenderPurple,
                                           ),
                                         ),
                                       ],
@@ -644,32 +806,53 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   onTap: () => widget.onNavigateTab(2),
                                   borderRadius: BorderRadius.circular(14),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
                                     decoration: BoxDecoration(
                                       color: AppColors.clayRose,
                                       borderRadius: BorderRadius.circular(14),
-                                      border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 1),
+                                      border: Border.all(
+                                          color: Colors.white
+                                              .withValues(alpha: 0.8),
+                                          width: 1),
                                     ),
                                     child: Row(
                                       children: [
-                                        const Icon(Icons.directions_walk_rounded, color: AppColors.secondaryPeach, size: 16),
+                                        const Icon(
+                                            Icons.directions_walk_rounded,
+                                            color: AppColors.secondaryPeach,
+                                            size: 16),
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 'dashboard_pulse_steps'.tr(),
-                                                style: GoogleFonts.plusJakartaSans(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
+                                                style:
+                                                    GoogleFonts.plusJakartaSans(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: AppColors
+                                                            .textSecondary),
                                               ),
                                               Text(
                                                 '${_todayLog?.stepCount ?? 0}',
-                                                style: GoogleFonts.outfit(fontSize: 11.5, fontWeight: FontWeight.w800, color: AppColors.primaryDark),
+                                                style: GoogleFonts.outfit(
+                                                    fontSize: 11.5,
+                                                    fontWeight: FontWeight.w800,
+                                                    color:
+                                                        AppColors.primaryDark),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        const Icon(Icons.arrow_forward_ios_rounded, size: 10, color: AppColors.textMuted),
+                                        const Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: 10,
+                                            color: AppColors.textMuted),
                                       ],
                                     ),
                                   ),
@@ -698,4 +881,3 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
-
