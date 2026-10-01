@@ -5,12 +5,14 @@ import 'package:easy_localization/easy_localization.dart';
 
 // Web uyumluluğu için koşullu importlar
 import 'dart:io' if (dart.library.html) 'services/io_stubs.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart' if (dart.library.html) 'services/sqflite_ffi_stubs.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart'
+    if (dart.library.html) 'services/sqflite_ffi_stubs.dart';
 import 'core/theme/clay_theme.dart';
 import 'services/database_helper.dart';
 import 'services/att_tracking_service.dart';
 import 'services/app_nav_observer.dart';
 import 'core/services/ad_service.dart';
+import 'services/notification_service.dart';
 import 'models/profile_model.dart';
 import 'views/welcome/generative_splash_screen.dart';
 import 'views/welcome/language_selection_screen.dart';
@@ -36,6 +38,10 @@ void main() async {
 
   // Google Mobile Ads servisi başlatma
   await AdService.instance.initialize();
+  // Bildirim servisi başlatma
+  await NotificationService.instance.initialize();
+  // AppNavObserver lifecycle kaydı (re-engagement için)
+  AppNavObserver.instance.registerLifecycle();
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('tr')],
@@ -90,9 +96,11 @@ class _RootGateScreenState extends State<RootGateScreen> {
   Future<void> _checkInitialState() async {
     try {
       final profile = await DatabaseHelper.instance.getProfile();
-      final isOnboardingCompleted = await DatabaseHelper.instance.isOnboardingCompleted();
+      final isOnboardingCompleted =
+          await DatabaseHelper.instance.isOnboardingCompleted();
       final hasSeenGuide = await DatabaseHelper.instance.hasSeenGuide();
-      final savedLang = await DatabaseHelper.instance.getSetting('app_language');
+      final savedLang =
+          await DatabaseHelper.instance.getSetting('app_language');
       if (savedLang != null && savedLang.isNotEmpty && mounted) {
         if (context.locale.languageCode != savedLang) {
           await context.setLocale(Locale(savedLang));
@@ -106,10 +114,29 @@ class _RootGateScreenState extends State<RootGateScreen> {
           _isDataReady = true;
         });
       }
+
+      // Bildirimler: Kullanıcı uygulamayı açtı → re-engagement iptal et
+      // ve haftalık + günlük bildirimleri yeniden zamanla
+      if (profile != null) {
+        final lang = (savedLang?.isNotEmpty == true) ? savedLang! : 'tr';
+        AppNavObserver.instance
+            .updateLang(lang); // re-engagement dili senkronize et
+        try {
+          await NotificationService.instance.cancelReEngagement();
+          await NotificationService.instance.rescheduleAll(
+            currentWeek:
+                profile.pregnancyProgress.contentWeek.clamp(5, 40).toInt(),
+            langCode: lang,
+          );
+        } catch (e) {
+          debugPrint('Notification reschedule error: $e');
+        }
+      }
       // iOS ATT (App Tracking Transparency) izin kontrolü
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          AttTrackingService.instance.requestConsentWithPreDialogIfNeeded(context);
+          AttTrackingService.instance
+              .requestConsentWithPreDialogIfNeeded(context);
         }
       });
     } catch (e) {

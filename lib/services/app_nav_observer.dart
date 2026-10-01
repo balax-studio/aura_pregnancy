@@ -1,19 +1,50 @@
 import 'package:flutter/material.dart';
+import 'notification_service.dart';
 
 /// Aura Pregnancy - Gezinme ve Modal Takip Gözlemcisi
 /// Diyaloglar (showDialog), alt pencereler (showModalBottomSheet) veya açılır pencereler (PopupRoute)
 /// açıldığında alt navigasyon çubuğunun (Bottom Bar) otomatik ve akıcı şekilde gizlenmesini sağlar.
-class AppNavObserver extends NavigatorObserver {
+/// Ayrıca uygulama arka plana geçince re-engagement bildirimini zamanlar.
+class AppNavObserver extends NavigatorObserver with WidgetsBindingObserver {
   AppNavObserver._internal();
   static final AppNavObserver instance = AppNavObserver._internal();
 
   final ValueNotifier<bool> isModalOpen = ValueNotifier<bool>(false);
   int _modalCount = 0;
+  String _currentLang = 'tr';
+
+  /// WidgetsBinding'e kayıt ol (main.dart'ta çağrılmalı)
+  void registerLifecycle() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  /// Dil bilgisini güncelle (bildirim mesajları için)
+  void updateLang(String lang) {
+    _currentLang = lang;
+  }
 
   void reset() {
     _modalCount = 0;
     isModalOpen.value = false;
   }
+
+  // ─── AppLifecycle: arka plana geçiş / öne geliş ────────────────────────
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      // Uygulama arka plana geçti → 3 gün sonrası için re-engagement zamanla
+      final dayIndex = DateTime.now().day;
+      NotificationService.instance.scheduleReEngagementFromNow(dayIndex, _currentLang);
+    } else if (state == AppLifecycleState.resumed) {
+      // Uygulama öne geldi → re-engagement iptal et (kullanıcı geri döndü)
+      NotificationService.instance.cancelReEngagement();
+    }
+  }
+
+  // ─── Modal / Popup İzleme ───────────────────────────────────────────────
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {

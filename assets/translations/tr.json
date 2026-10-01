@@ -19,7 +19,7 @@
   "dashboard_emergency": "Acil",
   "dashboard_trimester": "{}. Trimester",
   "dashboard_days_remaining": "Doğuma {} Gün",
-  "dashboard_week_day": "{}. Hafta + {}. Gün",
+  "dashboard_week_day": "{} Hafta + {} Gün",
   "dashboard_fruit_size": "Bebeğiniz bu hafta {} boyutunda",
   "dashboard_measurements": "Ortalama Boy: {}  •  Ağırlık: {}",
   "dashboard_medical_test_title": "Bu Haftanın Tıbbi Testi",

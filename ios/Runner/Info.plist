@@ -76,6 +76,8 @@
 	<string>Aura Pregnancy requires photo library access to save generated time-lapse pregnancy journey stories and milestone cards to your device.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Aura Pregnancy uses this identifier to deliver personalized and relevant maternal health content, baby care recommendations, and sponsor experiences to you.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>Aura Pregnancy bebeğinin gelişimini, günlük hatırlatıcıları ve sağlık takibini sana bildirmek için bildirim göndermek istiyor.</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-2626843024156194~2005391358</string>
 	<key>SKAdNetworkItems</key>
