@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:aura_pregnancy/models/profile_model.dart';
 import 'package:aura_pregnancy/services/medical_calculator.dart';
 import 'package:aura_pregnancy/services/pregnancy_progress.dart';
 import 'package:aura_pregnancy/services/fruit_asset_sync.dart';
 import 'package:aura_pregnancy/utils/date_utils.dart';
+import 'package:aura_pregnancy/core/constants/weekly_medical_data.dart';
+import 'test_helper.dart';
 
 void main() {
   group('PregnancyProgress', () {
@@ -21,6 +24,8 @@ void main() {
         final progress = PregnancyProgress.fromTotalDays(entry.key);
         expect(progress.week, entry.value[0], reason: 'totalDays=${entry.key}');
         expect(progress.day, entry.value[1], reason: 'totalDays=${entry.key}');
+        expect(progress.displayDay, entry.value[1],
+            reason: 'displayDay for totalDays=${entry.key}');
         expect(progress.displayWeek, entry.value[2],
             reason: 'totalDays=${entry.key}');
       }
@@ -107,6 +112,70 @@ void main() {
         Fruit3DAssetManager.getFruitKeyForWeek(afterBoundary.contentWeek),
         'blueberry',
       );
+    });
+
+    test('saved profile week refreshes from its dates as time advances', () {
+      final profile = ProfileModel(
+        dueDate: '2025-10-08',
+        lmpDate: '2025-01-01',
+        prePregnancyWeight: 60,
+        height: 165,
+        vki: 22,
+        currentWeek: 12,
+      );
+
+      final refreshed = profile.refreshCurrentWeek(
+        currentDate: DateTime(2025, 1, 15),
+      );
+
+      expect(profile.currentWeek, 12);
+      expect(refreshed.currentWeek, 3);
+      expect(refreshed.toMap()['current_week'], 3);
+      expect(
+        PregnancyProgress.fromDateStrings(
+          lmpDate: refreshed.lmpDate,
+          dueDate: refreshed.dueDate,
+          currentDate: DateTime(2025, 1, 15),
+        ).contentWeek,
+        3,
+      );
+    });
+
+    testWidgets('week size comparisons and fruit assets stay aligned',
+        (tester) async {
+      final weeks = <int, Map<String, dynamic>>{};
+      await tester.pumpWidget(createLocalizedTestWidget(
+        child: Builder(
+          builder: (context) {
+            for (var week = 1; week <= 40; week++) {
+              weeks[week] = WeeklyMedicalData.getInfoForWeek(week);
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      ));
+      await tester.pumpAndSettle();
+
+      for (var week = 1; week <= 3; week++) {
+        expect(weeks[week]!['has_size_comparison'], isFalse);
+        expect(weeks[week]!['length'], '—');
+        expect(weeks[week]!['weight'], '—');
+      }
+      expect(weeks[4]!['fruit_name'], 'Haşhaş Tohumu');
+      expect(weeks[4]!['length'], '2 mm');
+      expect(Fruit3DAssetManager.getFruitKeyForWeek(4), 'seed');
+      expect(weeks[5]!['fruit_name'], 'Susam Tanesi');
+      expect(Fruit3DAssetManager.getFruitKeyForWeek(5), 'sesame');
+      expect(weeks[6]!['length'], '6 mm');
+      expect(weeks[18]!['fruit_name'], 'Tatlı Patates');
+      expect(
+        Fruit3DAssetManager.getAssetImagePath(
+            Fruit3DAssetManager.getFruitKeyForWeek(18)),
+        'assets/images/fruit_sweet_potato.png',
+      );
+      expect(weeks[19]!['length_basis'], 'head_to_bottom');
+      expect(weeks[20]!['length_basis'], 'head_to_heel');
+      expect(weeks.length, 40);
     });
 
     test('only current and past weeks unlock unless rewarded explicitly', () {

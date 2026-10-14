@@ -10,6 +10,8 @@ class PregnancyProgress {
   final int week;
   final int day;
   final int displayWeek;
+
+  /// Remaining gestational days, still 0-based (0–6).
   final int displayDay;
 
   const PregnancyProgress._({
@@ -57,7 +59,7 @@ class PregnancyProgress {
       week: week,
       day: day,
       displayWeek: (week + 1).clamp(1, 42).toInt(),
-      displayDay: day + 1,
+      displayDay: day,
     );
   }
 

@@ -83,6 +83,21 @@ class ProfileModel {
         fallbackWeek: currentWeek,
       );
 
+  /// Refreshes the persisted week snapshot from the profile's calendar dates.
+  /// This also repairs snapshots written by older app versions when a profile
+  /// is next loaded. If its dates are unavailable, the stored week remains the
+  /// fallback used by [PregnancyProgress].
+  ProfileModel refreshCurrentWeek({DateTime? currentDate}) {
+    final calculatedWeek = PregnancyProgress.fromDateStrings(
+      lmpDate: lmpDate,
+      dueDate: dueDate,
+      fallbackWeek: currentWeek,
+      currentDate: currentDate,
+    ).displayWeek;
+    if (calculatedWeek == currentWeek) return this;
+    return copyWith(currentWeek: calculatedWeek);
+  }
+
   int get currentPregnancyWeek => pregnancyProgress.displayWeek;
 
   /// Bebeğin Sade Adı (Örn: "Ayşe" veya "Bebeğiniz")

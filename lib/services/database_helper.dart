@@ -459,20 +459,42 @@ class DatabaseHelper {
   Future<ProfileModel?> getProfile() async {
     final db = await database;
     if (db == null) {
-      return _webProfile;
+      return _refreshWebProfileWeek();
     }
     try {
       final maps = await db.query('profile', limit: 1);
       if (maps.isNotEmpty) {
-        final prof = ProfileModel.fromMap(maps.first);
-        _webProfile = prof;
-        return prof;
+        final storedProfile = ProfileModel.fromMap(maps.first);
+        final profile = storedProfile.refreshCurrentWeek();
+        _webProfile = profile;
+        if (profile.currentWeek != storedProfile.currentWeek &&
+            storedProfile.id != null) {
+          try {
+            await db.update(
+              'profile',
+              {'current_week': profile.currentWeek},
+              where: 'id = ?',
+              whereArgs: [storedProfile.id],
+            );
+          } catch (e) {
+            debugPrint('getProfile week refresh error: $e');
+          }
+        }
+        return profile;
       }
       return null;
     } catch (e) {
       debugPrint('getProfile db error, using fallback: $e');
-      return _webProfile;
+      return _refreshWebProfileWeek();
     }
+  }
+
+  ProfileModel? _refreshWebProfileWeek() {
+    final profile = _webProfile;
+    if (profile == null) return null;
+    final refreshedProfile = profile.refreshCurrentWeek();
+    _webProfile = refreshedProfile;
+    return refreshedProfile;
   }
 
   Future<ProfileModel> ensureDefaultProfile() async {

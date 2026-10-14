@@ -7,8 +7,8 @@ class Fruit3DAssetManager {
       case 1: return 'seed';
       case 2: return 'sesame';
       case 3: return 'peppercorn';
-      case 4: return 'pomegranate_seed';
-      case 5: return 'lentil';
+      case 4: return 'seed';
+      case 5: return 'sesame';
       case 6: return 'pea';
       case 7: return 'blueberry';
       case 8: return 'raspberry';
@@ -68,9 +68,7 @@ class Fruit3DAssetManager {
 
   /// Belirtilen meyve anahtarı için 3D görsel dosya yolunu döndürür
   static String getAssetImagePath(String fruitKey) {
-    if (fruitKey == 'sweet_potato') {
-      return 'assets/images/fruit_carrot.jpg';
-    }
+    if (fruitKey == 'sweet_potato') return 'assets/images/fruit_sweet_potato.png';
     return 'assets/images/fruit_$fruitKey.jpg';
   }
 }

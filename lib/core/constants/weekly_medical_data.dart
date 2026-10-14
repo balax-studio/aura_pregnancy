@@ -9,31 +9,34 @@ class WeeklyMedicalData {
       1: {
         'icon': Icons.grain_rounded,
         'fruit_name': 'week_1_fruit_name'.tr(),
-        'length': '0.1 mm',
-        'weight': '< 1 gr',
+        'length': '—',
+        'weight': '—',
+        'has_size_comparison': false,
         'baby_dev': 'week_1_baby_dev'.tr(),
         'mother_changes': 'week_1_mother_changes'.tr(),
       },
       2: {
         'icon': Icons.grain_rounded,
         'fruit_name': 'week_2_fruit_name'.tr(),
-        'length': '0.2 mm',
-        'weight': '< 1 gr',
+        'length': '—',
+        'weight': '—',
+        'has_size_comparison': false,
         'baby_dev': 'week_2_baby_dev'.tr(),
         'mother_changes': 'week_2_mother_changes'.tr(),
       },
       3: {
         'icon': Icons.spa_rounded,
         'fruit_name': 'week_3_fruit_name'.tr(),
-        'length': '0.5 mm',
-        'weight': '< 1 gr',
+        'length': '—',
+        'weight': '—',
+        'has_size_comparison': false,
         'baby_dev': 'week_3_baby_dev'.tr(),
         'mother_changes': 'week_3_mother_changes'.tr(),
       },
       4: {
         'icon': Icons.spa_rounded,
         'fruit_name': 'week_4_fruit_name'.tr(),
-        'length': '1 mm',
+        'length': '2 mm',
         'weight': '< 1 gr',
         'baby_dev': 'week_4_baby_dev'.tr(),
         'mother_changes': 'week_4_mother_changes'.tr(),
@@ -49,7 +52,7 @@ class WeeklyMedicalData {
       6: {
         'icon': Icons.circle_rounded,
         'fruit_name': 'week_6_fruit_name'.tr(),
-        'length': '4 mm',
+        'length': '6 mm',
         'weight': '< 1 gr',
         'baby_dev': 'week_6_baby_dev'.tr(),
         'mother_changes': 'week_6_mother_changes'.tr(),
@@ -376,7 +379,12 @@ class WeeklyMedicalData {
     final data = getWeeklyData();
     final clampedWeek = week.clamp(1, 40);
     if (data.containsKey(clampedWeek)) {
-      return data[clampedWeek]!;
+      final weekData = data[clampedWeek]!;
+      return {
+        ...weekData,
+        'has_size_comparison': weekData['has_size_comparison'] as bool? ?? true,
+        'length_basis': clampedWeek < 20 ? 'head_to_bottom' : 'head_to_heel',
+      };
     }
     return data[1]!;
   }

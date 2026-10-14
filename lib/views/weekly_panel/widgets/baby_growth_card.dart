@@ -31,6 +31,11 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
     final babyDev = widget.weekData['baby_dev'] as String? ?? '';
     final motherChanges = widget.weekData['mother_changes'] as String? ?? '';
     final babyName = widget.babyDisplayName ?? 'baby_default_name'.tr();
+    final hasSizeComparison =
+        widget.weekData['has_size_comparison'] as bool? ?? true;
+    final lengthLabel = widget.weekData['length_basis'] == 'head_to_heel'
+        ? 'baby_est_length_head_to_heel'.tr()
+        : 'baby_est_length_head_to_bottom'.tr();
 
     return Column(
       children: [
@@ -59,7 +64,10 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'baby_size_fruit_format'.tr(args: [babyName, fallbackFruit]),
+                          hasSizeComparison
+                              ? 'baby_size_fruit_format'
+                                  .tr(args: [babyName, fallbackFruit])
+                              : 'baby_size_comparison_unavailable'.tr(),
                           style: GoogleFonts.outfit(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
@@ -90,7 +98,7 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
               const SizedBox(height: 14),
 
               // 3D Meyve ve Boy / Kilo Detayları
-              Row(
+              if (hasSizeComparison) Row(
                 children: [
                   Fruit3DWidget(
                     week: widget.week,
@@ -116,7 +124,7 @@ class _BabyGrowthCardState extends State<BabyGrowthCard> {
                             child: Column(
                               children: [
                                 Text(
-                                  'baby_est_length'.tr(),
+                                  lengthLabel,
                                   style: GoogleFonts.plusJakartaSans(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w700,

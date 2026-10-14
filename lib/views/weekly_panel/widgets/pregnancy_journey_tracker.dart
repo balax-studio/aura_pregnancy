@@ -17,6 +17,7 @@ class JourneyStageData {
   final String description;
   final IconData icon;
   final Color themeColor;
+  final bool hasSizeComparison;
 
   const JourneyStageData({
     required this.title,
@@ -26,6 +27,7 @@ class JourneyStageData {
     required this.description,
     required this.icon,
     required this.themeColor,
+    required this.hasSizeComparison,
   });
 }
 
@@ -65,6 +67,7 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
         description: data['baby_dev'] as String,
         icon: data['icon'] as IconData,
         themeColor: _getThemeColorForWeek(week),
+        hasSizeComparison: data['has_size_comparison'] as bool? ?? true,
       );
     });
     
@@ -116,7 +119,10 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
   }
 
   void _openMysteryStageAd() {
-    final nextIndex = _maxUnlockedIndex + 1;
+    var nextIndex = _maxUnlockedIndex + 1;
+    while (nextIndex < stages.length && !stages[nextIndex].hasSizeComparison) {
+      nextIndex++;
+    }
     if (nextIndex >= stages.length) return;
 
     final nextStage = stages[nextIndex];
@@ -311,11 +317,25 @@ class _PregnancyJourneyTrackerState extends State<PregnancyJourneyTracker> {
                                   ? Border.all(color: AppColors.primaryPink, width: 2.5)
                                   : null,
                             ),
-                            child: Fruit3DWidget(
-                              week: index + 1,
-                              size: isCurrent ? 64 : 54,
-                              borderRadius: isCurrent ? 32 : 27,
-                            ),
+                            child: stage.hasSizeComparison
+                                ? Fruit3DWidget(
+                                    week: index + 1,
+                                    size: isCurrent ? 64 : 54,
+                                    borderRadius: isCurrent ? 32 : 27,
+                                  )
+                                : Container(
+                                    width: isCurrent ? 64 : 54,
+                                    height: isCurrent ? 64 : 54,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.clayPeach,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.auto_awesome_rounded,
+                                      size: isCurrent ? 28 : 24,
+                                      color: AppColors.secondaryPeach,
+                                    ),
+                                  ),
                           ),
                           const SizedBox(height: 8),
 

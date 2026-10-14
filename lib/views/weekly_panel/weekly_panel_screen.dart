@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +31,7 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen>
     with WidgetsBindingObserver {
   final WeeklyPanelController _controller = WeeklyPanelController();
   late int _subTabIndex;
+  Timer? _dayRolloverTimer;
 
   @override
   void initState() {
@@ -38,6 +41,18 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen>
     _controller.loadProfileWeek();
     _controller.addListener(() => setState(() {}));
     DatabaseHelper.appDataRevision.addListener(_onAppDataChanged);
+    _scheduleDayRolloverRefresh();
+  }
+
+  void _scheduleDayRolloverRefresh() {
+    _dayRolloverTimer?.cancel();
+    final now = DateTime.now();
+    final nextLocalDay = DateTime(now.year, now.month, now.day + 1);
+    _dayRolloverTimer = Timer(nextLocalDay.difference(now), () {
+      if (!mounted) return;
+      _controller.loadProfileWeek();
+      _scheduleDayRolloverRefresh();
+    });
   }
 
   void _onAppDataChanged() {
@@ -50,6 +65,7 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     DatabaseHelper.appDataRevision.removeListener(_onAppDataChanged);
+    _dayRolloverTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -58,6 +74,7 @@ class _WeeklyPanelScreenState extends State<WeeklyPanelScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _controller.loadProfileWeek();
+      _scheduleDayRolloverRefresh();
     }
   }
 

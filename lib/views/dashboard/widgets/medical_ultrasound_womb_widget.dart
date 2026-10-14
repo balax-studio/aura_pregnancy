@@ -6,7 +6,7 @@ import '../../../core/constants/app_colors.dart';
 /// Aura Pregnancy - Gerçekçi Canlı Tıbbi Ultrason & Fetal Sonografi Simülatörü
 class MedicalUltrasoundWombWidget extends StatefulWidget {
   final int currentWeek;
-  final int currentDay; // 1-7
+  final int currentDay; // Remaining gestational days, 0-6
   final String babyName;
   final String eddDate;
   final VoidCallback? onTap;

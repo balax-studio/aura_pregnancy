@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -36,13 +38,26 @@ class _DashboardScreenState extends State<DashboardScreen>
   int _medsTotal = 0;
   int _medsTaken = 0;
   bool _isLoading = true;
+  Timer? _dayRolloverTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _loadDashboardData();
+    _scheduleDayRolloverRefresh();
     DatabaseHelper.appDataRevision.addListener(_onAppDataChanged);
+  }
+
+  void _scheduleDayRolloverRefresh() {
+    _dayRolloverTimer?.cancel();
+    final now = DateTime.now();
+    final nextLocalDay = DateTime(now.year, now.month, now.day + 1);
+    _dayRolloverTimer = Timer(nextLocalDay.difference(now), () {
+      if (!mounted) return;
+      _loadDashboardData();
+      _scheduleDayRolloverRefresh();
+    });
   }
 
   void _onAppDataChanged() {
@@ -55,6 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     DatabaseHelper.appDataRevision.removeListener(_onAppDataChanged);
+    _dayRolloverTimer?.cancel();
     super.dispose();
   }
 
@@ -62,6 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _loadDashboardData();
+      _scheduleDayRolloverRefresh();
     }
   }
 
@@ -195,6 +212,11 @@ class _DashboardScreenState extends State<DashboardScreen>
     // Weekly fruit, measurements, and detail data all use the same content week.
     final weekData = WeeklyMedicalData.getInfoForWeek(weekNumber);
     final fruitName = weekData['fruit_name'] as String? ?? 'Gelişim';
+    final hasSizeComparison =
+        weekData['has_size_comparison'] as bool? ?? true;
+    final measurementsLabel = weekData['length_basis'] == 'head_to_heel'
+        ? 'dashboard_measurements_head_to_heel'
+        : 'dashboard_measurements_head_to_bottom';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -363,56 +385,82 @@ class _DashboardScreenState extends State<DashboardScreen>
                         const SizedBox(height: 4),
 
                         // Bebeğin Meyve Büyüklüğü
-                        Container(
-                          margin: const EdgeInsets.only(top: 6),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.85),
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(
-                              color: AppColors.secondaryPeach
-                                  .withValues(alpha: 0.25),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Fruit3DWidget(
-                                week: weekNumber,
-                                size: 34,
-                                borderRadius: 10,
+                        if (hasSizeComparison) ...[
+                          Container(
+                            margin: const EdgeInsets.only(top: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.clayCardSurface,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: AppColors.secondaryPeach
+                                    .withValues(alpha: 0.25),
+                                width: 1,
                               ),
-                              const SizedBox(width: 8),
-                              Flexible(
-                                child: Text(
-                                  'dashboard_fruit_size'.tr(args: [fruitName]),
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w800,
-                                    color: AppColors.primaryDark,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Fruit3DWidget(
+                                  week: weekNumber,
+                                  size: 34,
+                                  borderRadius: 10,
+                                ),
+                                const SizedBox(width: 8),
+                                Flexible(
+                                  child: Text(
+                                    'dashboard_fruit_size'
+                                        .tr(args: [fruitName]),
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primaryDark,
+                                    ),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            measurementsLabel.tr(args: [
+                              weekData['length']?.toString() ?? '~30.0 cm',
+                              weekData['weight']?.toString() ?? '~600 gr',
+                            ]),
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                        ] else ...[
+                          Container(
+                            margin: const EdgeInsets.only(top: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.clayCardSurface,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: AppColors.secondaryPeach
+                                    .withValues(alpha: 0.25),
+                                width: 1,
                               ),
-                            ],
+                            ),
+                            child: Text(
+                              'baby_size_comparison_unavailable'.tr(),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.outfit(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primaryDark,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Boy & Kilo Detayı
-                        Text(
-                          'dashboard_measurements'.tr(args: [
-                            weekData['length']?.toString() ?? '~30.0 cm',
-                            weekData['weight']?.toString() ?? '~600 gr',
-                          ]),
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
+                          const SizedBox(height: 14),
+                        ],
 
                         // This week's baby and mother changes come from the
                         // same weekly record as the fruit and measurements.

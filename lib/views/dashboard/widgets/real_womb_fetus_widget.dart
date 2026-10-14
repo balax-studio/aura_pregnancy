@@ -7,7 +7,7 @@ import '../../../core/theme/clay_theme.dart';
 /// Aura Pregnancy - 6 Evreli Gerçekçi Rahim İçi (In-Utero) Fetus Fotoğrafı ve Canlı Animasyon
 class RealWombFetusWidget extends StatefulWidget {
   final int currentWeek;
-  final int currentDay; // 1-7
+  final int currentDay; // Remaining gestational days, 0-6
   final String babyName;
   final String eddDate;
   final VoidCallback? onTap;
