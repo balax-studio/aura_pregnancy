@@ -21,17 +21,27 @@ class JournalController extends ChangeNotifier {
   List<DiaryModel> get highlightEntries =>
       _entries.where((e) => e.isRomanticHighlight).toList();
 
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
   /// Günlükleri ve profili yükle
   Future<void> loadDiaries() async {
+    if (_isDisposed) return;
     _isLoading = true;
     notifyListeners();
 
     try {
       _profile = await DatabaseHelper.instance.getProfile();
+      if (_isDisposed) return;
       _entries = await DatabaseHelper.instance.getAllDiaries();
 
       // Eğer henüz kayıt yoksa kullanıcının gerçek takvimine göre örnek anılar oluştur
-      if (_entries.isEmpty) {
+      if (_entries.isEmpty && !_isDisposed) {
         final calculatedDates = _calculateAccurateMilestoneDates(_profile);
 
         final sample1 = DiaryModel(
@@ -56,13 +66,16 @@ class JournalController extends ChangeNotifier {
 
         await DatabaseHelper.instance.insertDiary(sample1);
         await DatabaseHelper.instance.insertDiary(sample2);
+        if (_isDisposed) return;
         _entries = await DatabaseHelper.instance.getAllDiaries();
       }
     } catch (e) {
       debugPrint('JournalController load error: $e');
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      if (!_isDisposed) {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
   }
 

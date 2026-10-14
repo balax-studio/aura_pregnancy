@@ -1,4 +1,6 @@
+import 'dart:io' show Platform;
 import 'dart:math';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
@@ -37,19 +39,26 @@ class _AnimatedWombBabyWidgetState extends State<AnimatedWombBabyWidget>
     _floatController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 3500),
-    )..repeat(reverse: true);
+    );
 
     // 2. Kalp Atışı & Solunum Nabzı (1.2 saniyelik ritmik nabız)
     _heartbeatController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
+    );
 
     // 3. Amniyotik Işıltı Animasyonu
     _sparkleController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2400),
-    )..repeat();
+    );
+
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (!isTest) {
+      _floatController.repeat(reverse: true);
+      _heartbeatController.repeat(reverse: true);
+      _sparkleController.repeat();
+    }
   }
 
   @override

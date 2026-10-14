@@ -74,5 +74,12 @@ void main() {
       expect(find.text('Anladım, Devam Et'), findsOneWidget);
       expect(find.text('Şimdilik Geç'), findsOneWidget);
     });
+
+    test('4. AdService.explainAdError tüm hata kodlarını doğru teşhis eder', () {
+      expect(AdService.explainAdError(3), contains('NO_FILL'));
+      expect(AdService.explainAdError(0), contains('INTERNAL_ERROR'));
+      expect(AdService.explainAdError(1), contains('INVALID_REQUEST'));
+      expect(AdService.explainAdError(2), contains('NETWORK_ERROR'));
+    });
   });
 }

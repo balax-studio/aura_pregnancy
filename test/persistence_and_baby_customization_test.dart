@@ -67,8 +67,12 @@ void main() {
     });
 
     test('2. Profil veritabanına kaydedildiğinde kalıcı olarak okunur', () async {
+      final now = DateTime.now();
+      final lmp = now.subtract(const Duration(days: 17 * 7));
+      final due = now.add(const Duration(days: 22 * 7));
       final profile = ProfileModel(
-        dueDate: '2026-12-01',
+        dueDate: '${due.year.toString().padLeft(4, '0')}-${due.month.toString().padLeft(2, '0')}-${due.day.toString().padLeft(2, '0')}',
+        lmpDate: '${lmp.year.toString().padLeft(4, '0')}-${lmp.month.toString().padLeft(2, '0')}-${lmp.day.toString().padLeft(2, '0')}',
         prePregnancyWeight: 57.5,
         height: 170,
         vki: 19.9,
@@ -154,9 +158,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('baby_week_name_label'.tr(args: ['16', 'Mehmet Bebek'])), findsOneWidget);
-      expect(find.text('baby_dev_status'.tr(args: ['Mehmet Bebek'])), findsOneWidget);
-      expect(find.text('Avokado'), findsOneWidget);
+      expect(find.text('baby_developing_title'.tr(args: ['Mehmet Bebek'])), findsOneWidget);
+      expect(find.text('baby_size_fruit_format'.tr(args: ['Mehmet Bebek', 'Avokado'])), findsOneWidget);
     });
 
     testWidgets('6. Profil var olduğunda RootGateScreen doğrudan MainNavigationScaffold açar', (WidgetTester tester) async {
@@ -167,8 +170,7 @@ void main() {
           child: const RootGateScreen(),
         ),
       );
-      await tester.pump(const Duration(milliseconds: 300));
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
 
       expect(find.byType(MainNavigationScaffold), findsOneWidget);
     });
@@ -193,8 +195,7 @@ void main() {
           child: const RootGateScreen(),
         ),
       );
-      await tester.pump(const Duration(milliseconds: 300));
-      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
 
       // Ana sayfa görünmeli, dil seçimi veya rehber görünmemeli
       expect(find.byType(MainNavigationScaffold), findsOneWidget);

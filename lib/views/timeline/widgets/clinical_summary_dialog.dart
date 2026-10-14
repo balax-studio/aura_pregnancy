@@ -131,7 +131,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
             Expanded(
               child: Text(
                 'doctor_report_copied'.tr(),
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.outfit(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
                     fontSize: 13),
@@ -188,7 +188,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                           children: [
                             Text(
                               'doctor_report_title'.tr(),
-                              style: GoogleFonts.nunito(
+                              style: GoogleFonts.outfit(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w900,
                                 color: AppColors.primaryDark,
@@ -196,7 +196,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                             ),
                             Text(
                               'doctor_report_sub'.tr(),
-                              style: GoogleFonts.quicksand(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary,
@@ -293,7 +293,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                           const SizedBox(width: 10),
                           Text(
                             'doctor_report_pdf_loading'.tr(),
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.outfit(
                               fontSize: 14,
                               fontWeight: FontWeight.w800,
                               color: AppColors.primaryDark,
@@ -305,7 +305,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                           const SizedBox(width: 8),
                           Text(
                             'doctor_report_pdf_btn'.tr(),
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.outfit(
                               fontSize: 15,
                               fontWeight: FontWeight.w900,
                               color: AppColors.primaryDark,
@@ -331,7 +331,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
                         const SizedBox(width: 8),
                         Text(
                           'doctor_report_copy_btn'.tr(),
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.outfit(
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
                             color: AppColors.clinicalGreen,
@@ -351,7 +351,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
       padding: const EdgeInsets.only(bottom: 6, left: 4),
       child: Text(
         title,
-        style: GoogleFonts.nunito(
+        style: GoogleFonts.outfit(
           fontSize: 12,
           fontWeight: FontWeight.w900,
           color: AppColors.textSecondary,
@@ -382,7 +382,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
         children: [
           Text(
             label,
-            style: GoogleFonts.quicksand(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               fontWeight: FontWeight.w700,
               color: AppColors.textSecondary,
@@ -392,7 +392,7 @@ class _ClinicalSummaryDialogState extends State<ClinicalSummaryDialog> {
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: GoogleFonts.nunito(
+              style: GoogleFonts.outfit(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 color: AppColors.primaryDark,

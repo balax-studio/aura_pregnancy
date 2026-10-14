@@ -64,6 +64,25 @@ class AdService {
     return isIos ? iosRewardedTestId : androidRewardedTestId;
   }
 
+  /// Geliştirici veya test ortamı için test cihazı kimlikleri (AdMob Hashed Device ID'ler)
+  static final List<String> testDeviceIds = [];
+
+  /// AdMob hata kodunu geliştirici ve kullanıcı için anlaşılır Türkçe açıklamaya çevirir
+  static String explainAdError(int code) {
+    switch (code) {
+      case 0:
+        return 'Dahili Hata (ERROR_CODE_INTERNAL_ERROR): AdMob sunucu hatası veya uygulama/reklam birimi ID yapılandırma uyuşmazlığı.';
+      case 1:
+        return 'Geçersiz İstek (ERROR_CODE_INVALID_REQUEST): Reklam birimi kimliği (AdUnitId) türü yanlış (ör. Rewarded yerine Interstitial) veya istek formatı geçersiz.';
+      case 2:
+        return 'Ağ Hatası (ERROR_CODE_NETWORK_ERROR): Cihaz internete erişemiyor veya bağlantı koptu.';
+      case 3:
+        return 'Reklam Yok (ERROR_CODE_NO_FILL): İstek AdMob sunucusuna ulaştı ancak AdMob şu an gösterecek uygun reklam envanterine sahip değil (Yeni açılan hesap, geçici reklam sınırı veya organik trafik eksikliği).';
+      default:
+        return 'Bilinmeyen AdMob Hata Kodu ($code).';
+    }
+  }
+
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
 
@@ -79,10 +98,15 @@ class AdService {
     try {
       if (isMobile) {
         await MobileAds.instance.initialize();
+        if (testDeviceIds.isNotEmpty) {
+          await MobileAds.instance.updateRequestConfiguration(
+            RequestConfiguration(testDeviceIds: testDeviceIds),
+          );
+        }
         unawaited(loadRewardedAd());
       }
       _isInitialized = true;
-      debugPrint('[AdService] Google Mobile Ads servisi hazırlandı (Platform: ${defaultTargetPlatform.name}, ReleaseMode: $kReleaseMode).');
+      debugPrint('[AdService] Google Mobile Ads servisi hazırlandı (Platform: ${defaultTargetPlatform.name}, ReleaseMode: $kReleaseMode, Unit: $rewardedAdUnitId).');
     } catch (e) {
       _isInitialized = true;
       debugPrint('[AdService] Başlatma notu: $e');
@@ -107,7 +131,7 @@ class AdService {
     _loadingCompleter = Completer<RewardedAd?>();
     final targetAdUnitId = rewardedAdUnitId;
 
-    debugPrint('[AdService] RewardedAd yükleniyor (AdUnitId: $targetAdUnitId)...');
+    debugPrint('[AdService] 📡 RewardedAd yükleniyor (AdUnitId: $targetAdUnitId, Ortam: ${kReleaseMode ? "CANLI" : "TEST"})...');
 
     RewardedAd.load(
       adUnitId: targetAdUnitId,
@@ -118,7 +142,7 @@ class AdService {
           _isLoadingRewarded = false;
           _retryAttempt = 0;
           _retryTimer?.cancel();
-          debugPrint('[AdService] RewardedAd başarıyla önbelleklendi.');
+          debugPrint('[AdService] ✅ RewardedAd başarıyla yüklendi ve önbelleğe alındı.');
           if (_loadingCompleter != null && !_loadingCompleter!.isCompleted) {
             _loadingCompleter!.complete(ad);
           }
@@ -127,7 +151,8 @@ class AdService {
         onAdFailedToLoad: (error) {
           _preloadedRewardedAd = null;
           _isLoadingRewarded = false;
-          debugPrint('[AdService] RewardedAd yüklenemedi: $error (Code: ${error.code}, Message: ${error.message})');
+          final explanation = explainAdError(error.code);
+          debugPrint('[AdService] ❌ RewardedAd yüklenemedi: $error (Code: ${error.code}, Message: ${error.message}) -> $explanation');
           if (_loadingCompleter != null && !_loadingCompleter!.isCompleted) {
             _loadingCompleter!.complete(null);
           }
@@ -139,7 +164,7 @@ class AdService {
           _retryTimer?.cancel();
           _retryTimer = Timer(Duration(seconds: nextRetrySeconds), () {
             if (_preloadedRewardedAd == null && !_isLoadingRewarded) {
-              debugPrint('[AdService] RewardedAd otomatik retry başlatılıyor ($_retryAttempt. deneme)...');
+              debugPrint('[AdService] 🔄 RewardedAd otomatik retry başlatılıyor ($_retryAttempt. deneme)...');
               loadRewardedAd();
             }
           });
@@ -156,22 +181,22 @@ class AdService {
   /// Gerçek AdMob Rewarded reklamını ekranda gösterir (Hazır değilse yüklenmesini bekler)
   Future<bool> showRealRewardedAd({
     required VoidCallback onRewardEarned,
-    Duration timeout = const Duration(seconds: 7),
+    Duration timeout = const Duration(seconds: 15),
   }) async {
     if (!isMobile) return false;
 
     RewardedAd? ad = _preloadedRewardedAd;
     if (ad == null) {
-      debugPrint('[AdService] RewardedAd önbellekte yok, anlık olarak yükleniyor...');
+      debugPrint('[AdService] ⏳ RewardedAd önbellekte yok, anlık olarak yükleniyor (Maksimum bekleme süresi: ${timeout.inSeconds} sn)...');
       try {
         ad = await loadRewardedAd().timeout(timeout);
       } catch (e) {
-        debugPrint('[AdService] RewardedAd anlık yükleme zaman aşımına uğradı ($timeout): $e');
+        debugPrint('[AdService] ⏱️ RewardedAd anlık yükleme zaman aşımına uğradı ($timeout): $e');
       }
     }
 
     if (ad == null) {
-      debugPrint('[AdService] Gösterilecek RewardedAd bulunamadı.');
+      debugPrint('[AdService] ⚠️ Gösterilecek RewardedAd bulunamadı (AdMob No-Fill veya yükleme gecikmesi). Fallback devreye girecek.');
       return false;
     }
 
@@ -180,10 +205,10 @@ class AdService {
 
     ad.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
-        debugPrint('[AdService] RewardedAd tam ekran açıldı.');
+        debugPrint('[AdService] 🎬 RewardedAd tam ekran açıldı.');
       },
       onAdDismissedFullScreenContent: (ad) {
-        debugPrint('[AdService] RewardedAd kapatıldı.');
+        debugPrint('[AdService] 🚪 RewardedAd kapatıldı.');
         ad.dispose();
         _preloadedRewardedAd = null;
         unawaited(loadRewardedAd());
@@ -192,7 +217,7 @@ class AdService {
         }
       },
       onAdFailedToShowFullScreenContent: (ad, err) {
-        debugPrint('[AdService] RewardedAd gösterim hatası: $err');
+        debugPrint('[AdService] ❌ RewardedAd tam ekran gösterim hatası: $err');
         ad.dispose();
         _preloadedRewardedAd = null;
         unawaited(loadRewardedAd());
@@ -203,15 +228,16 @@ class AdService {
     );
 
     try {
+      debugPrint('[AdService] 📽️ ad.show çağrılıyor...');
       await ad.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-          debugPrint('[AdService] Ödül kazanıldı! (${reward.amount} ${reward.type})');
+          debugPrint('[AdService] 🎁 Ödül kazanıldı! (${reward.amount} ${reward.type})');
           rewardEarned = true;
           onRewardEarned();
         },
       );
     } catch (e) {
-      debugPrint('[AdService] ad.show istisnası: $e');
+      debugPrint('[AdService] ❌ ad.show istisnası: $e');
       _preloadedRewardedAd = null;
       unawaited(loadRewardedAd());
       if (!completer.isCompleted) {

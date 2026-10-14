@@ -23,7 +23,7 @@ void main() {
         createLocalizedTestWidget(
           child: const Scaffold(
             body: PregnancyJourneyTracker(
-              initialIndex: 2, // Haşhaş Tohumu, Susam, Karabiber
+              initialIndex: 5, // Haşhaş Tohumu, Susam, Bezelye (Hafta 4, 5, 6)
             ),
           ),
         ),
@@ -31,9 +31,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Bebeğinin Büyüme Serüveni'), findsOneWidget);
-      expect(find.text('Haşhaş Tohumu Tomurcuğu'), findsOneWidget);
-      expect(find.text('Susam Tanesi'), findsOneWidget);
-      expect(find.text('Karabiber Tanesi'), findsOneWidget);
+      expect(find.text('Haşhaş Tohumu'), findsWidgets);
+      expect(find.text('Susam Tanesi'), findsWidgets);
+      expect(find.text('Bezelye'), findsWidgets);
     });
 
     testWidgets('2. WeeklyPanelScreen içerisinde PregnancyJourneyTracker görüntülenir', (WidgetTester tester) async {

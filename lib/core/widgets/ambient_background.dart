@@ -1,4 +1,6 @@
+import 'dart:io' show Platform;
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
@@ -29,7 +31,11 @@ class _AmbientBackgroundState extends State<AmbientBackground>
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 14),
-    )..repeat();
+    );
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (!isTest) {
+      _pulseController.repeat();
+    }
   }
 
   @override

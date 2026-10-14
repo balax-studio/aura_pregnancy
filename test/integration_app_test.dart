@@ -11,9 +11,10 @@ import 'package:aura_pregnancy/models/emergency_card_model.dart';
 void main() {
   group('Aura Pregnancy Bütüncül Entegrasyon Testleri (MVP)', () {
     test('1. Onboarding ve VKİ hesaplama senaryosu', () {
-      final lmp = DateTime(2026, 1, 15);
+      final now = DateTime.now();
+      final lmp = DateTime(now.year, now.month, now.day).subtract(const Duration(days: 11 * 7));
       final dueDate = MedicalCalculator.calculateDueDateFromLmp(lmp);
-      final week = MedicalCalculator.calculateCurrentWeekFromLmp(lmp, DateTime(2026, 4, 9)); // 12. Hafta civarı
+      final week = MedicalCalculator.calculateCurrentWeekFromLmp(lmp, now); // 12. Hafta civarı
 
       final vki = MedicalCalculator.calculateVki(weightKg: 55.0, heightCm: 162.0); // ~20.95 -> 21.0
       expect(vki, equals(21.0));

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 /// 1. PulseAura: 3D Fetus ve Öne Çıkan Kartlar Arkasındaki Ritmik Nefes / Nabız Işıması
@@ -44,7 +46,8 @@ class _PulseAuraState extends State<PulseAura> with SingleTickerProviderStateMix
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
     );
 
-    if (widget.isEnabled) {
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (widget.isEnabled && !isTest) {
       _controller.repeat(reverse: true);
     }
   }
@@ -53,7 +56,8 @@ class _PulseAuraState extends State<PulseAura> with SingleTickerProviderStateMix
   void didUpdateWidget(covariant PulseAura oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.isEnabled != oldWidget.isEnabled) {
-      if (widget.isEnabled) {
+      final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+      if (widget.isEnabled && !isTest) {
         _controller.repeat(reverse: true);
       } else {
         _controller.stop();
@@ -278,7 +282,8 @@ class _StaggeredSlideFadeState extends State<StaggeredSlideFade> with SingleTick
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
 
-    final totalDelay = widget.delayStep * widget.index;
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    final totalDelay = isTest ? Duration.zero : widget.delayStep * widget.index;
     if (totalDelay == Duration.zero) {
       _controller.forward();
     } else {

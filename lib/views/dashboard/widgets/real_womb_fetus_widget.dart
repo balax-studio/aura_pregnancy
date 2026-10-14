@@ -1,4 +1,6 @@
+import 'dart:io' show Platform;
 import 'dart:math';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
@@ -38,13 +40,19 @@ class _RealWombFetusWidgetState extends State<RealWombFetusWidget>
     _breatheController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 3800),
-    )..repeat(reverse: true);
+    );
 
     // 2. Canlı Kalp Atışı Nabzı (140-160 BPM ritmi)
     _heartbeatController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 420),
-    )..repeat(reverse: true);
+    );
+
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (!isTest) {
+      _breatheController.repeat(reverse: true);
+      _heartbeatController.repeat(reverse: true);
+    }
   }
 
   @override

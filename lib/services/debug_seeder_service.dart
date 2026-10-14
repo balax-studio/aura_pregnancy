@@ -140,7 +140,28 @@ class DebugSeederService {
 
   /// Aktif Haftayı Hızlı Değiştirir
   Future<void> jumpToWeek(int targetWeek) async {
-    await DatabaseHelper.instance.updateCurrentWeek(targetWeek);
+    final now = DateTime.now();
+    final elapsedDays = (targetWeek - 1) * 7;
+    final lmp = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: elapsedDays))
+        .toIso8601String()
+        .split('T')
+        .first;
+    final due = DateTime.parse(lmp)
+        .add(const Duration(days: 280))
+        .toIso8601String()
+        .split('T')
+        .first;
+    final profile = await DatabaseHelper.instance.getProfile();
+    if (profile != null) {
+      await DatabaseHelper.instance.saveProfile(profile.copyWith(
+        currentWeek: targetWeek,
+        lmpDate: lmp,
+        dueDate: due,
+      ));
+    } else {
+      await DatabaseHelper.instance.updateCurrentWeek(targetWeek);
+    }
   }
 
   /// Veritabanı Canlı İstatistiklerini Getirir

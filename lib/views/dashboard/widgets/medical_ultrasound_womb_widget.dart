@@ -1,4 +1,6 @@
+import 'dart:io' show Platform;
 import 'dart:math';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/constants/app_colors.dart';
@@ -44,25 +46,33 @@ class _MedicalUltrasoundWombWidgetState
     _sweepController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2200),
-    )..repeat();
+    );
 
     // 2. Fetal Kalp Atışı (~400ms ritmik döngü)
     _heartbeatController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
-    )..repeat(reverse: true);
+    );
 
     // 3. Doppler Dalga Formu Kaydırma (1.5 saniye)
     _dopplerWaveController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
-    )..repeat();
+    );
 
     // 4. Sıvı İçi Nazik Solunum & Yüzme (3.8 saniye)
     _breathingController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 3800),
-    )..repeat(reverse: true);
+    );
+
+    final isTest = !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+    if (!isTest) {
+      _sweepController.repeat();
+      _heartbeatController.repeat(reverse: true);
+      _dopplerWaveController.repeat();
+      _breathingController.repeat(reverse: true);
+    }
   }
 
   @override

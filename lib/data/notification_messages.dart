@@ -1,4 +1,4 @@
-﻿/// Aura Pregnancy — Bebek Perspektifli Bildirim Mesaj Kütüphanesi
+/// Aura Pregnancy — Bebek Perspektifli Bildirim Mesaj Kütüphanesi
 /// Tüm mesajlar sanki bebek yazıyormuş gibi sıcak, samimi ve tatlı bir dille yazılmıştır.
 /// TR + EN çift dil desteği mevcuttur.
 library notification_messages;
@@ -8,7 +8,7 @@ class NotificationMessages {
   // Kategori 1 — Haftalık Bebek Gelişimi (Hafta bazlı, gerçek tıbbi bilgiler)
   // ────────────────────────────────────────────────────────────────────
 
-  static Map<int, NotifWeeklyMessage> weeklyDevelopmentTr = {
+  static const Map<int, NotifWeeklyMessage> weeklyDevelopmentTr = {
     5:  NotifWeeklyMessage(title: 'Merhaba anneciğim! 🐣', body: '5. haftayım! Kalbim şimdi atıyor — bip bip! Beni hissediyor musun? 💗'),
     6:  NotifWeeklyMessage(title: 'Anneciğim, büyüyorum! 🌱', body: '6. haftada beyin ve omurilik oluşmaya başladı. Çok çalışıyorum! 🧠'),
     7:  NotifWeeklyMessage(title: 'Kollarım var şimdi! 👋', body: '7. haftada küçük kolcuklar ve bacaklar beliriyor. Seninle dans etmek istiyorum! 💃'),
@@ -47,7 +47,7 @@ class NotificationMessages {
     40: NotifWeeklyMessage(title: 'Doğum zamanı yaklaşıyor! 🎉', body: '40. haftaya geldik anneciğim! Çok yakında yüz yüze olacağız 🤱💗'),
   };
 
-  static Map<int, NotifWeeklyMessage> weeklyDevelopmentEn = {
+  static const Map<int, NotifWeeklyMessage> weeklyDevelopmentEn = {
     5:  NotifWeeklyMessage(title: 'Hello mommy! 🐣', body: 'Week 5! My heart is beating now — beep beep! Can you feel me? 💗'),
     8:  NotifWeeklyMessage(title: 'Kidney bean sized! 🫘', body: 'Week 8: all my organs are starting to form. I look like a baby! 🍀'),
     10: NotifWeeklyMessage(title: 'Strawberry sized! 🍓', body: 'Week 10: my fingerprints are forming. I am uniquely me! ✨'),

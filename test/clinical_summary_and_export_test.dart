@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:aura_pregnancy/models/profile_model.dart';
@@ -11,6 +13,16 @@ import 'test_helper.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('com.balaxstudio.aura/gallery'),
+      (MethodCall methodCall) async {
+        return '${Directory.systemTemp.path}/test_video.mp4';
+      },
+    );
+  });
 
   setUp(() async {
     await DatabaseHelper.instance.ensureDefaultProfile();
@@ -63,6 +75,16 @@ void main() {
     });
 
     test('2. FFmpegVideoService.exportAndSaveVideo bozuk MP4 yerine temiz dosya üretir', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/path_provider'),
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'getTemporaryDirectory') {
+            return Directory.systemTemp.path;
+          }
+          return null;
+        },
+      );
       final frames = [
         const VideoStoryFrame(
           week: 12,

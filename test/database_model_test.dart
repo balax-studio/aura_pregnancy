@@ -7,10 +7,15 @@ import 'package:aura_pregnancy/models/notification_model.dart';
 void main() {
   group('SQLite Veri Modelleri & Map Serialization Testi', () {
     test('ProfileModel toMap ve fromMap dönüşümü', () {
+      final lmp = DateTime.now().subtract(const Duration(days: 23 * 7));
+      final due = lmp.add(const Duration(days: 280));
+      final lmpStr = lmp.toIso8601String().substring(0, 10);
+      final dueStr = due.toIso8601String().substring(0, 10);
+
       final profile = ProfileModel(
         id: 1,
-        dueDate: '2026-10-15',
-        lmpDate: '2026-01-08',
+        dueDate: dueStr,
+        lmpDate: lmpStr,
         prePregnancyWeight: 58.5,
         height: 168.0,
         vki: 20.7,
@@ -18,7 +23,7 @@ void main() {
       );
 
       final map = profile.toMap();
-      expect(map['due_date'], equals('2026-10-15'));
+      expect(map['due_date'], equals(dueStr));
       expect(map['pre_pregnancy_weight'], equals(58.5));
       expect(map['vki'], equals(20.7));
       expect(map['current_week'], equals(24));

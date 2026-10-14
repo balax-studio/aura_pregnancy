@@ -69,10 +69,10 @@ class _AdRewardDialogState extends State<AdRewardDialog> with SingleTickerProvid
     setState(() => _isLoadingAd = true);
 
     try {
-      // Gerçek AdMob Ödüllü Reklamını göster (Hazır değilse 7 sn'ye kadar yüklenmesini bekler)
+      // Gerçek AdMob Ödüllü Reklamını göster (Hazır değilse 15 sn'ye kadar yüklenmesini bekler)
       final earned = await AdService.instance.showRealRewardedAd(
         onRewardEarned: widget.onRewardEarned ?? () {},
-        timeout: const Duration(seconds: 7),
+        timeout: const Duration(seconds: 15),
       );
 
       if (!mounted) return;
